@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetWorld", "PetWorld\PetWorld.csproj", "{02F26047-1D4F-42C3-89D8-315891FCF486}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetWorld", "PetWorld\PetWorld.csproj", "{02F26047-1D4F-42C3-89D8-315891FCF486}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetWorld.Core", "PetWorld.Core\PetWorld.Core.csproj", "{ADE8DEC8-AD0E-4C74-835D-A41F2D41606D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetWorld.Infrastructure", "PetWorld.Infrastructure\PetWorld.Infrastructure.csproj", "{A6E74EC8-0F61-47C9-BE5C-AF42A6A8143F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{02F26047-1D4F-42C3-89D8-315891FCF486}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02F26047-1D4F-42C3-89D8-315891FCF486}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02F26047-1D4F-42C3-89D8-315891FCF486}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADE8DEC8-AD0E-4C74-835D-A41F2D41606D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADE8DEC8-AD0E-4C74-835D-A41F2D41606D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADE8DEC8-AD0E-4C74-835D-A41F2D41606D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADE8DEC8-AD0E-4C74-835D-A41F2D41606D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6E74EC8-0F61-47C9-BE5C-AF42A6A8143F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6E74EC8-0F61-47C9-BE5C-AF42A6A8143F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6E74EC8-0F61-47C9-BE5C-AF42A6A8143F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6E74EC8-0F61-47C9-BE5C-AF42A6A8143F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
