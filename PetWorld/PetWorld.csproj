@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PetWorld.Infrastructure\PetWorld.Infrastructure.csproj" />
+    <ProjectReference Include="..\PetWorld.Core\PetWorld.Core.csproj" />
   </ItemGroup>
 
 </Project>
