@@ -38,5 +38,13 @@ namespace PetWorld.Infrastructure.Data.Models
 
         [ForeignKey(nameof(PetOwnerId))]
         public PetOwner Owner { get; set; } = null!;
+
+        [Required]
+        [ForeignKey(nameof(Gender))]
+        [Comment("Pet gender")]
+        public int GenderId { get; set; }
+
+        public GenderType Gender { get; set; } = null!;
+
     }
 }

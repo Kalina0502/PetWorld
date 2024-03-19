@@ -10,7 +10,7 @@ using PetWorld.Infarstructure.Data;
 
 namespace PetWorld.Infrastructure.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(PetWorldDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -274,18 +274,18 @@ namespace PetWorld.Infrastructure.Migrations
 
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.GenderType", b =>
                 {
-                    b.Property<int>("GenderId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasComment("GenderType identifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GenderId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("GenderId");
+                    b.HasKey("Id");
 
                     b.ToTable("GenderTypes");
                 });
@@ -373,6 +373,10 @@ namespace PetWorld.Infrastructure.Migrations
                         .HasColumnType("nvarchar(500)")
                         .HasComment("Pet description");
 
+                    b.Property<int>("GenderId")
+                        .HasColumnType("int")
+                        .HasComment("Pet gender");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(15)
@@ -389,6 +393,8 @@ namespace PetWorld.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GenderId");
+
                     b.HasIndex("PetOwnerId");
 
                     b.HasIndex("SpeciesId");
@@ -400,12 +406,12 @@ namespace PetWorld.Infrastructure.Migrations
 
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.PetOwner", b =>
                 {
-                    b.Property<int>("PetOwnerId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasComment("Pet owner identifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PetOwnerId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("Age")
                         .HasColumnType("int")
@@ -444,7 +450,7 @@ namespace PetWorld.Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasComment("User identifier");
 
-                    b.HasKey("PetOwnerId");
+                    b.HasKey("Id");
 
                     b.HasIndex("GenderId");
 
@@ -551,12 +557,12 @@ namespace PetWorld.Infrastructure.Migrations
 
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.Species", b =>
                 {
-                    b.Property<int>("SpeciesId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasComment("Species identifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SpeciesId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("SpeciesName")
                         .IsRequired()
@@ -564,7 +570,7 @@ namespace PetWorld.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasComment("Species Name");
 
-                    b.HasKey("SpeciesId");
+                    b.HasKey("Id");
 
                     b.ToTable("Species");
 
@@ -662,6 +668,12 @@ namespace PetWorld.Infrastructure.Migrations
 
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.Pet", b =>
                 {
+                    b.HasOne("PetWorld.Infrastructure.Data.Models.GenderType", "Gender")
+                        .WithMany()
+                        .HasForeignKey("GenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("PetWorld.Infrastructure.Data.Models.PetOwner", "Owner")
                         .WithMany()
                         .HasForeignKey("PetOwnerId")
@@ -673,6 +685,8 @@ namespace PetWorld.Infrastructure.Migrations
                         .HasForeignKey("SpeciesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Gender");
 
                     b.Navigation("Owner");
 

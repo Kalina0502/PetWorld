@@ -9,7 +9,7 @@ namespace PetWorld.Infrastructure.Data.Models
     {
         [Key]
         [Comment("Species identifier")]
-        public int SpeciesId { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [MaxLength(SpeciesNameMaxLength)]

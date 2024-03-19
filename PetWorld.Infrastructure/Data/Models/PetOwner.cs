@@ -12,7 +12,7 @@ namespace PetWorld.Infrastructure.Data.Models
     {
         [Key]
         [Comment("Pet owner identifier")]
-        public int PetOwnerId { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [MaxLength(FirstNameLength)]
