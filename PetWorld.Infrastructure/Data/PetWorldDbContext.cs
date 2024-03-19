@@ -4,9 +4,9 @@ using PetWorld.Infrastructure.Data.Models;
 
 namespace PetWorld.Infarstructure.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class PetWorldDbContext : IdentityDbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public PetWorldDbContext(DbContextOptions<PetWorldDbContext> options)
             : base(options)
         {
 
