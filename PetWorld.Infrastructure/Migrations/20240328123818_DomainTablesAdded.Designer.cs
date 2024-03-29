@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetWorld.Infarstructure.Data;
 
@@ -11,9 +12,10 @@ using PetWorld.Infarstructure.Data;
 namespace PetWorld.Infrastructure.Migrations
 {
     [DbContext(typeof(PetWorldDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240328123818_DomainTablesAdded")]
+    partial class DomainTablesAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -272,6 +274,35 @@ namespace PetWorld.Infrastructure.Migrations
                     b.HasComment("Addoption description");
                 });
 
+            modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.Agent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasComment("Agent identifier");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)")
+                        .HasComment("Agent's phone");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasComment("User identifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Agents");
+
+                    b.HasComment("PetWorld agent");
+                });
+
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.GenderType", b =>
                 {
                     b.Property<int>("Id")
@@ -517,21 +548,35 @@ namespace PetWorld.Infrastructure.Migrations
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
-                    b.Property<string>("RoomType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasComment("Room type");
-
-                    b.Property<int>("SpeciesId")
+                    b.Property<int>("RoomTypeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SpeciesId");
+                    b.HasIndex("RoomTypeId");
 
                     b.ToTable("Rooms");
 
                     b.HasComment("Room description");
+                });
+
+            modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.RoomType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasComment("RoomType identifier");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasComment("RoomType");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RoomTypes");
                 });
 
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.ServiceType", b =>
@@ -564,7 +609,7 @@ namespace PetWorld.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("SpeciesName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
@@ -637,6 +682,17 @@ namespace PetWorld.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Species");
+                });
+
+            modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.Agent", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.GroomingService", b =>
@@ -733,13 +789,16 @@ namespace PetWorld.Infrastructure.Migrations
 
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.Room", b =>
                 {
-                    b.HasOne("PetWorld.Infrastructure.Data.Models.Species", "Species")
-                        .WithMany()
-                        .HasForeignKey("SpeciesId")
+                    b.HasOne("PetWorld.Infrastructure.Data.Models.RoomType", null)
+                        .WithMany("Rooms")
+                        .HasForeignKey("RoomTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
 
-                    b.Navigation("Species");
+            modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.RoomType", b =>
+                {
+                    b.Navigation("Rooms");
                 });
 #pragma warning restore 612, 618
         }

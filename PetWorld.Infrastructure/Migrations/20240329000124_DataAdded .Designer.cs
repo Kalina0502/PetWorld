@@ -12,8 +12,8 @@ using PetWorld.Infarstructure.Data;
 namespace PetWorld.Infrastructure.Migrations
 {
     [DbContext(typeof(PetWorldDbContext))]
-    [Migration("20240319180603_TablesCorrected")]
-    partial class TablesCorrected
+    [Migration("20240329000124_DataAdde")]
+    partial class DataAdde
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -139,6 +139,40 @@ namespace PetWorld.Infrastructure.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "dea12856-c198-4129-b3f3-b893d8395082",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "c8ee1f2e-65a9-4d96-b041-02b4af414c4d",
+                            Email = "agent@mail.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "agent@mail.com",
+                            NormalizedUserName = "agent@mail.com",
+                            PasswordHash = "AQAAAAEAACcQAAAAEN4/jFFFI8LUT5ojVDgbYRl0p01ExVqVC10iq/5V5RhsbQmWnE0Xbm6IFGrDNqBndQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "42a3f23d-631e-45ea-93ba-051e52e2ed39",
+                            TwoFactorEnabled = false,
+                            UserName = "agent@mail.com"
+                        },
+                        new
+                        {
+                            Id = "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "5b089c14-4b1b-4375-a323-47ec74bcaf49",
+                            Email = "guest@mail.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "guest@mail.com",
+                            NormalizedUserName = "guest@mail.com",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDwFlmzzIaYZAiQB0OuCKxXzXUxUeYlTPaiAfsVfbmwOAVQfywSsUXRt8x7Hnr3Seg==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "36ad2563-27f0-403f-9a71-d86c4d4b35bc",
+                            TwoFactorEnabled = false,
+                            UserName = "guest@mail.com"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -274,6 +308,43 @@ namespace PetWorld.Infrastructure.Migrations
                     b.HasComment("Addoption description");
                 });
 
+            modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.Agent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasComment("Agent identifier");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)")
+                        .HasComment("Agent's phone");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasComment("User identifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Agents");
+
+                    b.HasComment("PetWorld agent");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            PhoneNumber = "+359888888888",
+                            UserId = "dea12856-c198-4129-b3f3-b893d8395082"
+                        });
+                });
+
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.GenderType", b =>
                 {
                     b.Property<int>("Id")
@@ -290,6 +361,23 @@ namespace PetWorld.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("GenderTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Male"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Female"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Other"
+                        });
                 });
 
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.Groomer", b =>
@@ -404,6 +492,38 @@ namespace PetWorld.Infrastructure.Migrations
                     b.ToTable("Pets");
 
                     b.HasComment("Pet description");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Age = 5,
+                            Description = "Friendly dog",
+                            GenderId = 1,
+                            Name = "Buddy",
+                            PetOwnerId = 1,
+                            SpeciesId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Age = 3,
+                            Description = "Playful cat",
+                            GenderId = 2,
+                            Name = "Whiskers",
+                            PetOwnerId = 1,
+                            SpeciesId = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Age = 2,
+                            Description = "Talkative bird",
+                            GenderId = 2,
+                            Name = "Polly",
+                            PetOwnerId = 1,
+                            SpeciesId = 3
+                        });
                 });
 
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.PetOwner", b =>
@@ -426,8 +546,7 @@ namespace PetWorld.Infrastructure.Migrations
                         .HasComment("Pet Owner email");
 
                     b.Property<int>("GenderId")
-                        .HasColumnType("int")
-                        .HasComment("Pet Owner gender");
+                        .HasColumnType("int");
 
                     b.Property<string>("PetOwnerFirstName")
                         .IsRequired()
@@ -443,8 +562,8 @@ namespace PetWorld.Infrastructure.Migrations
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("nvarchar(8)")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)")
                         .HasComment("Pet owner phone number");
 
                     b.Property<string>("UserId")
@@ -461,6 +580,19 @@ namespace PetWorld.Infrastructure.Migrations
                     b.ToTable("PetOwners");
 
                     b.HasComment("Pet Owner");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Age = 30,
+                            Email = "john@example.com",
+                            GenderId = 1,
+                            PetOwnerFirstName = "John",
+                            PetOwnerLastName = "Doe",
+                            PhoneNumber = "1234567890",
+                            UserId = "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e"
+                        });
                 });
 
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.Reservation", b =>
@@ -505,6 +637,28 @@ namespace PetWorld.Infrastructure.Migrations
                     b.ToTable("Reservations");
 
                     b.HasComment("Reservation description");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CheckInDate = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CheckOutDate = new DateTime(2024, 3, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IncludesFood = true,
+                            IncludesWalk = true,
+                            PetId = 1,
+                            RoomId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CheckInDate = new DateTime(2024, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CheckOutDate = new DateTime(2024, 4, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IncludesFood = false,
+                            IncludesWalk = true,
+                            PetId = 2,
+                            RoomId = 2
+                        });
                 });
 
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.Room", b =>
@@ -519,21 +673,72 @@ namespace PetWorld.Infrastructure.Migrations
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
-                    b.Property<string>("RoomType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasComment("Room type");
-
-                    b.Property<int>("SpeciesId")
+                    b.Property<int>("RoomTypeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SpeciesId");
+                    b.HasIndex("RoomTypeId");
 
                     b.ToTable("Rooms");
 
                     b.HasComment("Room description");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsAvailable = true,
+                            RoomTypeId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IsAvailable = true,
+                            RoomTypeId = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            IsAvailable = false,
+                            RoomTypeId = 3
+                        });
+                });
+
+            modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.RoomType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasComment("RoomType identifier");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasComment("RoomType");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RoomTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Dog Room"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Cat Room"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Bird Room"
+                        });
                 });
 
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.ServiceType", b =>
@@ -566,7 +771,7 @@ namespace PetWorld.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("SpeciesName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
@@ -577,6 +782,28 @@ namespace PetWorld.Infrastructure.Migrations
                     b.ToTable("Species");
 
                     b.HasComment("Species description");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Dog"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Cat"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Bird"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Horse"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -639,6 +866,17 @@ namespace PetWorld.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Species");
+                });
+
+            modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.Agent", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.GroomingService", b =>
@@ -735,13 +973,16 @@ namespace PetWorld.Infrastructure.Migrations
 
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.Room", b =>
                 {
-                    b.HasOne("PetWorld.Infrastructure.Data.Models.Species", "Species")
-                        .WithMany()
-                        .HasForeignKey("SpeciesId")
+                    b.HasOne("PetWorld.Infrastructure.Data.Models.RoomType", null)
+                        .WithMany("Rooms")
+                        .HasForeignKey("RoomTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
 
-                    b.Navigation("Species");
+            modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.RoomType", b =>
+                {
+                    b.Navigation("Rooms");
                 });
 #pragma warning restore 612, 618
         }

@@ -52,13 +52,13 @@ namespace PetWorld.Infrastructure.Migrations
                 name: "GenderTypes",
                 columns: table => new
                 {
-                    GenderId = table.Column<int>(type: "int", nullable: false, comment: "GenderType identifier")
+                    Id = table.Column<int>(type: "int", nullable: false, comment: "GenderType identifier")
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GenderTypes", x => x.GenderId);
+                    table.PrimaryKey("PK_GenderTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -78,6 +78,19 @@ namespace PetWorld.Infrastructure.Migrations
                 comment: "Groomer description");
 
             migrationBuilder.CreateTable(
+                name: "RoomTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false, comment: "RoomType identifier")
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "RoomType")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoomTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ServiceTypes",
                 columns: table => new
                 {
@@ -95,13 +108,13 @@ namespace PetWorld.Infrastructure.Migrations
                 name: "Species",
                 columns: table => new
                 {
-                    SpeciesId = table.Column<int>(type: "int", nullable: false, comment: "Species identifier")
+                    Id = table.Column<int>(type: "int", nullable: false, comment: "Species identifier")
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SpeciesName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, comment: "Species Name")
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, comment: "Species Name")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Species", x => x.SpeciesId);
+                    table.PrimaryKey("PK_Species", x => x.Id);
                 },
                 comment: "Species description");
 
@@ -215,7 +228,7 @@ namespace PetWorld.Infrastructure.Migrations
                 name: "PetOwners",
                 columns: table => new
                 {
-                    PetOwnerId = table.Column<int>(type: "int", nullable: false, comment: "Pet owner identifier")
+                    Id = table.Column<int>(type: "int", nullable: false, comment: "Pet owner identifier")
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PetOwnerFirstName = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false, comment: "Pet owner first name"),
                     PetOwnerLastName = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false, comment: "Pet owner last name"),
@@ -227,7 +240,7 @@ namespace PetWorld.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PetOwners", x => x.PetOwnerId);
+                    table.PrimaryKey("PK_PetOwners", x => x.Id);
                     table.ForeignKey(
                         name: "FK_PetOwners_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -238,10 +251,31 @@ namespace PetWorld.Infrastructure.Migrations
                         name: "FK_PetOwners_GenderTypes_GenderId",
                         column: x => x.GenderId,
                         principalTable: "GenderTypes",
-                        principalColumn: "GenderId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 },
                 comment: "Pet Owner");
+
+            migrationBuilder.CreateTable(
+                name: "Rooms",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false, comment: "Room identifier")
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoomTypeId = table.Column<int>(type: "int", nullable: false),
+                    IsAvailable = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Rooms", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Rooms_RoomTypes_RoomTypeId",
+                        column: x => x.RoomTypeId,
+                        principalTable: "RoomTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                },
+                comment: "Room description");
 
             migrationBuilder.CreateTable(
                 name: "AdoptionAnimals",
@@ -263,32 +297,10 @@ namespace PetWorld.Infrastructure.Migrations
                         name: "FK_AdoptionAnimals_Species_SpeciesId",
                         column: x => x.SpeciesId,
                         principalTable: "Species",
-                        principalColumn: "SpeciesId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 },
                 comment: "Addoption description");
-
-            migrationBuilder.CreateTable(
-                name: "Rooms",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false, comment: "Room identifier")
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RoomType = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Room type"),
-                    SpeciesId = table.Column<int>(type: "int", nullable: false),
-                    IsAvailable = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Rooms", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Rooms_Species_SpeciesId",
-                        column: x => x.SpeciesId,
-                        principalTable: "Species",
-                        principalColumn: "SpeciesId",
-                        onDelete: ReferentialAction.Cascade);
-                },
-                comment: "Room description");
 
             migrationBuilder.CreateTable(
                 name: "Pets",
@@ -300,22 +312,29 @@ namespace PetWorld.Infrastructure.Migrations
                     Age = table.Column<int>(type: "int", nullable: false, comment: "Pet age"),
                     SpeciesId = table.Column<int>(type: "int", nullable: false, comment: "Species"),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true, comment: "Pet description"),
-                    PetOwnerId = table.Column<int>(type: "int", nullable: false, comment: "Pet owner")
+                    PetOwnerId = table.Column<int>(type: "int", nullable: false, comment: "Pet owner"),
+                    GenderId = table.Column<int>(type: "int", nullable: false, comment: "Pet gender")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Pets", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Pets_GenderTypes_GenderId",
+                        column: x => x.GenderId,
+                        principalTable: "GenderTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Pets_PetOwners_PetOwnerId",
                         column: x => x.PetOwnerId,
                         principalTable: "PetOwners",
-                        principalColumn: "PetOwnerId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Pets_Species_SpeciesId",
                         column: x => x.SpeciesId,
                         principalTable: "Species",
-                        principalColumn: "SpeciesId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 },
                 comment: "Pet description");
@@ -456,6 +475,11 @@ namespace PetWorld.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Pets_GenderId",
+                table: "Pets",
+                column: "GenderId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Pets_PetOwnerId",
                 table: "Pets",
                 column: "PetOwnerId");
@@ -476,9 +500,9 @@ namespace PetWorld.Infrastructure.Migrations
                 column: "RoomId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rooms_SpeciesId",
+                name: "IX_Rooms_RoomTypeId",
                 table: "Rooms",
-                column: "SpeciesId");
+                column: "RoomTypeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -527,6 +551,9 @@ namespace PetWorld.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Species");
+
+            migrationBuilder.DropTable(
+                name: "RoomTypes");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
