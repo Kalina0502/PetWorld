@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PetWorld.Infrastructure.Data.Models;
+using PetWorld.Infrastructure.Data.SeedDb;
 
 namespace PetWorld.Infarstructure.Data
 {
@@ -12,6 +13,24 @@ namespace PetWorld.Infarstructure.Data
 
         }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.ApplyConfiguration(new UserConfiguration());
+            builder.ApplyConfiguration(new AgentConfiguration());
+            builder.ApplyConfiguration(new PetOwnerConfiguration());
+            builder.ApplyConfiguration(new PetConfiguration());
+            builder.ApplyConfiguration(new ReservationConfiguration());
+            builder.ApplyConfiguration(new RoomTypeConfiguration());
+            builder.ApplyConfiguration(new GenderTypeConfiguration());
+            builder.ApplyConfiguration(new RoomConfiguration());
+            builder.ApplyConfiguration(new SpeciesConfiguration());
+
+
+
+            base.OnModelCreating(builder);
+        }
+
+        public DbSet<Agent> Agents{ get; set; } = null!;
         public DbSet<AdoptionAnimal> AdoptionAnimals { get; set; } = null!;
         public DbSet<GenderType> GenderTypes { get; set; } = null!;
         public DbSet<Pet> Pets { get; set; } = null!;
@@ -22,24 +41,6 @@ namespace PetWorld.Infarstructure.Data
         public DbSet<Groomer> Groomers { get; set; } = null!;
         public DbSet<GroomingService> GroomingServices { get; set; } = null!;
         public DbSet<ServiceType> ServiceTypes { get; set; } = null!;
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<Reservation>()
-                .HasOne(r => r.Room)
-                .WithMany()
-                .HasForeignKey(r => r.RoomId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Pet>()
-                .HasOne(p => p.Gender)
-                .WithMany()
-                .HasForeignKey(p => p.GenderId)
-                .OnDelete(DeleteBehavior.Restrict);
-        }
-
-
+        public DbSet<RoomType> RoomTypes { get; set; } = null!;
     }
 }
