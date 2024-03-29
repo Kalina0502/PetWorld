@@ -14,6 +14,6 @@ namespace PetWorld.Infrastructure.Data.Models
         [Required]
         [MaxLength(SpeciesNameMaxLength)]
         [Comment("Species Name")]
-        public string SpeciesName { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
     }
 }

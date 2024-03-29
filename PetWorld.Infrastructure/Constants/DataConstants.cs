@@ -8,7 +8,7 @@
 
         public const int EmailLength = 254;
 
-        public const int PhoneNumberLength = 8;
+        public const int PhoneNumberLength = 15;
 
         public const int PetOwnerMinAge = 10;
 

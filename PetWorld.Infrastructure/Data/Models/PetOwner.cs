@@ -40,9 +40,7 @@ namespace PetWorld.Infrastructure.Data.Models
         [Comment("Pet owner age")]
         public int Age { get; set; }
 
-        [Required]
         [ForeignKey(nameof(Gender))]
-        [Comment("Pet Owner gender")]
         public int GenderId { get; set; }
 
         public GenderType Gender { get; set; } = null!;
