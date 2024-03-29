@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using PetWorld.Infarstructure.Data;
+using PetWorld.Infrastructure.Data;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

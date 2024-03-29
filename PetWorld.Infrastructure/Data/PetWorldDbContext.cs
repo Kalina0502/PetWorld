@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PetWorld.Infrastructure.Data.Models;
 using PetWorld.Infrastructure.Data.SeedDb;
 
-namespace PetWorld.Infarstructure.Data
+namespace PetWorld.Infrastructure.Data
 {
     public class PetWorldDbContext : IdentityDbContext
     {
