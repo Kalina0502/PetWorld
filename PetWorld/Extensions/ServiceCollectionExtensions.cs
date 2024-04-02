@@ -25,7 +25,11 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddAplicationIdentity(this IServiceCollection services, IConfiguration config)
         {
             services.
-                AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                AddDefaultIdentity<IdentityUser>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = true;
+                    options.Password.RequireNonAlphanumeric = false;
+                })
                 .AddEntityFrameworkStores<PetWorldDbContext>();
 
             return services;
