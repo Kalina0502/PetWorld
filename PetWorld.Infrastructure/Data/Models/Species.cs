@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using static PetWorld.Infrastructure.Constants.DataConstants;
 
 namespace PetWorld.Infrastructure.Data.Models
@@ -15,5 +16,12 @@ namespace PetWorld.Infrastructure.Data.Models
         [MaxLength(SpeciesNameMaxLength)]
         [Comment("Species Name")]
         public string Name { get; set; } = string.Empty;
+
+        [Required]
+        [Comment("Agent identifier")]
+        public int AgentId { get; set; }
+
+        [ForeignKey(nameof(AgentId))]
+        public Agent Agent { get; set; } = null!;
     }
 }

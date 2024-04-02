@@ -8,6 +8,12 @@ namespace PetWorld.Infrastructure.Data.SeedDb
     {
         public void Configure(EntityTypeBuilder<GenderType> builder)
         {
+            builder
+               .HasOne(gt => gt.Agent)
+               .WithMany() 
+               .HasForeignKey(gt => gt.AgentId)
+               .OnDelete(DeleteBehavior.Restrict);
+
             var data = new SeedData();
 
             builder.HasData(new GenderType[] { data.MaleGender, data.FemaleGender, data.OtherGender });

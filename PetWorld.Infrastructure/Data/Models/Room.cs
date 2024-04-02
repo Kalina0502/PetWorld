@@ -16,5 +16,12 @@ namespace PetWorld.Infrastructure.Data.Models
 
         [Required]
         public bool IsAvailable { get; set; }
+
+        [Required]
+        [Comment("Agent identifier")]
+        public int AgentId { get; set; }
+
+        [ForeignKey(nameof(AgentId))]
+        public Agent Agent { get; set; } = null!;
     }
 }

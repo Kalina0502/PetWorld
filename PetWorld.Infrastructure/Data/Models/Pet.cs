@@ -45,6 +45,5 @@ namespace PetWorld.Infrastructure.Data.Models
         public int GenderId { get; set; }
 
         public GenderType Gender { get; set; } = null!;
-
     }
 }

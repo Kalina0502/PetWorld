@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PetWorld.Infrastructure.Data.Models
 {
@@ -14,7 +14,13 @@ namespace PetWorld.Infrastructure.Data.Models
         [Comment("RoomType")]
         public string Name { get; set; } = string.Empty;
 
-        // Навигационно свойство за обратна връзка към стаите
+        [Required]
+        [Comment("Agent identifier")]
+        public int AgentId { get; set; }
+
+        [ForeignKey(nameof(AgentId))]
+        public Agent Agent { get; set; } = null!;
+
         public List<Room> Rooms { get; set; } = new List<Room>();
     }
 }

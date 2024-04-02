@@ -8,6 +8,12 @@ namespace PetWorld.Infrastructure.Data.SeedDb
     {
         public void Configure(EntityTypeBuilder<Room> builder)
         {
+            builder
+               .HasOne(r => r.Agent)
+               .WithMany()
+               .HasForeignKey(r => r.AgentId)
+               .OnDelete(DeleteBehavior.Restrict);
+
             var data = new SeedData();
 
             builder.HasData(new Room[] { data.DogRooms, data.CatRooms, data.BirdRooms });

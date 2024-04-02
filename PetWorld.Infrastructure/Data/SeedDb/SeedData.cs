@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using PetWorld.Infrastructure.Data.Models;
+using System.Xml.Linq;
 namespace PetWorld.Infrastructure.Data.SeedDb
 {
     internal class SeedData
@@ -24,8 +26,18 @@ namespace PetWorld.Infrastructure.Data.SeedDb
         public Pet Dog { get; set; }
         public Pet Cat { get; set; }
         public Pet Bird { get; set; }
-        public Reservation FirstReservation { get; set; }
-        public Reservation SecondReservation { get; set; }
+        public RoomReservation FirstReservation { get; set; }
+        public RoomReservation SecondReservation { get; set; }
+        public AdoptionAnimal FirstAdoptionAnimal { get; set; }
+        public AdoptionAnimal SecondAdoptionAnimal { get; set; }
+        public Groomer FirstGroomer { get; set; }
+        public Groomer SecondGroomer { get; set; }
+        public Groomer ThirdGroomer { get; set; }
+        public GroomingType FirstGroomingType { get; set; }
+        public GroomingType SecondGroomingType { get; set; }
+        public GroomingType ThirdGroomingType { get; set; }
+        public GroomingReservation FirstGroomingReservation { get; set; }
+        public GroomingReservation SecondGroomingReservation { get; set; }
 
         public SeedData()
         {
@@ -37,7 +49,11 @@ namespace PetWorld.Infrastructure.Data.SeedDb
             SeedPets();
             SeedRoomTypes();
             SeedRooms();
-            SeedReservations();
+            SeedRoomReservations();
+            SeedAdoptionAnimals();
+            SeedGroomers();
+            SeedGroomingTypes();
+            SeedGroomingReservations();
         }
 
         private void SeedUsers()
@@ -82,19 +98,22 @@ namespace PetWorld.Infrastructure.Data.SeedDb
             MaleGender = new GenderType()
             {
                 Id = 1,
-                Name = "Male"
+                Name = "Male",
+                AgentId = Agent.Id
             };
 
             FemaleGender = new GenderType()
             {
                 Id = 2,
-                Name = "Female"
+                Name = "Female",
+                AgentId = Agent.Id
             };
 
             OtherGender = new GenderType()
             {
                 Id = 3,
-                Name = "Other"
+                Name = "Other",
+                AgentId = Agent.Id
             };
         }
 
@@ -118,25 +137,29 @@ namespace PetWorld.Infrastructure.Data.SeedDb
             DogSpecies = new Species()
             {
                 Id = 1,
-                Name = "Dog"
+                Name = "Dog",
+                AgentId = Agent.Id
             };
 
             CatSpecies = new Species()
             {
                 Id = 2,
-                Name = "Cat"
+                Name = "Cat",
+                AgentId = Agent.Id
             };
 
             BirdSpecies = new Species()
             {
                 Id = 3,
-                Name = "Bird"
+                Name = "Bird",
+                AgentId = Agent.Id
             };
 
             HorseSpecies = new Species()
             {
                 Id = 4,
-                Name = "Horse"
+                Name = "Horse",
+                AgentId = Agent.Id
             };
         }
 
@@ -182,19 +205,22 @@ namespace PetWorld.Infrastructure.Data.SeedDb
             DogRoom = new RoomType()
             {
                 Id = 1,
-                Name = "Dog Room"
+                Name = "Dog Room",
+                AgentId = Agent.Id
             };
 
             CatRoom = new RoomType()
             {
                 Id = 2,
-                Name = "Cat Room"
+                Name = "Cat Room",
+                AgentId = Agent.Id
             };
 
             BirdRoom = new RoomType()
             {
                 Id = 3,
-                Name = "Bird Room"
+                Name = "Bird Room",
+                AgentId = Agent.Id
             };
         }
 
@@ -204,27 +230,30 @@ namespace PetWorld.Infrastructure.Data.SeedDb
             {
                 Id = 1,
                 RoomTypeId = DogRoom.Id,
-                IsAvailable = true
+                IsAvailable = true,
+                AgentId = Agent.Id
             };
 
             CatRooms = new Room()
             {
                 Id = 2,
                 RoomTypeId = CatRoom.Id,
-                IsAvailable = true
+                IsAvailable = true,
+                AgentId = Agent.Id
             };
 
             BirdRooms = new Room()
             {
                 Id = 3,
                 RoomTypeId = BirdRoom.Id,
-                IsAvailable = false
+                IsAvailable = false,
+                AgentId = Agent.Id
             };
         }
 
-        private void SeedReservations()
+        private void SeedRoomReservations()
         {
-            FirstReservation = new Reservation()
+            FirstReservation = new RoomReservation()
             {
                 Id = 1,
                 RoomId = DogRoom.Id,
@@ -235,7 +264,7 @@ namespace PetWorld.Infrastructure.Data.SeedDb
                 IncludesWalk = true
             };
 
-            SecondReservation = new Reservation()
+            SecondReservation = new RoomReservation()
             {
                 Id = 2,
                 RoomId = CatRoom.Id,
@@ -244,6 +273,104 @@ namespace PetWorld.Infrastructure.Data.SeedDb
                 CheckOutDate = new DateTime(2024, 4, 5),
                 IncludesFood = false,
                 IncludesWalk = true
+            };
+        }
+
+        private void SeedAdoptionAnimals()
+        {
+            FirstAdoptionAnimal = new AdoptionAnimal()
+            {
+                Id = 1,
+                Name = "Fluffy",
+                Age = 3,
+                City = "Varna",
+                Description = "Friendly dog looking for a forever home.",
+                SpeciesId = DogSpecies.Id,
+                ImageUrl = "https://example.com/fluffy.jpg",
+                AgentId = Agent.Id
+            };
+            SecondAdoptionAnimal = new AdoptionAnimal()
+            {
+                Id = 2,
+                Name = "Whiskers",
+                Age = 2,
+                City = "Sofia",
+                Description = "Playful cat in need of a loving family.",
+                SpeciesId = CatSpecies.Id,
+                ImageUrl = "https://example.com/whiskers.jpg",
+                AgentId = Agent.Id
+            };
+        }
+        private void SeedGroomers()
+        {
+            FirstGroomer = new Groomer()
+            {
+                Id = 1,
+                Name = "Kalina Yordanova",
+                Age = 23,
+                Description = "Professional groomers providing high-quality grooming services.",
+                AgentId = Agent.Id
+            };
+            SecondGroomer = new Groomer()
+            { 
+                Id = 2,
+                Name = "Constantine Nenov",
+                Age = 30,
+                Description = "Dedicated groomers offering personalized grooming sessions for your pets.",
+                AgentId = Agent.Id
+            };
+            ThirdGroomer = new Groomer()
+            {
+                Id = 3,
+                Name = "Rosica Yordanova",
+                Age = 27,
+                Description = "Experienced groomers who love pampering your furry friends.",
+                AgentId = Agent.Id
+            };
+        }
+
+        private void SeedGroomingTypes()
+        {
+            FirstGroomingType = new GroomingType()
+            {
+                Id = 1,
+                Name = "Bath and Brush",
+                AgentId = Agent.Id
+            };
+            SecondGroomingType = new GroomingType()
+            {
+                Id = 2,
+                Name = "Haircut",
+                AgentId = Agent.Id,
+            };
+            ThirdGroomingType = new GroomingType()
+            {
+                Id = 3,
+                Name = "Nail Trim",
+                AgentId = Agent.Id
+            };
+        }
+
+        private void SeedGroomingReservations()
+        {
+            FirstGroomingReservation = new GroomingReservation()
+            {
+                Id = 1,
+                PetId = 1,
+                GroomerId = 1,
+                GroomingTypeId = 1,
+                StartTime = new DateTime(2024, 4, 24, 15, 0, 0),
+                EndTime = new DateTime(2024, 4, 24, 17, 0, 0)
+
+            };
+            SecondGroomingReservation = new GroomingReservation()
+            {
+                Id = 2,
+                PetId = 3,
+                GroomerId = 2,
+                GroomingTypeId = 1,
+                StartTime = new DateTime(2024, 4, 28, 10, 0, 0),
+                EndTime = new DateTime(2024, 4, 28, 12, 0, 0)
             };
         }
     }
