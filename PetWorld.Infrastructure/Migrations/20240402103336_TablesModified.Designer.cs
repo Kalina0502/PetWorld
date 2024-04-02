@@ -12,8 +12,8 @@ using PetWorld.Infrastructure.Data;
 namespace PetWorld.Infrastructure.Migrations
 {
     [DbContext(typeof(PetWorldDbContext))]
-    [Migration("20240329000124_DataAdde")]
-    partial class DataAdde
+    [Migration("20240402103336_TablesModified")]
+    partial class TablesModified
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -145,15 +145,15 @@ namespace PetWorld.Infrastructure.Migrations
                         {
                             Id = "dea12856-c198-4129-b3f3-b893d8395082",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c8ee1f2e-65a9-4d96-b041-02b4af414c4d",
+                            ConcurrencyStamp = "1115ef14-748a-4eac-80ea-af2b142133e2",
                             Email = "agent@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "agent@mail.com",
                             NormalizedUserName = "agent@mail.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEN4/jFFFI8LUT5ojVDgbYRl0p01ExVqVC10iq/5V5RhsbQmWnE0Xbm6IFGrDNqBndQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAllGh8A1bp3rTj37xXYledMAoPZSuPyR+TzNyEabrOK3rU/Ctj9S4U0VIa52J8Ytw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "42a3f23d-631e-45ea-93ba-051e52e2ed39",
+                            SecurityStamp = "e8ca9674-c8c2-4b5b-9484-87cddcb3b68c",
                             TwoFactorEnabled = false,
                             UserName = "agent@mail.com"
                         },
@@ -161,15 +161,15 @@ namespace PetWorld.Infrastructure.Migrations
                         {
                             Id = "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5b089c14-4b1b-4375-a323-47ec74bcaf49",
+                            ConcurrencyStamp = "356bbe1d-31b5-47f9-a398-ce79089b3bb9",
                             Email = "guest@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "guest@mail.com",
                             NormalizedUserName = "guest@mail.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDwFlmzzIaYZAiQB0OuCKxXzXUxUeYlTPaiAfsVfbmwOAVQfywSsUXRt8x7Hnr3Seg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHmduOlEfGNwB2K7r3New0oOxTVOTjzJRde8t3nj5YFTuTnzedCGnhDmMx3qU/A8kQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "36ad2563-27f0-403f-9a71-d86c4d4b35bc",
+                            SecurityStamp = "1e9bedf7-6ae6-4c88-9a54-6bb85e577032",
                             TwoFactorEnabled = false,
                             UserName = "guest@mail.com"
                         });
@@ -297,7 +297,8 @@ namespace PetWorld.Infrastructure.Migrations
                         .HasComment("Pet name");
 
                     b.Property<int>("SpeciesId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasComment("Species");
 
                     b.HasKey("Id");
 
@@ -306,6 +307,28 @@ namespace PetWorld.Infrastructure.Migrations
                     b.ToTable("AdoptionAnimals");
 
                     b.HasComment("Addoption description");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Age = 3,
+                            City = "Varna",
+                            Description = "Friendly dog looking for a forever home.",
+                            ImageUrl = "https://example.com/fluffy.jpg",
+                            Name = "Fluffy",
+                            SpeciesId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Age = 2,
+                            City = "Sofia",
+                            Description = "Playful cat in need of a loving family.",
+                            ImageUrl = "https://example.com/whiskers.jpg",
+                            Name = "Whiskers",
+                            SpeciesId = 2
+                        });
                 });
 
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.Agent", b =>
@@ -408,41 +431,129 @@ namespace PetWorld.Infrastructure.Migrations
                     b.ToTable("Groomers");
 
                     b.HasComment("Groomer description");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Age = 23,
+                            Description = "Professional groomers providing high-quality grooming services.",
+                            Name = "Kalina Yordanova"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Age = 30,
+                            Description = "Dedicated groomers offering personalized grooming sessions for your pets.",
+                            Name = "Constantine Nenov"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Age = 27,
+                            Description = "Experienced groomers who love pampering your furry friends.",
+                            Name = "Rosica Yordanova"
+                        });
                 });
 
-            modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.GroomingService", b =>
+            modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.GroomingReservation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasComment("Grooming Service identifier");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("DateTime")
+                    b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2")
-                        .HasComment("Date of service");
+                        .HasComment("Check-out date");
 
                     b.Property<int>("GroomerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PetId")
+                    b.Property<int>("GroomingTypeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ServiceTypeId")
-                        .HasColumnType("int");
+                    b.Property<int>("PetId")
+                        .HasColumnType("int")
+                        .HasComment("Pet");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2")
+                        .HasComment("Check-in date");
 
                     b.HasKey("Id");
 
                     b.HasIndex("GroomerId");
 
+                    b.HasIndex("GroomingTypeId");
+
                     b.HasIndex("PetId");
 
-                    b.HasIndex("ServiceTypeId");
+                    b.ToTable("GroomingReservations");
 
-                    b.ToTable("GroomingServices");
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            EndTime = new DateTime(2024, 4, 24, 17, 0, 0, 0, DateTimeKind.Unspecified),
+                            GroomerId = 1,
+                            GroomingTypeId = 1,
+                            PetId = 1,
+                            StartTime = new DateTime(2024, 4, 24, 15, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            EndTime = new DateTime(2024, 4, 28, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                            GroomerId = 2,
+                            GroomingTypeId = 1,
+                            PetId = 3,
+                            StartTime = new DateTime(2024, 4, 28, 10, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
+                });
 
-                    b.HasComment("Grooming Service description");
+            modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.GroomingType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasComment("ServiceType identifier");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("GroomingTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasComment("Name of the service");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroomingTypeId");
+
+                    b.ToTable("GroomingTypes");
+
+                    b.HasComment("Service Type description");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Bath and Brush"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Haircut"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Nail Trim"
+                        });
                 });
 
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.Pet", b =>
@@ -595,72 +706,6 @@ namespace PetWorld.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.Reservation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasComment("Reservation identifier");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CheckInDate")
-                        .HasColumnType("datetime2")
-                        .HasComment("Check-in date");
-
-                    b.Property<DateTime>("CheckOutDate")
-                        .HasColumnType("datetime2")
-                        .HasComment("Check-out date");
-
-                    b.Property<bool>("IncludesFood")
-                        .HasColumnType("bit")
-                        .HasComment("Includes food");
-
-                    b.Property<bool>("IncludesWalk")
-                        .HasColumnType("bit")
-                        .HasComment("Includes walk");
-
-                    b.Property<int>("PetId")
-                        .HasColumnType("int")
-                        .HasComment("Pet");
-
-                    b.Property<int>("RoomId")
-                        .HasColumnType("int")
-                        .HasComment("Room");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PetId");
-
-                    b.HasIndex("RoomId");
-
-                    b.ToTable("Reservations");
-
-                    b.HasComment("Reservation description");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CheckInDate = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CheckOutDate = new DateTime(2024, 3, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IncludesFood = true,
-                            IncludesWalk = true,
-                            PetId = 1,
-                            RoomId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CheckInDate = new DateTime(2024, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CheckOutDate = new DateTime(2024, 4, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IncludesFood = false,
-                            IncludesWalk = true,
-                            PetId = 2,
-                            RoomId = 2
-                        });
-                });
-
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.Room", b =>
                 {
                     b.Property<int>("Id")
@@ -705,6 +750,72 @@ namespace PetWorld.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.RoomReservation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasComment("Reservation identifier");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CheckInDate")
+                        .HasColumnType("datetime2")
+                        .HasComment("Check-in date");
+
+                    b.Property<DateTime>("CheckOutDate")
+                        .HasColumnType("datetime2")
+                        .HasComment("Check-out date");
+
+                    b.Property<bool>("IncludesFood")
+                        .HasColumnType("bit")
+                        .HasComment("Includes food");
+
+                    b.Property<bool>("IncludesWalk")
+                        .HasColumnType("bit")
+                        .HasComment("Includes walk");
+
+                    b.Property<int>("PetId")
+                        .HasColumnType("int")
+                        .HasComment("Pet");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int")
+                        .HasComment("Room");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PetId");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("RoomReservations");
+
+                    b.HasComment("Reservation description");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CheckInDate = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CheckOutDate = new DateTime(2024, 3, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IncludesFood = true,
+                            IncludesWalk = true,
+                            PetId = 1,
+                            RoomId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CheckInDate = new DateTime(2024, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CheckOutDate = new DateTime(2024, 4, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IncludesFood = false,
+                            IncludesWalk = true,
+                            PetId = 2,
+                            RoomId = 2
+                        });
+                });
+
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.RoomType", b =>
                 {
                     b.Property<int>("Id")
@@ -739,27 +850,6 @@ namespace PetWorld.Infrastructure.Migrations
                             Id = 3,
                             Name = "Bird Room"
                         });
-                });
-
-            modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.ServiceType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasComment("ServiceType identifier");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasComment("Name of the service");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ServiceTypes");
-
-                    b.HasComment("Service Type description");
                 });
 
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.Species", b =>
@@ -879,11 +969,17 @@ namespace PetWorld.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.GroomingService", b =>
+            modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.GroomingReservation", b =>
                 {
                     b.HasOne("PetWorld.Infrastructure.Data.Models.Groomer", "Groomer")
                         .WithMany()
                         .HasForeignKey("GroomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PetWorld.Infrastructure.Data.Models.GroomingType", "GroomingType")
+                        .WithMany()
+                        .HasForeignKey("GroomingTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -893,17 +989,18 @@ namespace PetWorld.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PetWorld.Infrastructure.Data.Models.ServiceType", "ServiceType")
-                        .WithMany()
-                        .HasForeignKey("ServiceTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Groomer");
 
-                    b.Navigation("Pet");
+                    b.Navigation("GroomingType");
 
-                    b.Navigation("ServiceType");
+                    b.Navigation("Pet");
+                });
+
+            modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.GroomingType", b =>
+                {
+                    b.HasOne("PetWorld.Infrastructure.Data.Models.GroomingType", null)
+                        .WithMany("GroomingTypes")
+                        .HasForeignKey("GroomingTypeId");
                 });
 
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.Pet", b =>
@@ -952,7 +1049,16 @@ namespace PetWorld.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.Reservation", b =>
+            modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.Room", b =>
+                {
+                    b.HasOne("PetWorld.Infrastructure.Data.Models.RoomType", null)
+                        .WithMany("Rooms")
+                        .HasForeignKey("RoomTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.RoomReservation", b =>
                 {
                     b.HasOne("PetWorld.Infrastructure.Data.Models.Pet", "Pet")
                         .WithMany()
@@ -971,13 +1077,9 @@ namespace PetWorld.Infrastructure.Migrations
                     b.Navigation("Room");
                 });
 
-            modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.Room", b =>
+            modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.GroomingType", b =>
                 {
-                    b.HasOne("PetWorld.Infrastructure.Data.Models.RoomType", null)
-                        .WithMany("Rooms")
-                        .HasForeignKey("RoomTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("GroomingTypes");
                 });
 
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.RoomType", b =>
