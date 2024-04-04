@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PetWorld.Core.Models.Home;
 using PetWorld.Models;
 using System.Diagnostics;
 
@@ -15,7 +16,8 @@ namespace PetWorld.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var model = new IndexViewModel();
+            return View(model);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
