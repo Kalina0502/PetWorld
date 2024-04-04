@@ -16,12 +16,5 @@ namespace PetWorld.Infrastructure.Data.Models
         [MaxLength(SpeciesNameMaxLength)]
         [Comment("Species Name")]
         public string Name { get; set; } = string.Empty;
-
-        [Required]
-        [Comment("Agent identifier")]
-        public int AgentId { get; set; }
-
-        [ForeignKey(nameof(AgentId))]
-        public Agent Agent { get; set; } = null!;
     }
 }

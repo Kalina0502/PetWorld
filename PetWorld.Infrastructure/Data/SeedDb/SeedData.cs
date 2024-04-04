@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
 using PetWorld.Infrastructure.Data.Models;
-using System.Xml.Linq;
 namespace PetWorld.Infrastructure.Data.SeedDb
 {
     internal class SeedData
@@ -138,28 +136,24 @@ namespace PetWorld.Infrastructure.Data.SeedDb
             {
                 Id = 1,
                 Name = "Dog",
-                AgentId = Agent.Id
             };
 
             CatSpecies = new Species()
             {
                 Id = 2,
                 Name = "Cat",
-                AgentId = Agent.Id
             };
 
             BirdSpecies = new Species()
             {
                 Id = 3,
                 Name = "Bird",
-                AgentId = Agent.Id
             };
 
             HorseSpecies = new Species()
             {
                 Id = 4,
                 Name = "Horse",
-                AgentId = Agent.Id
             };
         }
 
@@ -206,21 +200,18 @@ namespace PetWorld.Infrastructure.Data.SeedDb
             {
                 Id = 1,
                 Name = "Dog Room",
-                AgentId = Agent.Id
             };
 
             CatRoom = new RoomType()
             {
                 Id = 2,
                 Name = "Cat Room",
-                AgentId = Agent.Id
             };
 
             BirdRoom = new RoomType()
             {
                 Id = 3,
                 Name = "Bird Room",
-                AgentId = Agent.Id
             };
         }
 
@@ -312,7 +303,7 @@ namespace PetWorld.Infrastructure.Data.SeedDb
                 AgentId = Agent.Id
             };
             SecondGroomer = new Groomer()
-            { 
+            {
                 Id = 2,
                 Name = "Constantine Nenov",
                 Age = 30,
@@ -335,19 +326,16 @@ namespace PetWorld.Infrastructure.Data.SeedDb
             {
                 Id = 1,
                 Name = "Bath and Brush",
-                AgentId = Agent.Id
             };
             SecondGroomingType = new GroomingType()
             {
                 Id = 2,
                 Name = "Haircut",
-                AgentId = Agent.Id,
             };
             ThirdGroomingType = new GroomingType()
             {
                 Id = 3,
                 Name = "Nail Trim",
-                AgentId = Agent.Id
             };
         }
 
