@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetWorld.Core.Contracts;
 using PetWorld.Core.Models.Home;
 using PetWorld.Models;
@@ -6,7 +7,7 @@ using System.Diagnostics;
 
 namespace PetWorld.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IAdoptionService adoptionService;
@@ -18,6 +19,7 @@ namespace PetWorld.Controllers
             adoptionService = _adoptionService;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var model = await adoptionService.LastTrheePets();

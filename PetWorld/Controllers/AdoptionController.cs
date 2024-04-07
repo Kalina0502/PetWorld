@@ -4,8 +4,7 @@ using PetWorld.Core.Models.Adoption;
 
 namespace PetWorld.Controllers
 {
-    [Authorize]
-    public class AdoptionController : Controller
+    public class AdoptionController : BaseController
     {
         [AllowAnonymous]
         [HttpGet]
