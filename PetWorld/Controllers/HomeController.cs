@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PetWorld.Core.Contracts.Adoption;
 using PetWorld.Core.Models.Home;
 using PetWorld.Models;
 using System.Diagnostics;
@@ -8,15 +9,18 @@ namespace PetWorld.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IAdoptionService adoptionService;
+        public HomeController(
+            ILogger<HomeController> logger,
+            IAdoptionService _adoptionService)
         {
             _logger = logger;
+            adoptionService = _adoptionService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var model = new IndexViewModel();
+            var model = await adoptionService.LastTrheePets();
             return View(model);
         }
 
