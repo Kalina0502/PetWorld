@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PetWorld.Core.Contracts;
 using PetWorld.Core.Models.Agent;
 using PetWorld.Core.Services;
-using PetWorld.Extensions;
+using System.Security.Claims;
 
 namespace PetWorld.Controllers
 {
