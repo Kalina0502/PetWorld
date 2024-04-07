@@ -6,6 +6,7 @@ using static PetWorld.Infrastructure.Constants.DataConstants;
 
 namespace PetWorld.Infrastructure.Data.Models
 {
+    [Index(nameof(PhoneNumber), IsUnique = true)]
     [Comment("PetWorld agent")]
     public class Agent
     {

@@ -4,6 +4,6 @@ namespace PetWorld.Core.Contracts
 {
     public interface IAdoptionService
     {
-        Task<IEnumerable<AdoptionIndexServiceModel>> LastTrheePets();
+        Task<IEnumerable<AdoptionIndexServiceModel>> LastTrheePetsAsync();
     }
 }

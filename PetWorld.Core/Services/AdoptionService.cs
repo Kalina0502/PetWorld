@@ -13,7 +13,7 @@ namespace PetWorld.Core.Services
         {
             repository = _repository;
         }
-        public async Task<IEnumerable<AdoptionIndexServiceModel>> LastTrheePets()
+        public async Task<IEnumerable<AdoptionIndexServiceModel>> LastTrheePetsAsync()
         {
             return await repository
                 .AllReadOnly<AdoptionAnimal>()
