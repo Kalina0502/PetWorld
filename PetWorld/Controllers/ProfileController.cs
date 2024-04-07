@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetWorld.Core.Models.Profile;
 
 namespace PetWorld.Controllers
 {
+    [Authorize]
     public class ProfileController : Controller
     {
         [HttpGet]

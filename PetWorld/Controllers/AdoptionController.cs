@@ -15,7 +15,7 @@ namespace PetWorld.Controllers
 
             return View(model);
         }
-
+        
         [HttpGet]
         public async Task<IActionResult> Mine()
         {
