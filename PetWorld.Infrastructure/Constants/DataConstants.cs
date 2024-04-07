@@ -10,6 +10,8 @@
 
         public const int PhoneNumberLength = 15;
 
+        public const int PhoneNumberMinLength = 10;
+
         public const int PetOwnerMinAge = 10;
 
         public const int PetOwnerMaxAge = 120;
