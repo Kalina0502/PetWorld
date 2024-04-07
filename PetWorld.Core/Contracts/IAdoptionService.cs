@@ -1,6 +1,6 @@
 ﻿using PetWorld.Core.Models.Home;
 
-namespace PetWorld.Core.Contracts.Adoption
+namespace PetWorld.Core.Contracts
 {
     public interface IAdoptionService
     {

@@ -1,6 +1,3 @@
-using PetWorld.Core.Contracts.Adoption;
-using PetWorld.Core.Services.Adoption;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAplicationDbContext(builder.Configuration);

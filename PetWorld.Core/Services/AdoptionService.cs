@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PetWorld.Core.Contracts.Adoption;
+using PetWorld.Core.Contracts;
 using PetWorld.Core.Models.Home;
 using PetWorld.Infrastructure.Common;
+using PetWorld.Infrastructure.Data.Models;
 
-namespace PetWorld.Core.Services.Adoption
+namespace PetWorld.Core.Services
 {
     public class AdoptionService : IAdoptionService
     {
@@ -15,7 +16,7 @@ namespace PetWorld.Core.Services.Adoption
         public async Task<IEnumerable<AdoptionIndexServiceModel>> LastTrheePets()
         {
             return await repository
-                .AllReadOnly<Infrastructure.Data.Models.AdoptionAnimal>()
+                .AllReadOnly<AdoptionAnimal>()
                 .OrderByDescending(a => a.Id)
                 .Take(3)
                 .Select(a => new AdoptionIndexServiceModel()

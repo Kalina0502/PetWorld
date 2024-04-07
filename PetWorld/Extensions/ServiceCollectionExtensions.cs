@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using PetWorld.Core.Contracts.Adoption;
-using PetWorld.Core.Services.Adoption;
+using PetWorld.Core.Contracts;
+using PetWorld.Core.Services;
 using PetWorld.Infrastructure.Common;
 using PetWorld.Infrastructure.Data;
 

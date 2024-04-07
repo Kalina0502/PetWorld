@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PetWorld.Core.Contracts.Adoption;
+using PetWorld.Core.Contracts;
 using PetWorld.Core.Models.Home;
 using PetWorld.Models;
 using System.Diagnostics;
