@@ -6,8 +6,6 @@
 
         Task<bool> UserWithPhoneNumberExistsAsync(string phoneNumber);
 
-        Task<bool> UserHasPetsAsync(string userId);
-
         Task CreateAsync(string userId, string phoneNumber);
     }
 }

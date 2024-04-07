@@ -2,7 +2,6 @@
 using PetWorld.Core.Contracts;
 using PetWorld.Infrastructure.Common;
 using PetWorld.Infrastructure.Data.Models;
-using System.Diagnostics.CodeAnalysis;
 
 namespace PetWorld.Core.Services
 {
@@ -15,9 +14,15 @@ namespace PetWorld.Core.Services
             repository = _repository;
         }
 
-        public Task CreateAsync(string userId, string phoneNumber)
+        public async Task CreateAsync(string userId, string phoneNumber)
         {
-            throw new NotImplementedException();
+            await repository.AddAsync(new Agent()
+            {
+                UserId = userId,
+                PhoneNumber = phoneNumber
+            });
+
+            await repository.SaveChangesAsync();
         }
 
         public async Task<bool> ExistByIdAsync(string userId)
@@ -26,14 +31,10 @@ namespace PetWorld.Core.Services
                      .AnyAsync(a => a.UserId == userId);
         }
 
-        public Task<bool> UserHasPetsAsync(string userId)
+        public async Task<bool> UserWithPhoneNumberExistsAsync(string phoneNumber)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> UserWithPhoneNumberExistsAsync(string phoneNumber)
-        {
-            throw new NotImplementedException();
+            return await repository.AllReadOnly<Agent>()
+                .AnyAsync(a => a.PhoneNumber == phoneNumber);
         }
     }
 }
