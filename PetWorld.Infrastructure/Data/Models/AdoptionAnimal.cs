@@ -23,7 +23,7 @@ namespace PetWorld.Infrastructure.Data.Models
         public int? Age { get; set; }
 
         [Required]
-        [MaxLength(CityLength)]
+        [MaxLength(CityMaxLength)]
         [Comment("Pet city")]
         public string City { get; set; } = string.Empty;
 

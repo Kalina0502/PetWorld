@@ -26,7 +26,9 @@
 
         public const int DescriptionLength = 500;
 
-        public const int CityLength = 50;
+        public const int CityMaxLength = 50;
+
+        public const int CityMinLength = 5;
 
         public const int SpeciesNameMaxLength = 50;
     }
