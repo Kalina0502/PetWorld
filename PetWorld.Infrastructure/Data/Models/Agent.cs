@@ -15,7 +15,7 @@ namespace PetWorld.Infrastructure.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(PhoneNumberLength)]
+        [MaxLength(PhoneNumberMaxLength)]
         [Comment("Agent's phone")]
         public string PhoneNumber { get; set; } = string.Empty;
 

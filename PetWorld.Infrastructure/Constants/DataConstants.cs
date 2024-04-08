@@ -8,7 +8,7 @@
 
         public const int EmailLength = 254;
 
-        public const int PhoneNumberLength = 15;
+        public const int PhoneNumberMaxLength = 15;
 
         public const int PhoneNumberMinLength = 10;
 
@@ -16,7 +16,9 @@
 
         public const int PetOwnerMaxAge = 120;
 
-        public const int PetNameLength = 15;
+        public const int PetNameMaxLength = 15;
+
+        public const int PetNameMinLength = 2;
 
         public const int PetMinAge = 0;
 
