@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PetWorld.Core.Contracts;
-using PetWorld.Core.Models.Home;
 using PetWorld.Models;
 using System.Diagnostics;
 
@@ -26,6 +25,7 @@ namespace PetWorld.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
