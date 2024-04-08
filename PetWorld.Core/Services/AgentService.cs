@@ -25,12 +25,17 @@ namespace PetWorld.Core.Services
             await repository.SaveChangesAsync();
         }
 
-        public async Task<bool> ExistByIdAsync(string userId)
+        public  async Task<bool> ExistsByIdAsync(string userId)
         {
             return await repository.AllReadOnly<Agent>()
-                     .AnyAsync(a => a.UserId == userId);
+         .AnyAsync(a => a.UserId == userId);
         }
 
+        public async Task<int?> GetAgentIdAsync(string userId)
+        {
+            return (await repository.AllReadOnly<Agent>()
+                .FirstOrDefaultAsync(a => a.UserId == userId))?.Id;
+        }
         public async Task<bool> UserWithPhoneNumberExistsAsync(string phoneNumber)
         {
             return await repository.AllReadOnly<Agent>()

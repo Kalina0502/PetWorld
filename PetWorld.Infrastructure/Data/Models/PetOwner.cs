@@ -31,7 +31,7 @@ namespace PetWorld.Infrastructure.Data.Models
         public string Email { get; set; } = string.Empty;
 
         [Required]
-        [MaxLength(PhoneNumberLength)]
+        [MaxLength(PhoneNumberMaxLength)]
         [Comment("Pet owner phone number")]
         public string PhoneNumber { get; set; } = string.Empty;
 
