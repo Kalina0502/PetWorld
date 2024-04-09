@@ -25,7 +25,7 @@ namespace PetWorld.Core.Services
             await repository.SaveChangesAsync();
         }
 
-        public  async Task<bool> ExistsByIdAsync(string userId)
+        public async Task<bool> ExistsByIdAsync(string userId)
         {
             return await repository.AllReadOnly<Agent>()
          .AnyAsync(a => a.UserId == userId);
