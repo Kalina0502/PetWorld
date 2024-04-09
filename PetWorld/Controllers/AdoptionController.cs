@@ -1,47 +1,120 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PetWorld.Attributes;
+using PetWorld.Core.Contracts;
 using PetWorld.Core.Models.Adoption;
+using System.Security.Claims;
 
 namespace PetWorld.Controllers
 {
     public class AdoptionController : BaseController
     {
+        private readonly IAdoptionService adoptionService;
+
+        private readonly IAgentService agentService;
+
+        public AdoptionController(
+            IAdoptionService _adoptionService,
+            IAgentService agentService)
+        {
+            adoptionService = _adoptionService;
+            this.agentService = agentService;
+        }
+
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All([FromQuery] AllAdoptionsQueryModel query)
         {
-            var model = new AllAdoptionsQueryModel();
+            var model = await adoptionService.AllAsync(
+                query.Species,
+                query.SearchTerm,
+                query.Sorting,
+                query.CurrentPage,
+                query.AdoptionsPerPage);
+
+            model.TotalAdoptionsCount = model.TotalAdoptionsCount;
+            model.Adoptions = model.Adoptions;
 
             return View(model);
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> Mine()
         {
             var model = new MyAnimalsForAdoptionModel();
 
+            var userId = User.Id();
+
+
             return View(model);
         }
+
+        [HttpGet]
+        [MustBeAgent]
+        public async Task<IActionResult> Add()
+        {
+            var model = new AdoptionFormModel()
+            {
+                Species = await adoptionService.AllSpeciesNamesAsync()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [MustBeAgent]
+        public async Task<IActionResult> Add(AdoptionFormModel model)
+        {
+            if (await adoptionService.SpeciesExistsAsync(model.SpeciesId) == false)
+            {
+                ModelState.AddModelError(nameof(model.SpeciesId), "Species does not exist");
+            }
+
+            if (ModelState.IsValid == false)
+            {
+                model.Species = await adoptionService.AllSpeciesNamesAsync();
+
+                return View(model);
+            }
+
+            int? agentId = await agentService.GetAgentIdAsync(User.Id());
+
+            int newAdoptionId = await adoptionService.CreateAsync(model, agentId ?? 0);
+
+            return RedirectToAction(nameof(Details), new { id = newAdoptionId, /*information = model.GetInformation()*/ });
+        }
+
+        /*  [HttpGet]
+        public async Task<IActionResult> Mine()
+        {
+            var userId = User.Id();
+            IEnumerable<HouseServiceModel> model;
+
+            if (User.IsAdmin())
+            {
+                return RedirectToAction("Mine", "House", new { area = "Admin" });
+            }
+
+            if (await agentService.ExistsByIdAsync(userId))
+            {
+                int agentId = await agentService.GetAgentIdAsync(userId) ?? 0;
+                model = await houseService.AllHousesByAgentIdAsync(agentId);
+            }
+            else
+            {
+                model = await houseService.AllHousesByUserId(userId);
+            }
+
+            return View(model);*/
 
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            var model = new AdoptionDetailsViewModel();
+            var model = new AdoptionFormModel();
 
             return View(model);
         }
 
-        [HttpGet]
-        public IActionResult Add()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Add(AdoptionFormModel model)
-        {
-            return RedirectToAction(nameof(Details), new { id = 1 });
-        }
 
         [HttpGet]
         public async Task<IActionResult> Edit()
@@ -52,7 +125,7 @@ namespace PetWorld.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult>Edit (int id, AdoptionFormModel model)
+        public async Task<IActionResult> Edit(int id, AdoptionFormModel model)
         {
             return RedirectToAction(nameof(Details), new { id = 1 });
         }
@@ -66,7 +139,7 @@ namespace PetWorld.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult>Delete (AdoptionDetailsViewModel model)
+        public async Task<IActionResult> Delete(AdoptionDetailsViewModel model)
         {
             return RedirectToAction(nameof(All));
         }
