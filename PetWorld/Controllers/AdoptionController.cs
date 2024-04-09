@@ -23,20 +23,22 @@ namespace PetWorld.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> All([FromQuery] AllAdoptionsQueryModel query)
+        public async Task<IActionResult> All([FromQuery] AllAdoptionsQueryModel model)
         {
-            var model = await adoptionService.AllAsync(
-                query.Species,
-                query.SearchTerm,
-                query.Sorting,
-                query.CurrentPage,
-                query.AdoptionsPerPage);
+            var adoptionPets = await adoptionService.AllAsync(
+                model.Species,
+                model.SearchTerm,
+                model.Sorting,
+                model.CurrentPage,
+                model.AdoptionPetsPerPage);
 
-            model.TotalAdoptionsCount = model.TotalAdoptionsCount;
-            model.Adoptions = model.Adoptions;
+            model.TotalAdoptionPetsCount = adoptionPets.TotalAdoptionPetsCount;
+            model.Adoptions = adoptionPets.AdoptionPets;
+            model.SpeciesList = (IEnumerable<string>)await adoptionService.AllSpeciesCategoriesAsync();
 
             return View(model);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> Mine()

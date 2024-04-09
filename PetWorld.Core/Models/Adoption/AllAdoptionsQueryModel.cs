@@ -5,7 +5,7 @@ namespace PetWorld.Core.Models.Adoption
 {
     public class AllAdoptionsQueryModel
     {
-        public int AdoptionsPerPage { get; } = 3;
+        public int AdoptionPetsPerPage { get; } = 3;
 
         public string Species { get; init; } = null!;
 
@@ -16,7 +16,7 @@ namespace PetWorld.Core.Models.Adoption
 
         public int CurrentPage { get; init; } = 1;
 
-        public int TotalAdoptionsCount { get; set; }
+        public int TotalAdoptionPetsCount { get; set; }
 
         [Display(Name = "Speciest List")]
         public IEnumerable<string> SpeciesList { get; set; } = null!;

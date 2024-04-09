@@ -21,7 +21,7 @@ namespace PetWorld.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var model = await adoptionService.LastTrheePetsAsync();
+            var model = await adoptionService.LastThreePetsAsync();
             return View(model);
         }
 

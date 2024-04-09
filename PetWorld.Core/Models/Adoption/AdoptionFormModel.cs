@@ -34,6 +34,7 @@ namespace PetWorld.Core.Models.Adoption
 
         [Display(Name = "Species Id")]
         public int SpeciesId { get; set; }
+
         public IEnumerable<string> Species { get; set; } = Enumerable.Empty<string>();
 
         public IEnumerable<AdoptionSpeciesServiceModel> AllSpecies { get; set; } =

@@ -5,97 +5,110 @@ using PetWorld.Core.Models.Adoption;
 using PetWorld.Core.Models.Home;
 using PetWorld.Infrastructure.Common;
 using PetWorld.Infrastructure.Data.Models;
+using System.Runtime.CompilerServices;
 
 namespace PetWorld.Core.Services
 {
     public class AdoptionService : IAdoptionService
     {
         private readonly IRepository repository;
+
         public AdoptionService(IRepository _repository)
         {
             repository = _repository;
         }
+
+        public Task<AdoptionDetailsServiceModel> AdoptionDetailsByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<AdoptionServiceModel>> AllAdoptionsByAgentIdAsync(int agentId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<AdoptionServiceModel>> AllAdoptionsByUserId(string userId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<AdoptionQueryServiceModel> AllAsync(string? species = null,
             string? searchTerm = null,
             AdoptionSorting sorting = AdoptionSorting.Newest,
             int currentPage = 1,
-            int adoptionsPerPage = 1)
+            int adoptionPetsPerPage = 1)
         {
-            var adoptionToShow = repository.AllReadOnly<AdoptionAnimal>();
-            //.Where(aa => aa.IsApproved);
+            var adoptionPetToShow = repository.AllReadOnly<AdoptionAnimal>();
+            // .Where(h => h.IsApproved);
 
             if (species != null)
             {
-                adoptionToShow = adoptionToShow
-                    .Where(a => a.Species.Name == species);
+                adoptionPetToShow = adoptionPetToShow
+                        .Where(aa => aa.Species.Name == species);
             }
 
             if (searchTerm != null)
             {
                 string normalizedSearchTerm = searchTerm.ToLower();
-                adoptionToShow = adoptionToShow
-                    .Where(a => a.City.ToLower().Contains(normalizedSearchTerm) ||
-                                (a.Description.ToLower().Contains(normalizedSearchTerm)));
+                adoptionPetToShow = adoptionPetToShow
+                    .Where(aa => (aa.Name.ToLower().Contains(normalizedSearchTerm) ||
+                                aa.City.ToLower().Contains(normalizedSearchTerm) ||
+                                aa.Description.ToLower().Contains(normalizedSearchTerm)));
             }
 
-            adoptionToShow = sorting switch
-            {
-                AdoptionSorting.Newest => adoptionToShow.OrderByDescending(a => a.Id),
-                AdoptionSorting.Oldest => adoptionToShow.OrderBy(a => a.Id),
-                AdoptionSorting.NameDescending => adoptionToShow.OrderByDescending(a => a.Name),
-                _ => adoptionToShow.OrderByDescending(a => a.Id)
+            adoptionPetToShow = sorting switch
+            { 
+                _ => adoptionPetToShow
+                .OrderByDescending(aa => aa.Id)
             };
 
-
-            var adoptions = await adoptionToShow
-                .Skip((currentPage - 1) * adoptionsPerPage)
-                .Take(adoptionsPerPage)
-                .Select(a => new AdoptionServiceModel()
+            var adoptionPets = await adoptionPetToShow
+                .Skip((currentPage - 1) * adoptionPetsPerPage)
+                .Take(adoptionPetsPerPage)
+                .Select(ap => new AdoptionServiceModel()
                 {
-                    Id = a.Id,
-                    Name = a.Name,
-                    ImageUrl = a.ImageUrl,
-                    City = a.City,
-                    Description = a.Description,
+                    Id = ap.Id,
+                    City = ap.City,
+                    Description = ap.Description,
+                    ImageUrl = ap.ImageUrl,
+                    Name = ap.Name,
+
                 })
                 .ToListAsync();
 
-            int totalHouses = await adoptionToShow.CountAsync();
+            int totalAdoptionPets = await adoptionPetToShow.CountAsync();
 
             return new AdoptionQueryServiceModel()
             {
-                Adoptions = adoptions,
-                TotalAdoptionsCount = totalHouses
+                AdoptionPets = adoptionPets,
+                TotalAdoptionPetsCount = totalAdoptionPets
             };
+
+        }
+
+        public async Task<IEnumerable<AdoptionSpeciesServiceModel>> AllSpeciesCategoriesAsync()
+        {
+            return await repository.AllReadOnly<Species>()
+                 .Select(c => new AdoptionSpeciesServiceModel()
+                 {
+                     Id = c.Id,
+                     Name = c.Name,
+                 })
+                 .ToListAsync();
         }
 
         public async Task<IEnumerable<string>> AllSpeciesNamesAsync()
         {
             return await repository.AllReadOnly<Species>()
-                .Select(s => s.Name)
+                .Select(c => c.Name)
                 .Distinct()
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<AdoptionIndexServiceModel>> LastTrheePetsAsync()
+        public Task ApproveAdoptionPetAsync(int adoptionId)
         {
-            return await repository
-                .AllReadOnly<AdoptionAnimal>()
-                .OrderByDescending(a => a.Id)
-                .Take(3)
-                .Select(a => new AdoptionIndexServiceModel()
-                {
-                    Id = a.Id,
-                    ImageUrl = a.ImageUrl,
-                    Title = a.Name
-                })
-                .ToListAsync();
-        }
-
-        public async Task<bool> SpeciesExistsAsync(int speciesId)
-        {
-            return await repository.AllReadOnly<Species>()
-                .AllAsync(s => s.Id == speciesId);
+            throw new NotImplementedException();
         }
 
         public async Task<int> CreateAsync(AdoptionFormModel model, int agentId)
@@ -116,37 +129,56 @@ namespace PetWorld.Core.Services
             return adoptionAnimal.Id;
         }
 
-        /*  public async Task<IEnumerable<AdoptionFormModel>> GetAnimalsForAdoptionAsync()
-          {
-              var adoptionAnimals = repository.AllReadOnly<AdoptionAnimal>()
-                  .OrderByDescending(a => a.Id)
-                  .Select(a => new AdoptionFormModel()
-                  {
-                      Name = a.Name,
-                      City = a.City,
-                      ImageUrl = a.ImageUrl,
-                      SpeciesId = a.SpeciesId,
-                  });
+        public Task DeleteAsync(int adoptionId)
+        {
+            throw new NotImplementedException();
+        }
 
-              return await adoptionAnimals.ToListAsync();
-          }*/
+        public Task EditAsync(int adoptionId, AdoptionFormModel model)
+        {
+            throw new NotImplementedException();
+        }
 
-        /* public async Task<AdoptionFormModel> GetAnimalDetailsAsync(int id)
-         {
-             var adoptionAnimal = await repository.AllReadOnly<AdoptionAnimal>()
-                 .Where(a => a.Id == id)
-                 .Select(a => new AdoptionFormModel()
-                 {
-                     Name = a.Name,
-                     Age = a.Age.HasValue ? a.Age.Value.ToString() : "No age specified",
-                     City = a.City,
-                     Description = a.Description,
-                     ImageUrl = a.ImageUrl,
-                     SpeciesId = a.SpeciesId,
-                 })
-                 .FirstOrDefaultAsync();
+        public Task<bool> ExistsAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
 
-             return adoptionAnimal;
-         }*/
+        public Task<AdoptionFormModel?> GetHouseFormModelByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<AdoptionServiceModel>> GetUnApprovedAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> HasAgentWithIdAsync(int adoptionId, string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<AdoptionIndexServiceModel>> LastThreePetsAsync()
+        {
+
+            return await repository
+                .AllReadOnly<AdoptionAnimal>()
+                .OrderByDescending(a => a.Id)
+                .Take(3)
+                .Select(a => new AdoptionIndexServiceModel()
+                {
+                    Id = a.Id,
+                    ImageUrl = a.ImageUrl,
+                    Name = a.Name
+                })
+                .ToListAsync();
+        }
+
+        public async Task<bool> SpeciesExistsAsync(int speciesId)
+        {
+            return await repository.AllReadOnly<Species>()
+                .AllAsync(s => s.Id == speciesId);
+        }
     }
 }

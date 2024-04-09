@@ -6,22 +6,40 @@ namespace PetWorld.Core.Contracts
 {
     public interface IAdoptionService
     {
-        Task<IEnumerable<AdoptionIndexServiceModel>> LastTrheePetsAsync();
+        Task<IEnumerable<AdoptionIndexServiceModel>> LastThreePetsAsync();
 
-        Task<IEnumerable<string>> AllSpeciesNamesAsync();
+        Task<IEnumerable<AdoptionSpeciesServiceModel>> AllSpeciesCategoriesAsync();
 
         Task<bool> SpeciesExistsAsync(int speciesId);
 
-        Task<int> CreateAsync (AdoptionFormModel model, int agentId);
-
-        //  Task<IEnumerable<AdoptionFormModel>> GetAnimalsForAdoptionAsync();
-        // Task<AdoptionFormModel> GetAnimalDetailsAsync(int id);
-
+        Task<int> CreateAsync(AdoptionFormModel model, int agentId);
         Task<AdoptionQueryServiceModel> AllAsync(
-          string? category = null,
-          string? searchTerm = null,
-          AdoptionSorting sorting = AdoptionSorting.Newest,
-          int currentPage = 1,
-          int housesPerPage = 1);
+            string? species = null,
+            string? searchTerm = null,
+            AdoptionSorting sorting = AdoptionSorting.Newest,
+            int currentPage = 1,
+            int adoptionPetsPerPage = 1);
+
+        Task<IEnumerable<string>> AllSpeciesNamesAsync();
+
+        Task<IEnumerable<AdoptionServiceModel>> AllAdoptionsByAgentIdAsync(int agentId);
+
+        Task<IEnumerable<AdoptionServiceModel>> AllAdoptionsByUserId(string userId);
+
+        Task<bool> ExistsAsync(int id);
+
+        Task<AdoptionDetailsServiceModel> AdoptionDetailsByIdAsync(int id);
+
+        Task EditAsync(int adoptionId, AdoptionFormModel model);
+
+        Task<bool> HasAgentWithIdAsync(int adoptionId, string userId);
+
+        Task<AdoptionFormModel?> GetHouseFormModelByIdAsync(int id);
+
+        Task DeleteAsync(int adoptionId);
+
+        Task<IEnumerable<AdoptionServiceModel>> GetUnApprovedAsync();
+
+        Task ApproveAdoptionPetAsync(int adoptionId);
     }
 }

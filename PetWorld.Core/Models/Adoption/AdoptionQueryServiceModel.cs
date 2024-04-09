@@ -2,8 +2,9 @@
 {
     public class AdoptionQueryServiceModel
     {
-        public int TotalAdoptionsCount { get; set; }
-        public IEnumerable<AdoptionServiceModel> Adoptions { get; set; } =
+        public int TotalAdoptionPetsCount { get; set; }
+
+        public IEnumerable<AdoptionServiceModel> AdoptionPets { get; set; } =
             new List<AdoptionServiceModel>();
     }
 }
