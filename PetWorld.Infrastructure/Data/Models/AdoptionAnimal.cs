@@ -28,15 +28,14 @@ namespace PetWorld.Infrastructure.Data.Models
         public string City { get; set; } = string.Empty;
 
         [Required]
-        [MaxLength(DescriptionLength)]
+        [MaxLength(DescriptionMaxLength)]
         [Comment("Pet for adopting")]
         public string Description { get; set; } = string.Empty;
 
         [Required]
-        [Comment("Species")]
+        [Comment("Species identifier")]
         public int SpeciesId { get; set; }
 
-        [ForeignKey(nameof(SpeciesId))]
         public Species Species { get; set; } = null!;
 
         [Required]

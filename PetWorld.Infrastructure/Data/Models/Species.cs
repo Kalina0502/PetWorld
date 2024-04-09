@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using static PetWorld.Infrastructure.Constants.DataConstants;
 
 namespace PetWorld.Infrastructure.Data.Models
@@ -16,5 +15,7 @@ namespace PetWorld.Infrastructure.Data.Models
         [MaxLength(SpeciesNameMaxLength)]
         [Comment("Species Name")]
         public string Name { get; set; } = string.Empty;
+
+        public List<Pet> Pets { get; set; } = new List<Pet>();
     }
 }

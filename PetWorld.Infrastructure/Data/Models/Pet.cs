@@ -22,15 +22,17 @@ namespace PetWorld.Infrastructure.Data.Models
         public int Age { get; set; }
 
         [Required]
-        [Comment("Species")]
+        [Comment("Species identifier")]
         public int SpeciesId { get; set; }
 
-        [ForeignKey(nameof(SpeciesId))]
         public Species Species { get; set; } = null!;
 
         [Comment("Pet description")]
-        [MaxLength(DescriptionLength)]
+        [MaxLength(DescriptionMaxLength)]
         public string? Description { get; set; }
+
+        [MaxLength(CityMaxLength)]
+        public string City { get; set; } = null!;
 
         [Required]
         [Comment("Pet owner")]

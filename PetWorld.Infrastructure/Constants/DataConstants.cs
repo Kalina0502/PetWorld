@@ -24,7 +24,9 @@
 
         public const int PetMaxAge = 100;
 
-        public const int DescriptionLength = 500;
+        public const int DescriptionMaxLength = 500;
+
+        public const int DescriptionMinLength = 30;
 
         public const int CityMaxLength = 50;
 
