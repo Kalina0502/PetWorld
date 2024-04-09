@@ -167,7 +167,8 @@ namespace PetWorld.Infrastructure.Data.SeedDb
                 SpeciesId = DogSpecies.Id,
                 Description = "Friendly dog",
                 PetOwnerId = PetOwner.Id,
-                GenderId = MaleGender.Id
+                GenderId = MaleGender.Id,
+                City = "Varna"
             };
 
             Cat = new Pet()
@@ -178,7 +179,8 @@ namespace PetWorld.Infrastructure.Data.SeedDb
                 SpeciesId = CatSpecies.Id,
                 Description = "Playful cat",
                 PetOwnerId = PetOwner.Id,
-                GenderId = FemaleGender.Id
+                GenderId = FemaleGender.Id,
+                City = "Sofia"
             };
 
             Bird = new Pet()
@@ -189,7 +191,8 @@ namespace PetWorld.Infrastructure.Data.SeedDb
                 SpeciesId = BirdSpecies.Id,
                 Description = "Talkative bird",
                 PetOwnerId = PetOwner.Id,
-                GenderId = FemaleGender.Id
+                GenderId = FemaleGender.Id,
+                City = "Burgas"
             };
         }
 
