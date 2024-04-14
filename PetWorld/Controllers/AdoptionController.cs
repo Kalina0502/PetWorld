@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using PetWorld.Attributes;
 using PetWorld.Core.Contracts;
 using PetWorld.Core.Models.Adoption;
@@ -43,10 +44,23 @@ namespace PetWorld.Controllers
         [HttpGet]
         public async Task<IActionResult> Mine()
         {
-            var model = new MyAnimalsForAdoptionModel();
-
             var userId = User.Id();
+            IEnumerable<AdoptionServiceModel> model;
 
+            //  if (User.IsAdmin())
+            //{
+            //  return RedirectToAction("Mine", "House", new { area = "Admin" });
+            //}
+
+            if (await agentService.ExistsByIdAsync(userId))
+            {
+                int agentId = await agentService.GetAgentIdAsync(userId) ?? 0;
+                model = await adoptionService.AllAdoptionsByAgentIdAsync(agentId);
+            }
+            else
+            {
+                model = await adoptionService.AllAdoptionsByUserId(userId);
+            }
 
             return View(model);
         }
@@ -112,7 +126,17 @@ namespace PetWorld.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            var model = new AdoptionFormModel();
+            if (await adoptionService.ExistsAsync(id) == false)
+            {
+                return BadRequest();
+            }
+
+            var model = await adoptionService.AdoptionDetailsByIdAsync(id);
+
+            //if (information != model.GetInformation())
+            //{
+            //  return BadRequest();
+            //x}
 
             return View(model);
         }

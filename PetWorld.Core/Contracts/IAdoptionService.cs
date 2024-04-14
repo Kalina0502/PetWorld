@@ -18,7 +18,7 @@ namespace PetWorld.Core.Contracts
             string? searchTerm = null,
             AdoptionSorting sorting = AdoptionSorting.Newest,
             int currentPage = 1,
-            int adoptionPetsPerPage = 1);
+            int adoptionPetsPerPage = 3);
 
         Task<IEnumerable<string>> AllSpeciesNamesAsync();
 
@@ -34,7 +34,7 @@ namespace PetWorld.Core.Contracts
 
         Task<bool> HasAgentWithIdAsync(int adoptionId, string userId);
 
-        Task<AdoptionFormModel?> GetHouseFormModelByIdAsync(int id);
+        Task<AdoptionFormModel?> GetAdoptionFormModelByIdAsync(int id);
 
         Task DeleteAsync(int adoptionId);
 

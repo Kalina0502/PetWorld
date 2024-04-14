@@ -48,5 +48,11 @@ namespace PetWorld.Infrastructure.Data.Models
 
         [ForeignKey(nameof(AgentId))]
         public Agent Agent { get; set; } = null!;
+
+        [Comment("User id of the pet")]
+        public string? UserId { get; set; }
+
+        [ForeignKey(nameof(UserId))]
+        public ApplicationUser? User { get; set; }
     }
 }

@@ -1,10 +1,10 @@
-﻿@model AllAdoptionsQueryModel
+﻿@model PetWorld.Core.Models.Adoption.AllAdoptionsQueryModel
 
 @{
-    ViewBag.Title = "All Adoptions";
+    ViewData["Title"] = "All Adoptions";
 }
 
-<h2 class="text-center">@ViewBag.Title</h2>
+<h2 class="text-center">@ViewData["Title"]</h2>
 <hr />
 
 <form method="get">
@@ -48,8 +48,7 @@
         previousPage = 1;
     }
 
-    var maxPage = Math.Ceiling((double)Model.TotalAdoptionPetsCount /
-        Model.AdoptionPetsPerPage);
+    var maxPage = Math.Ceiling((double)Model.TotalAdoptionPetsCount / Model.AdoptionPetsPerPage);
 }
 
 <div class="row mb-5">

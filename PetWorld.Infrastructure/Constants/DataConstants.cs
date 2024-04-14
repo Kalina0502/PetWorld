@@ -33,5 +33,10 @@
         public const int CityMinLength = 5;
 
         public const int SpeciesNameMaxLength = 50;
+
+        public const int UserFirstNameMaxLength = 12;
+
+        public const int UserLastNameMaxLength = 15;
+
     }
 }
