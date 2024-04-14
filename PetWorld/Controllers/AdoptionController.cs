@@ -35,7 +35,7 @@ namespace PetWorld.Controllers
 
             model.TotalAdoptionPetsCount = adoptionPets.TotalAdoptionPetsCount;
             model.Adoptions = adoptionPets.AdoptionPets;
-            model.SpeciesList = (IEnumerable<string>)await adoptionService.AllSpeciesCategoriesAsync();
+            model.SpeciesList = await adoptionService.AllSpeciesCategoriesAsync();
 
             return View(model);
         }
