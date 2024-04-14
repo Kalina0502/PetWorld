@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic;
+using Microsoft.Extensions.Logging;
 using PetWorld.Attributes;
 using PetWorld.Core.Contracts;
 using PetWorld.Core.Models.Adoption;
@@ -100,29 +100,6 @@ namespace PetWorld.Controllers
             return RedirectToAction(nameof(Details), new { id = newAdoptionId, /*information = model.GetInformation()*/ });
         }
 
-        /*  [HttpGet]
-        public async Task<IActionResult> Mine()
-        {
-            var userId = User.Id();
-            IEnumerable<HouseServiceModel> model;
-
-            if (User.IsAdmin())
-            {
-                return RedirectToAction("Mine", "House", new { area = "Admin" });
-            }
-
-            if (await agentService.ExistsByIdAsync(userId))
-            {
-                int agentId = await agentService.GetAgentIdAsync(userId) ?? 0;
-                model = await houseService.AllHousesByAgentIdAsync(agentId);
-            }
-            else
-            {
-                model = await houseService.AllHousesByUserId(userId);
-            }
-
-            return View(model);*/
-
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
@@ -193,9 +170,28 @@ namespace PetWorld.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Delete()
+        public async Task<IActionResult> Delete(int id)
         {
-            var model = new AdoptionDetailsViewModel();
+            if (await adoptionService.ExistsAsync(id) == false)
+            {
+                return BadRequest();
+            }
+
+            if (await adoptionService.HasAgentWithIdAsync(id, User.Id()) == false)
+            //  && User.IsAdmin() == false)
+            {
+                return Unauthorized();
+            }
+
+            var adoption = await adoptionService.AdoptionDetailsByIdAsync(id);
+
+            var model = new AdoptionDetailsViewModel()
+            {
+                Id = adoption.Id,
+                City = adoption.City,
+                ImageUrl = adoption.ImageUrl,
+                Name = adoption.Name
+            };
 
             return View(model);
         }
@@ -203,19 +199,45 @@ namespace PetWorld.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(AdoptionDetailsViewModel model)
         {
+            if (await adoptionService.ExistsAsync(model.Id) == false)
+            {
+                return BadRequest();
+            }
+
+            if (await adoptionService.HasAgentWithIdAsync(model.Id, User.Id()) == false)
+            //  && User.IsAdmin() == false)
+            {
+                return Unauthorized();
+            }
+
+            await adoptionService.DeleteAsync(model.Id);
+
             return RedirectToAction(nameof(All));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Adopt(int id)
+        public async Task<IActionResult> ForAdoptionAsync(int id)
         {
-            return RedirectToAction(nameof(Mine));
-        }
+            if (await adoptionService.ExistsAsync(id) == false)
+            {
+                return BadRequest();
+            }
 
-        [HttpPost]
-        public async Task<IActionResult> ForAdoption(int id)
-        {
-            return RedirectToAction(nameof(Mine));
+            if (await agentService.ExistsByIdAsync(User.Id()))
+            //  && User.IsAdmin() == false)
+            {
+                return Unauthorized();
+            }
+
+            if (await adoptionService.IsAdoptedAsync(id))
+            {
+                return BadRequest();
+            }
+
+            await adoptionService.ForAdoptionAsync(id, User.Id());
+
+           // TempData[UserMessageSuccess] = "You have successfully adopted the pet.";
+            return RedirectToAction(nameof(All));
         }
     }
 }

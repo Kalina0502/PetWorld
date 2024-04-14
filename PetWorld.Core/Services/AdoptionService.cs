@@ -5,7 +5,6 @@ using PetWorld.Core.Models.Adoption;
 using PetWorld.Core.Models.Home;
 using PetWorld.Infrastructure.Common;
 using PetWorld.Infrastructure.Data.Models;
-using System.Runtime.CompilerServices;
 
 namespace PetWorld.Core.Services
 {
@@ -16,6 +15,22 @@ namespace PetWorld.Core.Services
         public AdoptionService(IRepository _repository)
         {
             repository = _repository;
+        }
+
+        public async Task ForAdoptionAsync(int id, string userId)
+        {
+            var adoption = await repository.GetByIdAsync<AdoptionAnimal>(userId);
+
+            if (adoption != null)
+            {
+                if (adoption.UserId != userId)
+                {
+                   // throw new UnauthorizedActionException("The user is not the renter");
+                }
+
+                adoption.UserId = null;
+                await repository.SaveChangesAsync();
+            }
         }
 
         public async Task<AdoptionDetailsServiceModel> AdoptionDetailsByIdAsync(int id)
@@ -145,9 +160,10 @@ namespace PetWorld.Core.Services
             return adoptionAnimal.Id;
         }
 
-        public Task DeleteAsync(int adoptionId)
+        public async Task DeleteAsync(int adoptionId)
         {
-            throw new NotImplementedException();
+            await repository.DeleteAsync<AdoptionAnimal>(adoptionId);
+            await repository.SaveChangesAsync();
         }
 
         public async Task EditAsync(int adoptionId, AdoptionFormModel model)
@@ -207,6 +223,32 @@ namespace PetWorld.Core.Services
                  .AnyAsync(aa => aa.Id == adoptionId && aa.Agent.UserId == userId);
         }
 
+        public async Task<bool> IsAdoptedAsync(int adoptionId)
+        {
+            bool result = false;
+            var adoption = await repository.GetByIdAsync<AdoptionAnimal>(adoptionId);
+
+            if (adoption != null)
+            {
+                result = adoption.UserId != null;
+            }
+
+            return result;
+        }
+
+        public async Task<bool> IsAdoptedByIUserWithIdAsync(int adoptionId, string userId)
+        {
+            bool result = false;
+            var adoption = await repository.GetByIdAsync<AdoptionAnimal>(adoptionId);
+
+            if (adoption != null)
+            {
+                result = adoption.UserId == userId;
+            }
+
+            return result;
+        }
+
         public async Task<IEnumerable<AdoptionIndexServiceModel>> LastThreePetsAsync()
         {
 
@@ -227,6 +269,17 @@ namespace PetWorld.Core.Services
         {
             return await repository.AllReadOnly<Species>()
                 .AllAsync(s => s.Id == speciesId);
+        }
+
+        public async Task AdoptAsync(int id, string userId)
+        {
+            var adoption = await repository.GetByIdAsync<AdoptionAnimal>(id);
+
+            if (adoption != null)
+            {
+                adoption.UserId = userId;
+                await repository.SaveChangesAsync();
+            }
         }
     }
 }

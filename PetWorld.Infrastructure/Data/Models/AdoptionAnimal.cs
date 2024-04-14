@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using static PetWorld.Infrastructure.Constants.DataConstants;
@@ -53,6 +54,6 @@ namespace PetWorld.Infrastructure.Data.Models
         public string? UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
-        public ApplicationUser? User { get; set; }
+        public IdentityUser? User { get; set; }
     }
 }

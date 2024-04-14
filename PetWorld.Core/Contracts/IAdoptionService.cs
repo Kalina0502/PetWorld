@@ -41,5 +41,13 @@ namespace PetWorld.Core.Contracts
         Task<IEnumerable<AdoptionServiceModel>> GetUnApprovedAsync();
 
         Task ApproveAdoptionPetAsync(int adoptionId);
+
+        Task<bool> IsAdoptedAsync(int adoptionId);
+
+        Task<bool> IsAdoptedByIUserWithIdAsync(int adoptionId, string userId);
+
+        Task ForAdoptionAsync(int id, string userId);
+
+        Task AdoptAsync(int id, string userId);
     }
 }
