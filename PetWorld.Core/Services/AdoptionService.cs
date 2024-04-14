@@ -150,9 +150,21 @@ namespace PetWorld.Core.Services
             throw new NotImplementedException();
         }
 
-        public Task EditAsync(int adoptionId, AdoptionFormModel model)
+        public async Task EditAsync(int adoptionId, AdoptionFormModel model)
         {
-            throw new NotImplementedException();
+            var adoption = await repository.GetByIdAsync<AdoptionAnimal>(adoptionId);
+
+            if (adoption != null)
+            {
+                adoption.City = model.City;
+                adoption.SpeciesId = model.SpeciesId;
+                adoption.Age = model.Age;
+                adoption.Description = model.Description;
+                adoption.ImageUrl = model.ImageUrl;
+                adoption.Name = model.Name;
+
+                await repository.SaveChangesAsync();
+            }
         }
 
         public async Task<bool> ExistsAsync(int id)
@@ -161,9 +173,27 @@ namespace PetWorld.Core.Services
                 .AnyAsync(aa => aa.Id == id);
         }
 
-        public Task<AdoptionFormModel?> GetAdoptionFormModelByIdAsync(int id)
+        public async Task<AdoptionFormModel?> GetAdoptionFormModelByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var adoption = await repository.AllReadOnly<AdoptionAnimal>()
+                   .Where(aa => aa.Id == id)
+                   .Select(aa => new AdoptionFormModel()
+                   {
+                       City = aa.City,
+                       SpeciesId = aa.SpeciesId,
+                       Description = aa.Description,
+                       Age = aa.Age,
+                       ImageUrl = aa.ImageUrl,
+                       Name = aa.Name,
+                   })
+                   .FirstOrDefaultAsync();
+
+            if (adoption != null)
+            {
+                adoption.Species = await AllSpeciesNamesAsync();
+            }
+
+            return adoption;
         }
 
         public Task<IEnumerable<AdoptionServiceModel>> GetUnApprovedAsync()
@@ -171,9 +201,10 @@ namespace PetWorld.Core.Services
             throw new NotImplementedException();
         }
 
-        public Task<bool> HasAgentWithIdAsync(int adoptionId, string userId)
+        public async Task<bool> HasAgentWithIdAsync(int adoptionId, string userId)
         {
-            throw new NotImplementedException();
+            return await repository.AllReadOnly<AdoptionAnimal>()
+                 .AnyAsync(aa => aa.Id == adoptionId && aa.Agent.UserId == userId);
         }
 
         public async Task<IEnumerable<AdoptionIndexServiceModel>> LastThreePetsAsync()

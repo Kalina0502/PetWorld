@@ -143,9 +143,20 @@ namespace PetWorld.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> Edit()
+        public async Task<IActionResult> Edit(int id)
         {
-            var model = new AdoptionFormModel();
+            if (await adoptionService.ExistsAsync(id) == false)
+            {
+                return BadRequest();
+            }
+
+            if (await adoptionService.HasAgentWithIdAsync(id, User.Id()) == false)
+            //&& User.IsAdmin() == false)
+            {
+                return Unauthorized();
+            }
+
+            var model = await adoptionService.GetAdoptionFormModelByIdAsync(id);
 
             return View(model);
         }
@@ -153,7 +164,32 @@ namespace PetWorld.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int id, AdoptionFormModel model)
         {
-            return RedirectToAction(nameof(Details), new { id = 1 });
+            if (await adoptionService.ExistsAsync(id) == false)
+            {
+                return BadRequest();
+            }
+
+            if (await adoptionService.HasAgentWithIdAsync(id, User.Id()) == false)
+            //      && User.IsAdmin() == false)
+            {
+                return Unauthorized();
+            }
+
+            if (await adoptionService.SpeciesExistsAsync(model.SpeciesId) == false)
+            {
+                ModelState.AddModelError(nameof(model.SpeciesId), "Species does not exist");
+            }
+
+            if (ModelState.IsValid == false)
+            {
+                model.Species = await adoptionService.AllSpeciesNamesAsync();
+
+                return View(model);
+            }
+
+            await adoptionService.EditAsync(id, model);
+
+            return RedirectToAction(nameof(Details), new { id });
         }
 
         [HttpGet]
