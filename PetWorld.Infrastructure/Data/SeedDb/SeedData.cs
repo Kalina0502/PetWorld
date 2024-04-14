@@ -280,7 +280,7 @@ namespace PetWorld.Infrastructure.Data.SeedDb
                 City = "Varna",
                 Description = "Friendly dog looking for a forever home.",
                 SpeciesId = DogSpecies.Id,
-                ImageUrl = "https://example.com/fluffy.jpg",
+                ImageUrl = "https://imgs.search.brave.com/6_mK4szCUhPtgYpWPnxvThzz8t1gjuxplafy-36PLLo/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTMw/MTgzOTExMi9waG90/by9wdXBweS13aXRo/LXRpbHRlZC1oZWFk/LWFuZC1jcm9zc2Vk/LXBhd3MtbHlpbmct/b24tc29mYS5qcGc_/cz02MTJ4NjEyJnc9/MCZrPTIwJmM9ak1x/TllGMXRPZGpIa2pP/QjZnTGdLbFc0V3I1/OGdzUWJIYnI4MnBK/Q0dpRT0",
                 AgentId = Agent.Id
             };
             SecondAdoptionAnimal = new AdoptionAnimal()
@@ -291,7 +291,7 @@ namespace PetWorld.Infrastructure.Data.SeedDb
                 City = "Sofia",
                 Description = "Playful cat in need of a loving family.",
                 SpeciesId = CatSpecies.Id,
-                ImageUrl = "https://example.com/whiskers.jpg",
+                ImageUrl = "https://imgs.search.brave.com/yUi94EMJUyOlxg2hDIkB884GABSL4Cy8XSt8L314Hqg/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9w/b3J0cmFpdC1hZG9y/YWJsZS1kb21lc3Rp/Yy1jYXRfMjMtMjE0/OTE2NzA4OC5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw",
                 AgentId = Agent.Id
             };
         }
