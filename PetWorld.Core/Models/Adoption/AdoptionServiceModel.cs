@@ -32,5 +32,12 @@ namespace PetWorld.Core.Models.Adoption
 
         [Display(Name = "Species Id ")]
         public int SpeciesId { get; set; }
+
+        [Range(PetMinAge, PetMaxAge,
+            ErrorMessage = LengthMessage)]
+        public int? Age { get; set; }
+
+        [Display(Name = "Speciest List")]
+        public IEnumerable<string> SpeciesList { get; set; } = null!;
     }
 }

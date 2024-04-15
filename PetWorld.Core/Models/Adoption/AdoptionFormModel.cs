@@ -7,6 +7,8 @@ namespace PetWorld.Core.Models.Adoption
 {
     public class AdoptionFormModel
     {
+        public int Id { get; set; }
+
         [Required(ErrorMessage = RequiredMessage)]
         [StringLength(PetNameMaxLength,
            MinimumLength = PetNameMinLength,
