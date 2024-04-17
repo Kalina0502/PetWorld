@@ -42,6 +42,7 @@ namespace PetWorld.Core.Services
                 {
                     Id = aa.Id,
                     City = aa.City,
+                    ImageUrl = aa.ImageUrl,
                     Agent = new Models.Agent.AgentServiceModel()
                     {
                         // FullName = $"{aa.Agent.User.FirstName} {aa.Agent.User.LastName}",
@@ -50,7 +51,6 @@ namespace PetWorld.Core.Services
                     },
                     Species = aa.Species.Name,
                     Description = aa.Description,
-                    ImageUrl = aa.ImageUrl,
                     Name = aa.Name
                 })
                 .FirstAsync();
@@ -118,7 +118,7 @@ namespace PetWorld.Core.Services
 
         }
 
-        public async Task<IEnumerable<AdoptionSpeciesServiceModel>> AllSpeciesCategoriesAsync()
+        public async Task<IEnumerable<AdoptionSpeciesServiceModel>> AllSpeciesAsync()
         {
             return await repository.AllReadOnly<Species>()
                  .Select(c => new AdoptionSpeciesServiceModel()
@@ -152,6 +152,7 @@ namespace PetWorld.Core.Services
                 SpeciesId = model.SpeciesId,
                 City = model.City,
                 AgentId = agentId
+                
             };
 
             await repository.AddAsync(adoptionAnimal);
@@ -183,10 +184,10 @@ namespace PetWorld.Core.Services
             }
         }
 
-        public async Task<bool> ExistsAsync(int id)
+        public async Task<bool> SpeciesExistsAsync(int speciesid)
         {
             return await repository.AllReadOnly<AdoptionAnimal>()
-                .AnyAsync(aa => aa.Id == id);
+                .AnyAsync(aa => aa.Id == speciesid);
         }
 
         public async Task<AdoptionFormModel?> GetAdoptionFormModelByIdAsync(int id)
@@ -206,7 +207,7 @@ namespace PetWorld.Core.Services
 
             if (adoption != null)
             {
-                adoption.Species = await AllSpeciesNamesAsync();
+                adoption.AllSpecies = await AllSpeciesAsync();
             }
 
             return adoption;
@@ -263,12 +264,6 @@ namespace PetWorld.Core.Services
                     Name = a.Name
                 })
                 .ToListAsync();
-        }
-
-        public async Task<bool> SpeciesExistsAsync(int speciesId)
-        {
-            return await repository.AllReadOnly<Species>()
-                .AllAsync(s => s.Id == speciesId);
         }
 
         public async Task AdoptAsync(int id, string userId)

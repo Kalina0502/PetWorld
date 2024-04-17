@@ -8,11 +8,12 @@ namespace PetWorld.Core.Contracts
     {
         Task<IEnumerable<AdoptionIndexServiceModel>> LastThreePetsAsync();
 
-        Task<IEnumerable<AdoptionSpeciesServiceModel>> AllSpeciesCategoriesAsync();
+        Task<IEnumerable<AdoptionSpeciesServiceModel>> AllSpeciesAsync();
 
         Task<bool> SpeciesExistsAsync(int speciesId);
 
         Task<int> CreateAsync(AdoptionFormModel model, int agentId);
+
         Task<AdoptionQueryServiceModel> AllAsync(
             string? species = null,
             string? searchTerm = null,
@@ -25,8 +26,6 @@ namespace PetWorld.Core.Contracts
         Task<IEnumerable<AdoptionServiceModel>> AllAdoptionsByAgentIdAsync(int agentId);
 
         Task<IEnumerable<AdoptionServiceModel>> AllAdoptionsByUserId(string userId);
-
-        Task<bool> ExistsAsync(int id);
 
         Task<AdoptionDetailsServiceModel> AdoptionDetailsByIdAsync(int id);
 

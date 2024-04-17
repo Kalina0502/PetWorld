@@ -1,5 +1,4 @@
-﻿using PetWorld.Core.Contracts;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using static PetWorld.Core.Constants.MessageConstants;
 using static PetWorld.Infrastructure.Constants.DataConstants;
 
@@ -7,8 +6,6 @@ namespace PetWorld.Core.Models.Adoption
 {
     public class AdoptionFormModel
     {
-        public int Id { get; set; }
-
         [Required(ErrorMessage = RequiredMessage)]
         [StringLength(PetNameMaxLength,
            MinimumLength = PetNameMinLength,
@@ -34,11 +31,8 @@ namespace PetWorld.Core.Models.Adoption
         [Display(Name = "Image URL")]
         public string ImageUrl { get; set; } = null!;
 
-        [Display(Name = "Species Id")]
+        [Display(Name = "Species")]
         public int SpeciesId { get; set; }
-
-        public IEnumerable<string> Species { get; set; } = Enumerable.Empty<string>();
-
         public IEnumerable<AdoptionSpeciesServiceModel> AllSpecies { get; set; } =
             new List<AdoptionSpeciesServiceModel>();
     }

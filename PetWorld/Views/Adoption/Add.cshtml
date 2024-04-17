@@ -1,0 +1,14 @@
+﻿@model AdoptionFormModel
+
+@{
+    ViewData["Title"] = "Add Pet For Adoption";
+}
+
+<h2 class="text-center">@ViewData["Title"]</h2>
+<hr />
+
+<partial name="_AdoptionFormPartial" model="@Model" />
+
+@section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+}
