@@ -17,22 +17,6 @@ namespace PetWorld.Core.Services
             repository = _repository;
         }
 
-        public async Task ForAdoptionAsync(int id, string userId)
-        {
-            var adoption = await repository.GetByIdAsync<AdoptionAnimal>(userId);
-
-            if (adoption != null)
-            {
-                if (adoption.UserId != userId)
-                {
-                    // throw new UnauthorizedActionException("The user is not the renter");
-                }
-
-                adoption.UserId = null;
-                await repository.SaveChangesAsync();
-            }
-        }
-
         public async Task<AdoptionDetailsServiceModel> AdoptionDetailsByIdAsync(int id)
         {
             return await repository.AllReadOnly<AdoptionAnimal>()
@@ -79,7 +63,20 @@ namespace PetWorld.Core.Services
             int currentPage = 1,
             int adoptionPetsPerPage = 3)
         {
+
+            var adoptedAnimalIds = await repository.AllReadOnly<AdoptionAnimal>()
+                .Where(a => a.IsAdopted) // Предполага се, че имате логическо поле IsAdopted в класа Adoption
+                .Select(a => a.Id) // Предполага се, че има поле AnimalId в класа Adoption, което е свързано с животното
+                .ToListAsync();
+            return adoptedAnimalIds;
             var adoptionPetToShow = repository.AllReadOnly<AdoptionAnimal>();
+
+            var adoptedAnimalsId = await GetAdoptedAnimalIdsAsync();
+            adoptionPetToShow = adoptionPetToShow.Where(aa => !adoptedAnimalsId.Contains(aa.Id));
+
+            // Филтриране на осиновените животни
+            adoptionPetToShow = adoptionPetToShow
+                .Where(aa => !adoptedAnimalsId.Contains(aa.Id));
 
             if (species != null)
             {

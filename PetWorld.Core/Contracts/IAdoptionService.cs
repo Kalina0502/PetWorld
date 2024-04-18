@@ -45,8 +45,6 @@ namespace PetWorld.Core.Contracts
 
         Task<bool> IsAdoptedByIUserWithIdAsync(int adoptionId, string userId);
 
-        Task ForAdoptionAsync(int id, string userId);
-
         Task AdoptAsync(int id, string userId);
     }
 }
