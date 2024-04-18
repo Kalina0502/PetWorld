@@ -8,7 +8,7 @@
 
 <form method="get">
     <div class="row">
-        <div class="form-group col-md-3 d-flex justify-content-between">
+        <div class="form-group col-md-3">
             <div class="form-group">
                 <label asp-for="Species"></label>
                 <select asp-for="Species" class="form-control">
@@ -45,6 +45,13 @@
 </form>
 
 
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <a href="@Url.Action("Add", "Adoption")" class="btn btn-primary">Add Pet</a>
+    </div>
+</div>
+
+
 @{
     var previousPage = Model.CurrentPage - 1;
     if (previousPage < 1)
@@ -74,18 +81,10 @@
 </nav>
 
 
-<div class="row">
-    <div class="col-md-12 mb-3">
-        <a href="@Url.Action("Add", "Adoption")" class="btn btn-primary">Add Pet</a>
-    </div>
-</div>
-
-
 @if (!Model.Adoptions.Any())
 {
     <h2 class="text-center">No adoptions found by the given criteria!</h2>
 }
-
 
 
 <div class="row">

@@ -16,17 +16,17 @@ namespace PetWorld.Core.Models.Adoption
 
         public int CurrentPage { get; init; } = 1;
 
+        public int TotalPages { get; set; }
+
+        public bool HasPreviousPage { get; set; }
+
+        public bool HasNextPage { get; set; }
+
         public int TotalAdoptionPetsCount { get; set; }
 
         [Display(Name = "Speciest List")]
         public IEnumerable<string> SpeciesList { get; set; } = null!;
 
         public IEnumerable<AdoptionServiceModel> Adoptions { get; set; } = new List<AdoptionServiceModel>();
-
-
-
-        public int TotalPages { get; set; }
-        public bool HasPreviousPage { get; set; }
-        public bool HasNextPage { get; set; }
     }
 }
