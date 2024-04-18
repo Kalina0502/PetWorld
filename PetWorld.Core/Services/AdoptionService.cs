@@ -25,7 +25,7 @@ namespace PetWorld.Core.Services
             {
                 if (adoption.UserId != userId)
                 {
-                   // throw new UnauthorizedActionException("The user is not the renter");
+                    // throw new UnauthorizedActionException("The user is not the renter");
                 }
 
                 adoption.UserId = null;
@@ -72,14 +72,14 @@ namespace PetWorld.Core.Services
                .ToListAsync();
         }
 
-        public async Task<AdoptionQueryServiceModel> AllAsync(string? species = null,
+        public async Task<AdoptionQueryServiceModel> AllAsync(
+            string? species = null,
             string? searchTerm = null,
             AdoptionSorting sorting = AdoptionSorting.Newest,
             int currentPage = 1,
-            int adoptionPetsPerPage = 1)
+            int adoptionPetsPerPage = 3)
         {
             var adoptionPetToShow = repository.AllReadOnly<AdoptionAnimal>();
-            // .Where(h => h.IsApproved);
 
             if (species != null)
             {
@@ -98,8 +98,9 @@ namespace PetWorld.Core.Services
 
             adoptionPetToShow = sorting switch
             {
-                _ => adoptionPetToShow
-                .OrderByDescending(aa => aa.Id)
+                AdoptionSorting.Newest => adoptionPetToShow.OrderByDescending(aa => aa.Id),
+                AdoptionSorting.Oldest => adoptionPetToShow.OrderBy(aa => aa.Id),
+                _ => adoptionPetToShow.OrderByDescending(aa => aa.Id), // По подразбиране сортирайте по най-нови
             };
 
             var adoptionPets = await adoptionPetToShow
@@ -115,7 +116,6 @@ namespace PetWorld.Core.Services
                 AdoptionPets = adoptionPets,
                 TotalAdoptionPetsCount = totalAdoptionPets
             };
-
         }
 
         public async Task<IEnumerable<AdoptionSpeciesServiceModel>> AllSpeciesAsync()
@@ -151,8 +151,8 @@ namespace PetWorld.Core.Services
                 Description = model.Description,
                 SpeciesId = model.SpeciesId,
                 City = model.City,
-                AgentId = agentId
-                
+                AgentId = agentId,
+                ImageUrl = model.ImageUrl
             };
 
             await repository.AddAsync(adoptionAnimal);

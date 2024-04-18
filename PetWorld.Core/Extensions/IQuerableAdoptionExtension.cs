@@ -5,9 +5,9 @@ namespace System.Linq
 {
     public static class IQuerableAdoptionExtension
     {
-        public static IQueryable<AdoptionServiceModel> ProjectToAdoptionServiceModel(this IQueryable<AdoptionAnimal> adoptions)
+        public static IQueryable<AdoptionServiceModel> ProjectToAdoptionServiceModel(this IQueryable<AdoptionAnimal> adoptionPets)
         {
-            return adoptions
+            return adoptionPets
                 .Select(a => new AdoptionServiceModel()
                 {
                     Id = a.Id,

@@ -22,5 +22,11 @@ namespace PetWorld.Core.Models.Adoption
         public IEnumerable<string> SpeciesList { get; set; } = null!;
 
         public IEnumerable<AdoptionServiceModel> Adoptions { get; set; } = new List<AdoptionServiceModel>();
+
+
+
+        public int TotalPages { get; set; }
+        public bool HasPreviousPage { get; set; }
+        public bool HasNextPage { get; set; }
     }
 }

@@ -37,6 +37,18 @@ namespace PetWorld.Controllers
             model.Adoptions = adoptionPets.AdoptionPets;
             model.SpeciesList = await adoptionService.AllSpeciesNamesAsync();
 
+            var totalPages = (int)Math.Ceiling((double)model.TotalAdoptionPetsCount / model.AdoptionPetsPerPage);
+            var аllAdoptionsQueryModel = new AllAdoptionsQueryModel
+            {
+                CurrentPage = model.CurrentPage,
+                TotalPages = totalPages,
+                HasPreviousPage = model.CurrentPage > 1,
+                HasNextPage = model.CurrentPage < totalPages
+            };
+
+            ViewBag.PaginationViewModel = аllAdoptionsQueryModel;
+
+
             return View(model);
         }
 
@@ -71,7 +83,7 @@ namespace PetWorld.Controllers
         {
             var model = new AdoptionFormModel()
             {
-                Species = await adoptionService.AllSpeciesNamesAsync()
+                AllSpecies = await adoptionService.AllSpeciesAsync()
             };
 
             return View(model);
@@ -81,14 +93,9 @@ namespace PetWorld.Controllers
         [MustBeAgent]
         public async Task<IActionResult> Add(AdoptionFormModel model)
         {
-            if (await adoptionService.SpeciesExistsAsync(model.SpeciesId) == false)
-            {
-                ModelState.AddModelError(nameof(model.SpeciesId), "Species does not exist");
-            }
-
             if (ModelState.IsValid == false)
             {
-                model.Species = await adoptionService.AllSpeciesNamesAsync();
+                model.AllSpecies = await adoptionService.AllSpeciesAsync();
 
                 return View(model);
             }
@@ -103,7 +110,7 @@ namespace PetWorld.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            if (await adoptionService.ExistsAsync(id) == false)
+            if (await adoptionService.SpeciesExistsAsync(id) == false)
             {
                 return BadRequest();
             }
@@ -122,11 +129,6 @@ namespace PetWorld.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            if (await adoptionService.ExistsAsync(id) == false)
-            {
-                return BadRequest();
-            }
-
             if (await adoptionService.HasAgentWithIdAsync(id, User.Id()) == false)
             //&& User.IsAdmin() == false)
             {
@@ -141,7 +143,7 @@ namespace PetWorld.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int id, AdoptionFormModel model)
         {
-            if (await adoptionService.ExistsAsync(id) == false)
+            if (await adoptionService.SpeciesExistsAsync(id) == false)
             {
                 return BadRequest();
             }
@@ -152,14 +154,9 @@ namespace PetWorld.Controllers
                 return Unauthorized();
             }
 
-            if (await adoptionService.SpeciesExistsAsync(model.SpeciesId) == false)
-            {
-                ModelState.AddModelError(nameof(model.SpeciesId), "Species does not exist");
-            }
-
             if (ModelState.IsValid == false)
             {
-                model.Species = await adoptionService.AllSpeciesNamesAsync();
+                model.AllSpecies = await adoptionService.AllSpeciesAsync();
 
                 return View(model);
             }
@@ -172,7 +169,7 @@ namespace PetWorld.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            if (await adoptionService.ExistsAsync(id) == false)
+            if (await adoptionService.SpeciesExistsAsync(id) == false)
             {
                 return BadRequest();
             }
@@ -199,7 +196,7 @@ namespace PetWorld.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(AdoptionDetailsViewModel model)
         {
-            if (await adoptionService.ExistsAsync(model.Id) == false)
+            if (await adoptionService.SpeciesExistsAsync(model.Id) == false)
             {
                 return BadRequest();
             }
@@ -218,7 +215,7 @@ namespace PetWorld.Controllers
         [HttpPost]
         public async Task<IActionResult> ForAdoptionAsync(int id)
         {
-            if (await adoptionService.ExistsAsync(id) == false)
+            if (await adoptionService.SpeciesExistsAsync(id) == false)
             {
                 return BadRequest();
             }
