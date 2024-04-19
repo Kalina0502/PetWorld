@@ -8,18 +8,23 @@
         <div class="card-body text-center">
             <h4>@Model.Name</h4>
             <h6>City: <b>@Model.City</b></h6>
-            
+
             <a asp-controller="Adoption" asp-action="Details" asp-route-id="@Model.Id"
                class="btn btn-success">Details</a>
             @if (this.User.Identity.IsAuthenticated)
             {
                 <a asp-controller="Adoption" asp-action="Edit" asp-route-id="@Model.Id"
-               class="btn btn-warning">Edit</a>
+                   class="btn btn-warning">Edit</a>
                 <a asp-controller="Adoption" asp-action="Delete" asp-route-id="@Model.Id"
-               class="btn btn-danger">Delete</a>
+                   class="btn btn-danger">Delete</a>
                 <p></p>
-             
+
+
             }
+            <form class="input-group-sm" asp-controller="Adoption"
+                  asp-area="" asp-action="Adopt" asp-route-id="@Model.Id" method="post">
+                <input class="btn btn-primary" type="submit" value="Adopt" />
+            </form>
         </div>
     </div>
 </div>
