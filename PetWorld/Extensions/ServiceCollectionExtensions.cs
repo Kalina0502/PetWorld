@@ -13,6 +13,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddScoped<IAdoptionService, AdoptionService>();
             services.AddScoped<IAgentService, AgentService>();
+            services.AddScoped<IPetOwnerService, PetOwnerService>();
 
             return services;
         }

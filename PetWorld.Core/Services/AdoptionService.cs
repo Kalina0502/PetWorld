@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetWorld.Core.Contracts;
 using PetWorld.Core.Enumerations;
+using PetWorld.Core.Models;
 using PetWorld.Core.Models.Adoption;
 using PetWorld.Core.Models.Home;
 using PetWorld.Infrastructure.Common;
@@ -12,9 +13,12 @@ namespace PetWorld.Core.Services
     {
         private readonly IRepository repository;
 
-        public AdoptionService(IRepository _repository)
+        private readonly IPetOwnerService petOwnerService;
+
+        public AdoptionService(IRepository _repository, IPetOwnerService _petOwnerService)
         {
             repository = _repository;
+            petOwnerService = _petOwnerService;
         }
 
         public async Task<AdoptionDetailsServiceModel> AdoptionDetailsByIdAsync(int id)
@@ -63,20 +67,7 @@ namespace PetWorld.Core.Services
             int currentPage = 1,
             int adoptionPetsPerPage = 3)
         {
-
-            var adoptedAnimalIds = await repository.AllReadOnly<AdoptionAnimal>()
-                .Where(a => a.IsAdopted) // Предполага се, че имате логическо поле IsAdopted в класа Adoption
-                .Select(a => a.Id) // Предполага се, че има поле AnimalId в класа Adoption, което е свързано с животното
-                .ToListAsync();
-            return adoptedAnimalIds;
             var adoptionPetToShow = repository.AllReadOnly<AdoptionAnimal>();
-
-            var adoptedAnimalsId = await GetAdoptedAnimalIdsAsync();
-            adoptionPetToShow = adoptionPetToShow.Where(aa => !adoptedAnimalsId.Contains(aa.Id));
-
-            // Филтриране на осиновените животни
-            adoptionPetToShow = adoptionPetToShow
-                .Where(aa => !adoptedAnimalsId.Contains(aa.Id));
 
             if (species != null)
             {
@@ -97,7 +88,7 @@ namespace PetWorld.Core.Services
             {
                 AdoptionSorting.Newest => adoptionPetToShow.OrderByDescending(aa => aa.Id),
                 AdoptionSorting.Oldest => adoptionPetToShow.OrderBy(aa => aa.Id),
-                _ => adoptionPetToShow.OrderByDescending(aa => aa.Id), // По подразбиране сортирайте по най-нови
+                _ => adoptionPetToShow.OrderByDescending(aa => aa.Id), 
             };
 
             var adoptionPets = await adoptionPetToShow
@@ -263,15 +254,65 @@ namespace PetWorld.Core.Services
                 .ToListAsync();
         }
 
-        public async Task AdoptAsync(int id, string userId)
+        public async Task AdoptAsync(int adoptionId, string userId, PetOwnerFormModel petOwnerModel)
         {
-            var adoption = await repository.GetByIdAsync<AdoptionAnimal>(id);
+            // Проверете дали потребителят вече е осиновител
+            var petOwner = await repository.AllReadOnly<PetOwner>()
+                .FirstOrDefaultAsync(po => po.UserId == userId);
 
-            if (adoption != null)
+            // Ако потребителят не е осиновител, създайте нов запис в таблицата PetOwner
+            if (petOwner == null)
             {
-                adoption.UserId = userId;
+                petOwner = new PetOwner
+                {
+                    PetOwnerFirstName = petOwnerModel.FirstName,
+                    PetOwnerLastName = petOwnerModel.LastName,
+                    Email = petOwnerModel.Email,
+                    PhoneNumber = petOwnerModel.PhoneNumber,
+                    Age = petOwnerModel.Age,
+                    UserId = userId,
+                };
+
+                await repository.AddAsync(petOwner);
                 await repository.SaveChangesAsync();
             }
+            int petOwnerId = petOwner.Id;
+
+            // Намерете осиновеното животно
+            var adoptionAnimal = await repository.GetByIdAsync<AdoptionAnimal>(adoptionId);
+
+            if (adoptionAnimal != null)
+            {
+                int? adoptionAgeNullable = adoptionAnimal.Age;
+                int adoptionAge = adoptionAgeNullable ?? 0;
+
+                // Създайте нов запис за осиновеното животно
+                var pet = new Pet()
+                {
+                    Name = adoptionAnimal.Name,
+                    Age = adoptionAge,
+                    SpeciesId = adoptionAnimal.SpeciesId,
+                    City = adoptionAnimal.City,
+                    PetOwnerId = petOwnerId, // Задайте PetOwnerId
+                    ImageUrl = adoptionAnimal.ImageUrl,
+                    Description = adoptionAnimal.Description
+                };
+
+                await repository.AddAsync(pet);
+                await repository.SaveChangesAsync();
+
+                // Изтрийте записа за AdoptionAnimal
+                await repository.DeleteAsync<AdoptionAnimal>(adoptionId);
+            }
         }
+
+        public async Task<int?> GetPetOwnerIdByUserIdAsync(string userId)
+        {
+            // Викаме метода от petOwnerService
+            return await petOwnerService.GetPetOwnerIdByUserIdAsync(userId);
+        }
+
+   
+
     }
 }

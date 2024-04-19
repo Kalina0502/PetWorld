@@ -1,4 +1,5 @@
 ﻿using PetWorld.Core.Enumerations;
+using PetWorld.Core.Models;
 using PetWorld.Core.Models.Adoption;
 using PetWorld.Core.Models.Home;
 
@@ -45,6 +46,8 @@ namespace PetWorld.Core.Contracts
 
         Task<bool> IsAdoptedByIUserWithIdAsync(int adoptionId, string userId);
 
-        Task AdoptAsync(int id, string userId);
+        Task AdoptAsync(int adoptionId, string userId, PetOwnerFormModel petOwnerModel);
+
+        Task<int?> GetPetOwnerIdByUserIdAsync(string userId);
     }
 }

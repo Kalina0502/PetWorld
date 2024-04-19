@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using PetWorld.Attributes;
+using PetWorld.Core.Constants;
 using PetWorld.Core.Contracts;
+using PetWorld.Core.Models;
 using PetWorld.Core.Models.Adoption;
+using PetWorld.Core.Services;
 using System.Security.Claims;
 
 namespace PetWorld.Controllers
@@ -50,6 +52,59 @@ namespace PetWorld.Controllers
 
 
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Adopt(int id, PetOwnerFormModel petOwnerModel)
+        {
+         //   if (await adoptionService.SpeciesExistsAsync(id) == false)
+           // {
+           //     return BadRequest();
+           // }
+
+            if (await agentService.ExistsByIdAsync(User.Id()) == false)
+                //&& User.IsAdmin() == false)
+            {
+                return Unauthorized();
+            }
+
+            if (await adoptionService.IsAdoptedAsync(id))
+            {
+                return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(petOwnerModel);
+            }
+
+
+            return RedirectToAction(nameof(ProvideOwnerDetails), new { adoptionId = id });
+
+
+          //  await adoptionService.AdoptAsync(id, User.Id(), petOwnerModel);
+
+            //TempData[MessageConstants.UserMessageSuccess] = "You have successfully adopted the pet! We will call you soon!";
+
+            //return RedirectToAction(nameof(All));
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> ProvideOwnerDetails(int adoptionId, PetOwnerFormModel petOwnerModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(petOwnerModel);
+            }
+
+            // Продължаване с процеса по осиновяване
+            await adoptionService.AdoptAsync(adoptionId, User.Id(), petOwnerModel);
+
+            TempData[MessageConstants.UserMessageSuccess] = "You have successfully adopted the pet! We will call you soon!";
+
+            return RedirectToAction(nameof(All));
         }
 
 
@@ -211,30 +266,6 @@ namespace PetWorld.Controllers
 
             return RedirectToAction(nameof(All));
         }
-
-        [HttpPost]
-        public async Task<IActionResult> ForAdoptionAsync(int id)
-        {
-            if (await adoptionService.SpeciesExistsAsync(id) == false)
-            {
-                return BadRequest();
-            }
-
-            if (await agentService.ExistsByIdAsync(User.Id()))
-            //  && User.IsAdmin() == false)
-            {
-                return Unauthorized();
-            }
-
-            if (await adoptionService.IsAdoptedAsync(id))
-            {
-                return BadRequest();
-            }
-
-            await adoptionService.ForAdoptionAsync(id, User.Id());
-
-           // TempData[UserMessageSuccess] = "You have successfully adopted the pet.";
-            return RedirectToAction(nameof(All));
-        }
+        
     }
 }
