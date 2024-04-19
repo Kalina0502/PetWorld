@@ -34,6 +34,8 @@ namespace PetWorld.Infrastructure.Data.Models
         [MaxLength(CityMaxLength)]
         public string City { get; set; } = null!;
 
+        public string? ImageUrl { get; set; } 
+
         [Required]
         [Comment("Pet owner")]
         public int PetOwnerId { get; set; }
@@ -44,8 +46,8 @@ namespace PetWorld.Infrastructure.Data.Models
         [Required]
         [ForeignKey(nameof(Gender))]
         [Comment("Pet gender")]
-        public int GenderId { get; set; }
+        public int? GenderId { get; set; }
 
-        public GenderType Gender { get; set; } = null!;
+        public GenderType? Gender { get; set; } = null;
     }
 }

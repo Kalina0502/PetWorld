@@ -2,9 +2,13 @@
 {
     public static class DataConstants
     {
-        public const int FirstNameLength = 15;
+        public const int FirstNameMaxLength = 15;
 
-        public const int LastNameLength = 15;
+        public const int FirstNameMinLength = 2;
+
+        public const int LastNameMaxLength = 15;
+
+        public const int LastNameMinLength = 4;
 
         public const int EmailLength = 254;
 
@@ -12,7 +16,7 @@
 
         public const int PhoneNumberMinLength = 10;
 
-        public const int PetOwnerMinAge = 10;
+        public const int PetOwnerMinAge = 16;
 
         public const int PetOwnerMaxAge = 120;
 

@@ -15,12 +15,12 @@ namespace PetWorld.Infrastructure.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(FirstNameLength)]
+        [MaxLength(FirstNameMaxLength)]
         [Comment("Pet owner first name")]
         public string PetOwnerFirstName { get; set; } = string.Empty;
 
         [Required]
-        [MaxLength(LastNameLength)]
+        [MaxLength(LastNameMaxLength)]
         [Comment("Pet owner last name")]
         public string PetOwnerLastName { get; set; } = string.Empty;
 
@@ -41,9 +41,9 @@ namespace PetWorld.Infrastructure.Data.Models
         public int Age { get; set; }
 
         [ForeignKey(nameof(Gender))]
-        public int GenderId { get; set; }
+        public int? GenderId { get; set; }
 
-        public GenderType Gender { get; set; } = null!;
+        public GenderType? Gender { get; set; } = null;
 
         [Required]
         [Comment("User identifier")]
