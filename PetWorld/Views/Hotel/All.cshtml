@@ -1,7 +1,48 @@
-﻿@model AllRoomsQueryModel
-@{
-    ViewData["Title"] = "All Room";
-}
+﻿@model AllHotelRoomsQueryModel
 
-<h2 class="text-center">@ViewData["Title"]</h2>
-<hr />
+<h2>Hotel</h2>
+
+<form asp-action="All" method="get">
+    <div>
+        <label asp-for="RoomTypeId">Room Type:</label>
+        <select asp-for="RoomTypeId" class="form-control">
+            <option value="">All</option>
+            @foreach (var roomType in Model.RoomTypes)
+            {
+                <option value="@roomType">@roomType</option>
+            }
+        </select>
+    </div>
+
+    <div>
+        <label asp-for="CheckInDate">Check-in Date:</label>
+        <input asp-for="CheckInDate" class="form-control" type="date" />
+    </div>
+    <div>
+        <label asp-for="CheckOutDate">Check-out Date:</label>
+        <input asp-for="CheckOutDate" class="form-control" type="date" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+<div>
+    @if (Model.Rooms != null && Model.Rooms.Any())
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Room Type</th>
+                    <th>Is Available</th>
+                    <th>Check-in Date</th>
+                    <th>Check-out Date</th>
+                    <!-- Добавете други колони, ако е необходимо -->
+                </tr>
+            </thead>
+           
+        </table>
+    }
+    else
+    {
+        <p>No rooms found for the specified criteria.</p>
+    }
+</div>
