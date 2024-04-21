@@ -29,15 +29,5 @@ namespace PetWorld.Core.Models.Adoption
         MinimumLength = DescriptionMinLength,
         ErrorMessage = LengthMessage)]
         public string Description { get; set; } = string.Empty;
-
-        [Display(Name = "Species Id ")]
-        public int SpeciesId { get; set; }
-
-        [Range(PetMinAge, PetMaxAge,
-            ErrorMessage = LengthMessage)]
-        public int? Age { get; set; }
-
-        [Display(Name = "Speciest List")]
-        public IEnumerable<string> SpeciesList { get; set; } = null!;
     }
 }
