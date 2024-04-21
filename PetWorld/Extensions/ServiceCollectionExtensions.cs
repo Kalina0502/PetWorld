@@ -14,6 +14,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IAdoptionService, AdoptionService>();
             services.AddScoped<IAgentService, AgentService>();
             services.AddScoped<IPetOwnerService, PetOwnerService>();
+            services.AddScoped<IHotelService, HotelService>();
+
 
             return services;
         }
