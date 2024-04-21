@@ -1,11 +1,16 @@
-﻿@model AllHotelRoomsQueryModel
+﻿@model PetWorld.Controllers.AllHotelRoomsQueryModel
 
-<h2>Hotel</h2>
+@{
+    ViewData["Title"] = "All Hotel Rooms";
+}
 
-<form asp-action="All" method="get">
+<h2>All Hotel Rooms</h2>
+
+<!-- Филтриращ формуляр -->
+<form method="get" asp-action="All">
     <div>
-        <label asp-for="RoomTypeId">Room Type:</label>
-        <select asp-for="RoomTypeId" class="form-control">
+        <label for="RoomType">Room Type:</label>
+        <select id="RoomType" name="RoomType">
             <option value="">All</option>
             @foreach (var roomType in Model.RoomTypes)
             {
@@ -13,36 +18,54 @@
             }
         </select>
     </div>
-
     <div>
-        <label asp-for="CheckInDate">Check-in Date:</label>
-        <input asp-for="CheckInDate" class="form-control" type="date" />
+        <label for="CheckInDate">Check-in Date:</label>
+        <input type="date" id="CheckInDate" name="CheckInDate" value="@Model.CheckInDate?.ToString("yyyy-MM-dd")" />
     </div>
     <div>
-        <label asp-for="CheckOutDate">Check-out Date:</label>
-        <input asp-for="CheckOutDate" class="form-control" type="date" />
+        <label for="CheckOutDate">Check-out Date:</label>
+        <input type="date" id="CheckOutDate" name="CheckOutDate" value="@Model.CheckOutDate?.ToString("yyyy-MM-dd")" />
     </div>
-
-    <button type="submit" class="btn btn-primary">Search</button>
+    <div>
+        <button type="submit">Search</button>
+    </div>
 </form>
+
+<!-- Показване на хотелски стаи -->
 <div>
-    @if (Model.Rooms != null && Model.Rooms.Any())
+    <h3>Hotel Rooms:</h3>
+    @if (Model.HotelRooms.Any())
     {
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Room Type</th>
-                    <th>Is Available</th>
-                    <th>Check-in Date</th>
-                    <th>Check-out Date</th>
-                    <!-- Добавете други колони, ако е необходимо -->
-                </tr>
-            </thead>
-           
-        </table>
+        <ul>
+            @foreach (var room in Model.HotelRooms)
+            {
+                <li>
+                    <div>
+                        <h4>Room ID: @room.Id</h4>
+                        <p>Room Type ID: @room.RoomTypeId</p>
+                        <p>Is Available: @(room.IsAvailable ? "Yes" : "No")</p>
+                    </div>
+                </li>
+            }
+        </ul>
     }
     else
     {
-        <p>No rooms found for the specified criteria.</p>
+        <p>No rooms available for the selected filters.</p>
     }
+</div>
+
+<!-- Пагинация -->
+<div>
+    <p>
+        Page @Model.CurrentPage of @Model.TotalPages
+        | @if (Model.HasPreviousPage)
+        {
+            <a asp-action="All" asp-route-CurrentPage="@(Model.CurrentPage - 1)">Previous</a>
+        }
+        @if (Model.HasNextPage)
+        {
+            <a asp-action="All" asp-route-CurrentPage="@(Model.CurrentPage + 1)">Next</a>
+        }
+    </p>
 </div>
