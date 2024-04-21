@@ -16,17 +16,9 @@ namespace PetWorld.Controllers
 
         public HotelSorting Sorting { get; init; }
 
-        public int CurrentPage { get; init; } = 1;
-
-        public int TotalPages { get; set; }
-
-        public bool HasPreviousPage { get; set; }
-
-        public bool HasNextPage { get; set; }
-
         public int TotalHotelRoomsCount { get; set; }
 
-        [Display(Name = "Speciest List")]
+        [Display(Name = "All room types")]
         public IEnumerable<string> RoomTypes { get; set; } = null!;
 
         public IEnumerable<HotelRoomServiceModel> HotelRooms { get; set; } = new List<HotelRoomServiceModel>();

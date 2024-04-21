@@ -25,7 +25,6 @@ namespace PetWorld.Controllers
                model.CheckInDate,
                model.CheckOutDate,
                model.Sorting,
-               model.CurrentPage,
                model.HotelRoomsPerPage);
 
             model.TotalHotelRoomsCount = hotelRooms.TotalRoomsCount;
@@ -33,6 +32,15 @@ namespace PetWorld.Controllers
             model.RoomTypes = await hotelService.AllRoomTypeNamesAsync();
             return View(model);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Reserve(int roomId, DateTime checkInDate, DateTime checkOutDate)
+        {
+            await hotelService.ReserveRoomAsync(roomId, checkInDate, checkOutDate, includesFood:false, includesWalk:false);
+
+            return RedirectToAction("ThankYou");
+        }
+
 
 
         //[HttpGet]
@@ -89,12 +97,6 @@ namespace PetWorld.Controllers
         //public async Task<IActionResult> Delete(RoomDetailsViewModel model)
         //{
         //    return RedirectToAction(nameof(All));
-        //}
-
-        //[HttpPost]
-        //public async Task<IActionResult> Book(int id)
-        //{
-        //    return RedirectToAction(nameof(Mine));
         //}
 
         //[HttpPost]

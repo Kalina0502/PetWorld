@@ -20,5 +20,7 @@ namespace PetWorld.Core.Contracts
             HotelSorting sorting = HotelSorting.Newest,
             int currentPage = 1,
             int roomsPerPage = 1);
+        Task ReserveRoomAsync(int roomId, DateTime checkInDate, DateTime checkOutDate, bool includesFood = false, bool includesWalk = false);
+
     }
 }

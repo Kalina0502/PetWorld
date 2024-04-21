@@ -13,5 +13,8 @@
         public const string UserMessageSuccess = "UserMessageSuccess";
 
         public const string UserMessageError = "UserMessageError";
+
+        public const string CheckInDateMessage = "Check-in date must be earlier than check-out date.";
+
     }
 }

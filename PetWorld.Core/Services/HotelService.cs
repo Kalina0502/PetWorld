@@ -38,10 +38,10 @@ namespace PetWorld.Core.Services
 
         public async Task<HotelRoomsQueryServiceModel> AllAsync(
             string? roomType = null,
-            DateTime? checkInDate = null, 
-            DateTime? checkOutDate = null, 
-            HotelSorting sorting = HotelSorting.Newest, 
-            int currentPage = 1, 
+            DateTime? checkInDate = null,
+            DateTime? checkOutDate = null,
+            HotelSorting sorting = HotelSorting.Newest,
+            int currentPage = 1,
             int roomsPerPage = 1)
         {
             checkInDate ??= DateTime.Today;
@@ -82,5 +82,25 @@ namespace PetWorld.Core.Services
                 HotelRooms = hotelRooms
             };
         }
+
+        public async Task ReserveRoomAsync(int roomId, 
+            DateTime checkInDate, DateTime checkOutDate, 
+            bool includesFood = false, bool includesWalk = false)
+        {
+            var reservation = new RoomReservation
+            {
+                RoomId = roomId,
+                CheckInDate = checkInDate,
+                CheckOutDate = checkOutDate,
+                IncludesFood = false,
+                IncludesWalk = false,
+            };
+
+            await repository.AddAsync(reservation);
+            await repository.SaveChangesAsync();
+        }
+
+
+
     }
 }
