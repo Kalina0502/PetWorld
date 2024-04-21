@@ -19,13 +19,6 @@ namespace PetWorld.Infrastructure.Data.Models
         [ForeignKey(nameof(RoomId))]
         public Room Room { get; set; } = null!;
 
-       // [Required]
-       // [Comment("Pet identifier")]
-       // public int PetId { get; set; }
-
-       // [ForeignKey(nameof(PetId))]
-       // public Pet Pet { get; set; } = null!;
-
         [Required]
         [Comment("Check-in date")]
         public DateTime CheckInDate { get; set; }
