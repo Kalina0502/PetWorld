@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetWorld.Infrastructure.Data;
 
@@ -11,9 +12,10 @@ using PetWorld.Infrastructure.Data;
 namespace PetWorld.Infrastructure.Migrations
 {
     [DbContext(typeof(PetWorldDbContext))]
-    partial class PetWorldDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240421095426_TablesModifiedd")]
+    partial class TablesModifiedd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,15 +145,15 @@ namespace PetWorld.Infrastructure.Migrations
                         {
                             Id = "dea12856-c198-4129-b3f3-b893d8395082",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9cca3fc3-4c66-460e-95ef-82331e2a63e8",
+                            ConcurrencyStamp = "b3c16737-4b72-4fcf-9721-3fad13b498d3",
                             Email = "agent@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "agent@mail.com",
                             NormalizedUserName = "agent@mail.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFbKh/F0uexlNMFRqHaBDruTyo9HE2g0AbBzZSpRlpQQM763BmwbfnrZIq+LkxsNyQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAED/EiH+nGoQ/00qozdIUD8A0gOHTo7YZpCNlzEdoAIKVB2PzP5LQo6UcbSOA8767sA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "80ebc595-055d-4e4f-bc85-1ddcc82cb9e7",
+                            SecurityStamp = "b57d4775-425a-47de-a79a-ec377cc26693",
                             TwoFactorEnabled = false,
                             UserName = "agent@mail.com"
                         },
@@ -159,15 +161,15 @@ namespace PetWorld.Infrastructure.Migrations
                         {
                             Id = "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5c86832f-aa12-4cb4-9851-a2a766cc6fa1",
+                            ConcurrencyStamp = "95965392-1ed0-45d7-906a-7e14d1aa3d7d",
                             Email = "guest@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "guest@mail.com",
                             NormalizedUserName = "guest@mail.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBA/H8zf6WfmROKrgWvmfnL4KP6m9YLds+WX8W5DBWUC+JYthAJImEhAYUzz+RvAdg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGyvoMB6uOzjPZMGJnLfsZZq7OWgx+bhX/qI4FTO5VAHgPl5SXO4rGqNLETJPEZCVA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ca427238-2790-4596-ba15-b65516999a10",
+                            SecurityStamp = "f7d41f4a-bd1e-497e-84e6-689e45453346",
                             TwoFactorEnabled = false,
                             UserName = "guest@mail.com"
                         });
@@ -824,11 +826,17 @@ namespace PetWorld.Infrastructure.Migrations
                         .HasColumnType("bit")
                         .HasComment("Includes walk");
 
+                    b.Property<int>("PetId")
+                        .HasColumnType("int")
+                        .HasComment("Pet identifier");
+
                     b.Property<int>("RoomId")
                         .HasColumnType("int")
                         .HasComment("Room identifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PetId");
 
                     b.HasIndex("RoomId");
 
@@ -844,6 +852,7 @@ namespace PetWorld.Infrastructure.Migrations
                             CheckOutDate = new DateTime(2024, 3, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IncludesFood = true,
                             IncludesWalk = true,
+                            PetId = 1,
                             RoomId = 1
                         },
                         new
@@ -853,6 +862,7 @@ namespace PetWorld.Infrastructure.Migrations
                             CheckOutDate = new DateTime(2024, 4, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IncludesFood = false,
                             IncludesWalk = true,
+                            PetId = 2,
                             RoomId = 2
                         });
                 });
@@ -1127,11 +1137,19 @@ namespace PetWorld.Infrastructure.Migrations
 
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.RoomReservation", b =>
                 {
+                    b.HasOne("PetWorld.Infrastructure.Data.Models.Pet", "Pet")
+                        .WithMany()
+                        .HasForeignKey("PetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("PetWorld.Infrastructure.Data.Models.Room", "Room")
                         .WithMany()
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Pet");
 
                     b.Navigation("Room");
                 });

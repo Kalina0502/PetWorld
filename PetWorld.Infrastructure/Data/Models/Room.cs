@@ -11,13 +11,18 @@ namespace PetWorld.Infrastructure.Data.Models
         [Comment("Room identifier")]
         public int Id { get; set; }
 
-        [ForeignKey(nameof(RoomType))]
+        [Required]
+        [Comment("RoomType identifier")]
         public int RoomTypeId { get; set; }
 
-        [Required]
-        public bool IsAvailable { get; set; }
+        // Свързване към RoomType
+        [ForeignKey(nameof(RoomTypeId))]
+        public RoomType RoomType { get; set; } = null!;
 
         [Required]
+        [Comment("Is Available")]
+        public bool IsAvailable { get; set; }
+
         [Comment("Agent identifier")]
         public int AgentId { get; set; }
 

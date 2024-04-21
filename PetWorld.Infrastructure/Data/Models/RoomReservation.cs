@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
 namespace PetWorld.Infrastructure.Data.Models
 {
     [Comment("Reservation description")]
@@ -12,18 +13,18 @@ namespace PetWorld.Infrastructure.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [Comment("Room")]
+        [Comment("Room identifier")]
         public int RoomId { get; set; }
 
         [ForeignKey(nameof(RoomId))]
         public Room Room { get; set; } = null!;
 
-        [Required]
-        [Comment("Pet")]
-        public int PetId { get; set; }
+       // [Required]
+       // [Comment("Pet identifier")]
+       // public int PetId { get; set; }
 
-        [ForeignKey(nameof(PetId))]
-        public Pet Pet { get; set; } = null!;
+       // [ForeignKey(nameof(PetId))]
+       // public Pet Pet { get; set; } = null!;
 
         [Required]
         [Comment("Check-in date")]
@@ -34,9 +35,9 @@ namespace PetWorld.Infrastructure.Data.Models
         public DateTime CheckOutDate { get; set; }
 
         [Comment("Includes food")]
-        public bool IncludesFood { get; set; }
+        public bool IncludesFood { get; set; } = false;
 
         [Comment("Includes walk")]
-        public bool IncludesWalk { get; set; }
+        public bool IncludesWalk { get; set; } = false;
     }
 }

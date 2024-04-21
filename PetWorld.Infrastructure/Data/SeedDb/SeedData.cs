@@ -251,7 +251,7 @@ namespace PetWorld.Infrastructure.Data.SeedDb
             {
                 Id = 1,
                 RoomId = DogRoom.Id,
-                PetId = Dog.Id,
+               // PetId = Dog.Id,
                 CheckInDate = new DateTime(2024, 3, 20),
                 CheckOutDate = new DateTime(2024, 3, 25),
                 IncludesFood = true,
@@ -262,7 +262,7 @@ namespace PetWorld.Infrastructure.Data.SeedDb
             {
                 Id = 2,
                 RoomId = CatRoom.Id,
-                PetId = Cat.Id,
+              //  PetId = Cat.Id,
                 CheckInDate = new DateTime(2024, 4, 1),
                 CheckOutDate = new DateTime(2024, 4, 5),
                 IncludesFood = false,
