@@ -240,7 +240,7 @@ namespace PetWorld.Infrastructure.Data.SeedDb
             {
                 Id = 3,
                 RoomTypeId = BirdRoom.Id,
-                IsAvailable = false,
+                IsAvailable = true,
                 AgentId = Agent.Id
             };
         }
