@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PetWorld.Attributes;
 using PetWorld.Core.Contracts;
 using PetWorld.Core.Models.Hotel;
-using PetWorld.Core.Services;
+using System.Security.Claims;
 
 namespace PetWorld.Controllers
 {
@@ -10,38 +11,37 @@ namespace PetWorld.Controllers
     {
         private readonly IHotelService hotelService;
 
+        private readonly IAgentService agentService;
+
         public HotelController(
-            IHotelService _hotelService)
+            IHotelService _hotelService, IAgentService agentService)
         {
             hotelService = _hotelService;
+            this.agentService = agentService;
         }
 
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> All([FromQuery] AllHotelRoomsQueryModel model)
         {
-            // Вземаме първата открита стая, която отговаря на критериите
             var hotelRoom = await hotelService.AllAsync(
                 model.RoomType,
                 model.CheckInDate,
                 model.CheckOutDate);
 
-            // Ако е намерена открита стая, връщаме моделът със стаята
             if (hotelRoom != null)
             {
                 model.HotelRooms = new List<HotelRoomServiceModel> { hotelRoom };
-                model.TotalHotelRoomsCount = 1; // Само една намерена стая
+                model.TotalHotelRoomsCount = 1; 
             }
             else
             {
-                model.HotelRooms = new List<HotelRoomServiceModel>(); // Празен списък, ако няма намерена стая
-                model.TotalHotelRoomsCount = 0; // Нула налични стаи
+                model.HotelRooms = new List<HotelRoomServiceModel>(); 
+                model.TotalHotelRoomsCount = 0; 
             }
 
-            // Вземаме всички типове стаи за допълнителни данни
             model.RoomTypes = await hotelService.AllRoomTypeNamesAsync();
 
-            // Връщаме модела към представката (View)
             return View(model);
         }
 
@@ -64,53 +64,37 @@ namespace PetWorld.Controllers
         //    return View(model);
         //}
 
-        //[HttpGet]
-        //public async Task<IActionResult> Details(int id)
-        //{
-        //    var model = new RoomDetailsViewModel();
+        [HttpGet]
+        [MustBeAgent]
+        public async Task<IActionResult> Add()
+        {
+            var model = new HotelRoomFormModel()
+            {
+                AllRoomTypes = await hotelService.AllRoomTypesAsync()
+            };
 
-        //    return View(model);
-        //}
+            return View(model);
+        }
 
-        //[HttpGet]
-        //public IActionResult Add()
-        //{
-        //    return View();
-        //}
+        [HttpPost]
+        [MustBeAgent]
+        public async Task<IActionResult> Add(HotelRoomFormModel model)
+        {
+            if (ModelState.IsValid == false)
+            {
+                model.AllRoomTypes = await hotelService.AllRoomTypesAsync();
 
-        //[HttpPost]
-        //public async Task<IActionResult> Add(RoomFormModel model)
-        //{
-        //    return RedirectToAction(nameof(Details), new { id = 1 });
-        //}
+                return View(model);
+            }
 
-        //[HttpGet]
-        //public async Task<IActionResult> Edit()
-        //{
-        //    var model = new RoomFormModel();
+            int? agentId = await agentService.GetAgentIdAsync(User.Id());
 
-        //    return View(model);
-        //}
+            int newhotelRoomId = await hotelService.CreateAsync(model, agentId ?? 0);
 
-        //[HttpPost]
-        //public async Task<IActionResult> Edit(int id, RoomFormModel model)
-        //{
-        //    return RedirectToAction(nameof(Details), new { id = 1 });
-        //}
+            TempData["SuccessMessage"] = "Successfully added a new room!";
 
-        //[HttpGet]
-        //public async Task<IActionResult> Delete()
-        //{
-        //    var model = new RoomDetailsViewModel();
-
-        //    return View(model);
-        //}
-
-        //[HttpPost]
-        //public async Task<IActionResult> Delete(RoomDetailsViewModel model)
-        //{
-        //    return RedirectToAction(nameof(All));
-        //}
+            return RedirectToAction(nameof(All), new { id = newhotelRoomId, /*information = model.GetInformation()*/ });
+        }
 
         //[HttpPost]
         //public async Task<IActionResult> Leave(int id)

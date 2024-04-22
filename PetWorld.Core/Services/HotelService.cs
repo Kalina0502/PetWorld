@@ -1,10 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetWorld.Core.Contracts;
-using PetWorld.Core.Enumerations;
 using PetWorld.Core.Models.Hotel;
 using PetWorld.Infrastructure.Common;
 using PetWorld.Infrastructure.Data.Models;
-using System.Reflection.Metadata;
 
 namespace PetWorld.Core.Services
 {
@@ -37,23 +35,21 @@ namespace PetWorld.Core.Services
         }
 
         public async Task<HotelRoomServiceModel?> AllAsync(
-      string? roomType = null,
-      DateTime? checkInDate = null,
-      DateTime? checkOutDate = null)
+            string? roomType = null,
+            DateTime? checkInDate = null,
+            DateTime? checkOutDate = null)
         {
             checkInDate ??= DateTime.Today;
             checkOutDate ??= DateTime.Today;
 
             var hotelRoomsToShow = repository.AllReadOnly<Room>();
 
-            // Филтриране на стаите по тип, ако е зададен roomType
             if (roomType != null)
             {
                 hotelRoomsToShow = hotelRoomsToShow
                     .Where(hr => hr.RoomType.Name == roomType);
             }
 
-            // Проверка за наличност и вземане на първата свободна стая
             var availableRoom = await hotelRoomsToShow
                 .Where(r => !repository.AllReadOnly<RoomReservation>()
                     .Any(rr => rr.RoomId == r.Id &&
@@ -64,7 +60,7 @@ namespace PetWorld.Core.Services
                     RoomTypeId = hr.RoomTypeId,
                     IsAvailable = hr.IsAvailable
                 })
-                .FirstOrDefaultAsync(); // Взимаме първата налична стая
+                .FirstOrDefaultAsync();
 
             return availableRoom;
         }
@@ -84,6 +80,27 @@ namespace PetWorld.Core.Services
             };
 
             await repository.AddAsync(reservation);
+            await repository.SaveChangesAsync();
+        }
+
+        public async Task<int> CreateAsync(HotelRoomFormModel model, int agentId)
+        {
+            Room hotelRoom = new Room()
+            {
+                Id = model.Id,
+                AgentId = agentId,
+                RoomTypeId = model.RoomTypeId,
+            };
+
+            await repository.AddAsync(hotelRoom);
+            await repository.SaveChangesAsync();
+
+            return hotelRoom.Id;
+        }
+
+        public async Task DeleteAsync(int roomTypeId)
+        {
+            await repository.DeleteAsync<Room>(roomTypeId);
             await repository.SaveChangesAsync();
         }
     }

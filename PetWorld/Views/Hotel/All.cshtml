@@ -6,7 +6,17 @@
 
 <h2>All Hotel Rooms</h2>
 
-<!-- Форма за филтриране -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<div class="d-flex justify-content-end mb-3">
+    <a href="@Url.Action("Add", "Hotel")" class="btn btn-primary">Add Room</a>
+</div>
+
 <form method="get" asp-action="All">
     <div class="form-group">
         <label asp-for="RoomType">Room Type:</label>
@@ -31,7 +41,6 @@
     </div>
 </form>
 
-<!-- Показване на резултатите -->
 <div>
     @if (Model.CheckInDate.HasValue && Model.CheckOutDate.HasValue && !string.IsNullOrWhiteSpace(Model.RoomType))
     {
@@ -52,7 +61,6 @@
                                     <input type="hidden" name="checkInDate" value="@Model.CheckInDate?.ToString("yyyy-MM-dd")" />
                                     <input type="hidden" name="checkOutDate" value="@Model.CheckOutDate?.ToString("yyyy-MM-dd")" />
 
-                                    <!-- Опции за включване на храна и разходка -->
                                     <div>
                                         <label for="includesFood">Includes Food:</label>
                                         <input type="checkbox" id="includesFood" name="includesFood" value="true" />

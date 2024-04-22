@@ -7,17 +7,16 @@ namespace PetWorld.Core.Contracts
 {
     public interface IHotelService
     {
-      //  Task<Room?> FindFirstAvailableRoomAsync(string roomType, DateTime? checkInDate, DateTime? checkOutDate);
-
-      //  Task<IEnumerable<string>> AllRoomTypesAsync();
+        Task<IEnumerable<RoomTypeServiceModel>> AllRoomTypesAsync();
 
         Task<IEnumerable<string>> AllRoomTypeNamesAsync();
 
         Task<HotelRoomServiceModel> AllAsync(
              string? roomType = null,
-      DateTime? checkInDate = null,
-      DateTime? checkOutDate = null);
+            DateTime? checkInDate = null,
+            DateTime? checkOutDate = null);
         Task ReserveRoomAsync(int roomId, DateTime checkInDate, DateTime checkOutDate, bool includesFood, bool includesWalk);
 
+        Task<int> CreateAsync(HotelRoomFormModel model, int agentId);
     }
 }
