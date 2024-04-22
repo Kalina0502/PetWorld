@@ -13,14 +13,11 @@ namespace PetWorld.Core.Contracts
 
         Task<IEnumerable<string>> AllRoomTypeNamesAsync();
 
-        Task<HotelRoomsQueryServiceModel> AllAsync(
-            string? roomType = null,
-            DateTime? checkInDate = null,
-            DateTime? checkOutDate = null,
-            HotelSorting sorting = HotelSorting.Newest,
-            int currentPage = 1,
-            int roomsPerPage = 1);
-        Task ReserveRoomAsync(int roomId, DateTime checkInDate, DateTime checkOutDate, bool includesFood = false, bool includesWalk = false);
+        Task<HotelRoomServiceModel> AllAsync(
+             string? roomType = null,
+      DateTime? checkInDate = null,
+      DateTime? checkOutDate = null);
+        Task ReserveRoomAsync(int roomId, DateTime checkInDate, DateTime checkOutDate, bool includesFood, bool includesWalk);
 
     }
 }

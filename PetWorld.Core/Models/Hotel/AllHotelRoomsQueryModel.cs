@@ -1,6 +1,6 @@
-﻿using PetWorld.Core.Enumerations;
-using PetWorld.Core.Models.Hotel;
+﻿using PetWorld.Core.Models.Hotel;
 using System.ComponentModel.DataAnnotations;
+using static PetWorld.Core.Constants.MessageConstants;
 
 namespace PetWorld.Controllers
 {
@@ -13,8 +13,6 @@ namespace PetWorld.Controllers
         public DateTime? CheckInDate { get; init; }
 
         public DateTime? CheckOutDate { get; init; }
-
-        public HotelSorting Sorting { get; init; }
 
         public int TotalHotelRoomsCount { get; set; }
 

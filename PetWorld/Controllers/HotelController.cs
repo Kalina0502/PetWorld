@@ -18,27 +18,40 @@ namespace PetWorld.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> All([FromQuery]AllHotelRoomsQueryModel model)
+        public async Task<IActionResult> All([FromQuery] AllHotelRoomsQueryModel model)
         {
-           var hotelRooms =  await hotelService.AllAsync(
-               model.RoomType,
-               model.CheckInDate,
-               model.CheckOutDate,
-               model.Sorting,
-               model.HotelRoomsPerPage);
+            // Вземаме първата открита стая, която отговаря на критериите
+            var hotelRoom = await hotelService.AllAsync(
+                model.RoomType,
+                model.CheckInDate,
+                model.CheckOutDate);
 
-            model.TotalHotelRoomsCount = hotelRooms.TotalRoomsCount;
-            model.HotelRooms = hotelRooms.HotelRooms;
+            // Ако е намерена открита стая, връщаме моделът със стаята
+            if (hotelRoom != null)
+            {
+                model.HotelRooms = new List<HotelRoomServiceModel> { hotelRoom };
+                model.TotalHotelRoomsCount = 1; // Само една намерена стая
+            }
+            else
+            {
+                model.HotelRooms = new List<HotelRoomServiceModel>(); // Празен списък, ако няма намерена стая
+                model.TotalHotelRoomsCount = 0; // Нула налични стаи
+            }
+
+            // Вземаме всички типове стаи за допълнителни данни
             model.RoomTypes = await hotelService.AllRoomTypeNamesAsync();
+
+            // Връщаме модела към представката (View)
             return View(model);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Reserve(int roomId, DateTime checkInDate, DateTime checkOutDate)
-        {
-            await hotelService.ReserveRoomAsync(roomId, checkInDate, checkOutDate, includesFood:false, includesWalk:false);
 
-            return RedirectToAction("ThankYou");
+        [HttpGet]
+        public async Task<IActionResult> Reserve(int roomId, DateTime checkInDate, DateTime checkOutDate, bool includesFood, bool includesWalk)
+        {
+            await hotelService.ReserveRoomAsync(roomId, checkInDate, checkOutDate, includesFood, includesWalk);
+
+            return RedirectToAction("All");
         }
 
 

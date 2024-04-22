@@ -36,71 +36,55 @@ namespace PetWorld.Core.Services
                 .ToListAsync();
         }
 
-        public async Task<HotelRoomsQueryServiceModel> AllAsync(
-            string? roomType = null,
-            DateTime? checkInDate = null,
-            DateTime? checkOutDate = null,
-            HotelSorting sorting = HotelSorting.Newest,
-            int currentPage = 1,
-            int roomsPerPage = 1)
+        public async Task<HotelRoomServiceModel?> AllAsync(
+      string? roomType = null,
+      DateTime? checkInDate = null,
+      DateTime? checkOutDate = null)
         {
             checkInDate ??= DateTime.Today;
             checkOutDate ??= DateTime.Today;
 
             var hotelRoomsToShow = repository.AllReadOnly<Room>();
 
+            // Филтриране на стаите по тип, ако е зададен roomType
             if (roomType != null)
             {
                 hotelRoomsToShow = hotelRoomsToShow
                     .Where(hr => hr.RoomType.Name == roomType);
             }
 
-            if (checkInDate.HasValue && checkOutDate.HasValue)
-            {
-                hotelRoomsToShow = hotelRoomsToShow
-                    .Where(hr => !repository.AllReadOnly<RoomReservation>()
-                        .Any(r => r.RoomId == hr.Id &&
-                                  (r.CheckInDate <= checkOutDate.Value) && (r.CheckOutDate >= checkInDate.Value)));
-            }
-
-            var hotelRooms = await hotelRoomsToShow
-                .Skip((currentPage - 1) * roomsPerPage)
-                .Take(roomsPerPage)
+            // Проверка за наличност и вземане на първата свободна стая
+            var availableRoom = await hotelRoomsToShow
+                .Where(r => !repository.AllReadOnly<RoomReservation>()
+                    .Any(rr => rr.RoomId == r.Id &&
+                        (rr.CheckInDate <= checkOutDate.Value) && (rr.CheckOutDate >= checkInDate.Value)))
                 .Select(hr => new HotelRoomServiceModel
                 {
                     Id = hr.Id,
                     RoomTypeId = hr.RoomTypeId,
                     IsAvailable = hr.IsAvailable
                 })
-                .ToListAsync();
+                .FirstOrDefaultAsync(); // Взимаме първата налична стая
 
-            int totalRoomsCount = await hotelRoomsToShow.CountAsync();
-
-            return new HotelRoomsQueryServiceModel
-            {
-                TotalRoomsCount = totalRoomsCount,
-                HotelRooms = hotelRooms
-            };
+            return availableRoom;
         }
 
-        public async Task ReserveRoomAsync(int roomId, 
-            DateTime checkInDate, DateTime checkOutDate, 
-            bool includesFood = false, bool includesWalk = false)
+
+        public async Task ReserveRoomAsync(int roomId,
+         DateTime checkInDate, DateTime checkOutDate,
+         bool includesFood, bool includesWalk)
         {
             var reservation = new RoomReservation
             {
                 RoomId = roomId,
                 CheckInDate = checkInDate,
                 CheckOutDate = checkOutDate,
-                IncludesFood = false,
-                IncludesWalk = false,
+                IncludesFood = includesFood, 
+                IncludesWalk = includesWalk, 
             };
 
             await repository.AddAsync(reservation);
             await repository.SaveChangesAsync();
         }
-
-
-
     }
 }
