@@ -18,5 +18,11 @@ namespace PetWorld.Core.Contracts
         Task ReserveRoomAsync(int roomId, DateTime checkInDate, DateTime checkOutDate, bool includesFood, bool includesWalk);
 
         Task<int> CreateAsync(HotelRoomFormModel model, int agentId);
+
+        Task<IEnumerable<RoomReservation>> GetUserReservationsAsync(string userId);
+
+        Task<IEnumerable<RoomReservation>> AllReservationsByAgentIdAsync(int agentId);
+
+
     }
 }

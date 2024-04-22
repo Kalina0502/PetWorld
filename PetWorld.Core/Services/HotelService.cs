@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetWorld.Core.Contracts;
+using PetWorld.Core.Models.Adoption;
 using PetWorld.Core.Models.Hotel;
 using PetWorld.Infrastructure.Common;
 using PetWorld.Infrastructure.Data.Models;
@@ -75,8 +76,8 @@ namespace PetWorld.Core.Services
                 RoomId = roomId,
                 CheckInDate = checkInDate,
                 CheckOutDate = checkOutDate,
-                IncludesFood = includesFood, 
-                IncludesWalk = includesWalk, 
+                IncludesFood = includesFood,
+                IncludesWalk = includesWalk,
             };
 
             await repository.AddAsync(reservation);
@@ -98,10 +99,41 @@ namespace PetWorld.Core.Services
             return hotelRoom.Id;
         }
 
-        public async Task DeleteAsync(int roomTypeId)
+        public async Task<IEnumerable<RoomReservation>> GetUserReservationsAsync(string userId)
         {
-            await repository.DeleteAsync<Room>(roomTypeId);
-            await repository.SaveChangesAsync();
+            return await repository.AllReadOnly<RoomReservation>()
+                .Where(reservation => reservation.UserId == userId)
+                 .Include(rr => rr.Room) 
+                .ThenInclude(r => r.RoomType) 
+                .Select(rr => new RoomReservation
+                {
+                    Id = rr.RoomId, 
+                    CheckInDate = rr.CheckInDate, 
+                    CheckOutDate = rr.CheckOutDate, 
+                    IncludesFood = rr.IncludesFood,
+                    IncludesWalk = rr.IncludesWalk, 
+                })
+                .ToListAsync();
         }
+
+        public async Task<IEnumerable<RoomReservation>> AllReservationsByAgentIdAsync(int agentId)
+        {
+            var reservations = await repository.AllReadOnly<RoomReservation>()
+                .Where(rr => rr.AgentId == agentId) 
+                .Include(rr => rr.Room) 
+                .ThenInclude(r => r.RoomType) 
+                .Select(rr => new RoomReservation
+                {
+                   Id = rr.RoomId, 
+                   CheckInDate = rr.CheckInDate, 
+                   CheckOutDate = rr.CheckOutDate, 
+                   IncludesFood = rr.IncludesFood, 
+                   IncludesWalk = rr.IncludesWalk,
+                })
+                .ToListAsync();
+
+            return reservations;
+        }
+
     }
 }

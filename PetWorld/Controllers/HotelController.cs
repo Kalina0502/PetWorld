@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using PetWorld.Attributes;
 using PetWorld.Core.Contracts;
+using PetWorld.Core.Models.Adoption;
 using PetWorld.Core.Models.Hotel;
+using PetWorld.Core.Services;
+using PetWorld.Infrastructure.Data.Models;
 using System.Security.Claims;
 
 namespace PetWorld.Controllers
@@ -54,15 +57,24 @@ namespace PetWorld.Controllers
             return RedirectToAction("All");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Mine()
+        {
+            var userId = User.Id();
+            IEnumerable<RoomReservation> model;
 
+            if (await agentService.ExistsByIdAsync(userId))
+            {
+                int agentId = await agentService.GetAgentIdAsync(userId) ?? 0;
+                model = await hotelService.AllReservationsByAgentIdAsync(agentId);
+            }
+            else
+            {
+                model = await hotelService.GetUserReservationsAsync(userId);
+            }
 
-        //[HttpGet]
-        //public async Task<IActionResult> Mine()
-        //{
-        //    var model = new MyRoomModel();
-
-        //    return View(model);
-        //}
+            return View(model);
+        }
 
         [HttpGet]
         [MustBeAgent]
@@ -95,11 +107,5 @@ namespace PetWorld.Controllers
 
             return RedirectToAction(nameof(All), new { id = newhotelRoomId, /*information = model.GetInformation()*/ });
         }
-
-        //[HttpPost]
-        //public async Task<IActionResult> Leave(int id)
-        //{
-        //    return RedirectToAction(nameof(Mine));
-        //}
     }
 }
