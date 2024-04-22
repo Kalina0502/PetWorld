@@ -55,9 +55,7 @@
                         <div>
                             <h4>Room: @room.Id</h4>
 
-                            @if (room.IsAvailable)
-                            {
-                                <form method="get" asp-action="Reserve" asp-controller="Hotel">
+                             <form method="get" asp-action="Reserve" asp-controller="Hotel">
                                     <input type="hidden" name="roomId" value="@room.Id" />
                                     <input type="hidden" name="checkInDate" value="@Model.CheckInDate?.ToString("yyyy-MM-dd")" />
                                     <input type="hidden" name="checkOutDate" value="@Model.CheckOutDate?.ToString("yyyy-MM-dd")" />
@@ -73,7 +71,7 @@
 
                                     <button type="submit" class="btn btn-success">Reserve</button>
                                 </form>
-                            }
+                           
                         </div>
                     </li>
                 }
