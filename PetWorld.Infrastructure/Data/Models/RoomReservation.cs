@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -32,5 +33,11 @@ namespace PetWorld.Infrastructure.Data.Models
 
         [Comment("Includes walk")]
         public bool IncludesWalk { get; set; } = false;
+
+        [Comment("User id of the pet")]
+        public string? UserId { get; set; }
+
+        [ForeignKey(nameof(UserId))]
+        public IdentityUser? User { get; set; }
     }
 }

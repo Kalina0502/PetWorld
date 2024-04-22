@@ -15,7 +15,6 @@ namespace PetWorld.Infrastructure.Data.Models
         [Comment("RoomType identifier")]
         public int RoomTypeId { get; set; }
 
-        // Свързване към RoomType
         [ForeignKey(nameof(RoomTypeId))]
         public RoomType RoomType { get; set; } = null!;
 
@@ -28,7 +27,5 @@ namespace PetWorld.Infrastructure.Data.Models
 
         [ForeignKey(nameof(AgentId))]
         public Agent Agent { get; set; } = null!;
-
-        public List<RoomReservation> Reservations { get; set; } = new List<RoomReservation>();
     }
 }
