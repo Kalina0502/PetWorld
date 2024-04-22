@@ -132,17 +132,17 @@ namespace PetWorld.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        [MustBeAgent]
-        public async Task<IActionResult> Add()
-        {
-            var model = new AdoptionFormModel()
+            [HttpGet]
+            [MustBeAgent]
+            public async Task<IActionResult> Add()
             {
-                AllSpecies = await adoptionService.AllSpeciesAsync()
-            };
+                var model = new AdoptionFormModel()
+                {
+                    AllSpecies = await adoptionService.AllSpeciesAsync()
+                };
 
-            return View(model);
-        }
+                return View(model);
+            }
 
         [HttpPost]
         [MustBeAgent]

@@ -36,5 +36,9 @@ namespace PetWorld.Core.Models
         [Required(ErrorMessage = RequiredMessage)]
         [Range(PetOwnerMinAge, PetOwnerMaxAge, ErrorMessage = AgeMessage)]
         public int Age { get; set; }
+
+        [Required(ErrorMessage = RequiredMessage)]
+        [Display(Name = "Gender")]
+        public int GenderId { get; set; }
     }
 }

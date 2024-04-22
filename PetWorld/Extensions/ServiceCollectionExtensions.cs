@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using PetWorld.Core.Contracts;
 using PetWorld.Core.Services;
-using PetWorld.Helpers;
 using PetWorld.Infrastructure.Common;
 using PetWorld.Infrastructure.Data;
 
@@ -16,6 +15,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IAgentService, AgentService>();
             services.AddScoped<IPetOwnerService, PetOwnerService>();
             services.AddScoped<IHotelService, HotelService>();
+            services.AddScoped<IProfileService, ProfileService>();
+
 
             return services;
         }
