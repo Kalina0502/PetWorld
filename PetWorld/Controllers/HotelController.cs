@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PetWorld.Attributes;
 using PetWorld.Core.Contracts;
-using PetWorld.Core.Models.Adoption;
 using PetWorld.Core.Models.Hotel;
-using PetWorld.Core.Services;
 using PetWorld.Infrastructure.Data.Models;
 using System.Security.Claims;
 
@@ -35,12 +33,12 @@ namespace PetWorld.Controllers
             if (hotelRoom != null)
             {
                 model.HotelRooms = new List<HotelRoomServiceModel> { hotelRoom };
-                model.TotalHotelRoomsCount = 1; 
+                model.TotalHotelRoomsCount = 1;
             }
             else
             {
-                model.HotelRooms = new List<HotelRoomServiceModel>(); 
-                model.TotalHotelRoomsCount = 0; 
+                model.HotelRooms = new List<HotelRoomServiceModel>();
+                model.TotalHotelRoomsCount = 0;
             }
 
             model.RoomTypes = await hotelService.AllRoomTypeNamesAsync();
@@ -50,9 +48,11 @@ namespace PetWorld.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> Reserve(int roomId, DateTime checkInDate, DateTime checkOutDate, bool includesFood, bool includesWalk)
+        public async Task<IActionResult> Reserve(int roomId, DateTime checkInDate, DateTime checkOutDate, bool includesFood, bool includesWalk, string userId)
         {
-            await hotelService.ReserveRoomAsync(roomId, checkInDate, checkOutDate, includesFood, includesWalk);
+            await hotelService.ReserveRoomAsync(roomId, checkInDate, checkOutDate, includesFood, includesWalk, userId);
+
+            TempData["SuccessMessage"] = "Reservation made successfully !";
 
             return RedirectToAction("All");
         }
@@ -63,15 +63,7 @@ namespace PetWorld.Controllers
             var userId = User.Id();
             IEnumerable<RoomReservation> model;
 
-            if (await agentService.ExistsByIdAsync(userId))
-            {
-                int agentId = await agentService.GetAgentIdAsync(userId) ?? 0;
-                model = await hotelService.AllReservationsByAgentIdAsync(agentId);
-            }
-            else
-            {
-                model = await hotelService.GetUserReservationsAsync(userId);
-            }
+            model = await hotelService.GetUserReservationsAsync(userId);
 
             return View(model);
         }

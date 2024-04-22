@@ -43,6 +43,11 @@ namespace PetWorld.Core.Services
             checkInDate ??= DateTime.Today;
             checkOutDate ??= DateTime.Today;
 
+            if (checkInDate >= checkOutDate)
+            {
+                return null;
+            }
+
             var hotelRoomsToShow = repository.AllReadOnly<Room>();
 
             if (roomType != null)
@@ -69,7 +74,7 @@ namespace PetWorld.Core.Services
 
         public async Task ReserveRoomAsync(int roomId,
          DateTime checkInDate, DateTime checkOutDate,
-         bool includesFood, bool includesWalk)
+         bool includesFood, bool includesWalk, string userId)
         {
             var reservation = new RoomReservation
             {
@@ -114,25 +119,6 @@ namespace PetWorld.Core.Services
                     IncludesWalk = rr.IncludesWalk, 
                 })
                 .ToListAsync();
-        }
-
-        public async Task<IEnumerable<RoomReservation>> AllReservationsByAgentIdAsync(int agentId)
-        {
-            var reservations = await repository.AllReadOnly<RoomReservation>()
-                .Where(rr => rr.AgentId == agentId) 
-                .Include(rr => rr.Room) 
-                .ThenInclude(r => r.RoomType) 
-                .Select(rr => new RoomReservation
-                {
-                   Id = rr.RoomId, 
-                   CheckInDate = rr.CheckInDate, 
-                   CheckOutDate = rr.CheckOutDate, 
-                   IncludesFood = rr.IncludesFood, 
-                   IncludesWalk = rr.IncludesWalk,
-                })
-                .ToListAsync();
-
-            return reservations;
         }
 
     }

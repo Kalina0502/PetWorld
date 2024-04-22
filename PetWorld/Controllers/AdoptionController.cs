@@ -221,51 +221,51 @@ namespace PetWorld.Controllers
             return RedirectToAction(nameof(Details), new { id });
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Delete(int id)
-        {
-            if (await adoptionService.SpeciesExistsAsync(id) == false)
+            [HttpGet]
+            public async Task<IActionResult> Delete(int id)
             {
-                return BadRequest();
+                if (await adoptionService.SpeciesExistsAsync(id) == false)
+                {
+                    return BadRequest();
+                }
+
+                if (await adoptionService.HasAgentWithIdAsync(id, User.Id()) == false)
+                //  && User.IsAdmin() == false)
+                {
+                    return Unauthorized();
+                }
+
+                var adoption = await adoptionService.AdoptionDetailsByIdAsync(id);
+
+                var model = new AdoptionDetailsViewModel()
+                {
+                    Id = adoption.Id,
+                    City = adoption.City,
+                    ImageUrl = adoption.ImageUrl,
+                    Name = adoption.Name
+                };
+
+                return View(model);
             }
 
-            if (await adoptionService.HasAgentWithIdAsync(id, User.Id()) == false)
-            //  && User.IsAdmin() == false)
+            [HttpPost]
+            public async Task<IActionResult> Delete(AdoptionDetailsViewModel model)
             {
-                return Unauthorized();
+                if (await adoptionService.SpeciesExistsAsync(model.Id) == false)
+                {
+                    return BadRequest();
+                }
+
+                if (await adoptionService.HasAgentWithIdAsync(model.Id, User.Id()) == false)
+                //  && User.IsAdmin() == false)
+                {
+                    return Unauthorized();
+                }
+
+                await adoptionService.DeleteAsync(model.Id);
+
+                return RedirectToAction(nameof(All));
             }
-
-            var adoption = await adoptionService.AdoptionDetailsByIdAsync(id);
-
-            var model = new AdoptionDetailsViewModel()
-            {
-                Id = adoption.Id,
-                City = adoption.City,
-                ImageUrl = adoption.ImageUrl,
-                Name = adoption.Name
-            };
-
-            return View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Delete(AdoptionDetailsViewModel model)
-        {
-            if (await adoptionService.SpeciesExistsAsync(model.Id) == false)
-            {
-                return BadRequest();
-            }
-
-            if (await adoptionService.HasAgentWithIdAsync(model.Id, User.Id()) == false)
-            //  && User.IsAdmin() == false)
-            {
-                return Unauthorized();
-            }
-
-            await adoptionService.DeleteAsync(model.Id);
-
-            return RedirectToAction(nameof(All));
-        }
         
     }
 }
