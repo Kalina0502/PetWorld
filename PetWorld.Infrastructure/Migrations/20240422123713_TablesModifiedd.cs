@@ -4,7 +4,7 @@
 
 namespace PetWorld.Infrastructure.Migrations
 {
-    public partial class PetAndPetOwner : Migration
+    public partial class TablesModifiedd : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,14 +13,14 @@ namespace PetWorld.Infrastructure.Migrations
                 keyColumn: "Id",
                 keyValue: "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "c5d32c06-fa06-4c09-8fd5-24111923471c", "AQAAAAEAACcQAAAAELHuGoXByf1YaZVz/akG8wJ4ZQQrI9HK2cVlK2Rc2bKHvlcPjIw7V2cC+LBmnY9Mlg==", "077df5d1-b4ca-4df8-9faa-a71a28e862c4" });
+                values: new object[] { "36823253-4c96-46f0-ae97-3301b14cf418", "AQAAAAEAACcQAAAAEDm+BFyHWHlHy0+jFOGUXuC01h6fqc3QtRG1U3Pm37kxeamrIzLmY9RKwKr/31zINg==", "dfdf9ecd-eeb1-4799-b292-7067dd383b6b" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "dea12856-c198-4129-b3f3-b893d8395082",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "f3e40e14-d4e4-454b-8bf6-63dc27a41e3e", "AQAAAAEAACcQAAAAELbb/ralj1wTrE7ebuTuAPk6e4L5OI4eGD2qvF1fT4FlePLt7GoPF1Zco9YQZitweA==", "aa15dbf2-3b34-4d02-a205-ad1a12601602" });
+                values: new object[] { "5950cb9b-1d6f-4fb7-997b-29caf3d74c12", "AQAAAAEAACcQAAAAEIbavKDUdVNCz2TBxYz8CyKAsOxuBQ/OrpeFkkyq8+JwcTGin1QzotK5ivAqGlX3JA==", "3c05915e-2524-40ba-a3e4-a7f2233f6377" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -30,14 +30,14 @@ namespace PetWorld.Infrastructure.Migrations
                 keyColumn: "Id",
                 keyValue: "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "b754c98c-f828-4f4c-9367-1da59e9550aa", "AQAAAAEAACcQAAAAEFhSOaAkjfsq4M5Xsw1s16LJBqHFlajb5BAfahycd97JOAaSIYi6mlqpMAZfgR2TXw==", "94f8a6ef-1a8d-46f3-b3e2-055b933dc896" });
+                values: new object[] { "4eb1c236-07de-4a54-8377-6c24c7345303", "AQAAAAEAACcQAAAAEO+FqYD1N347l01k6lkytwOQISLdACxw9fhoQtbPOm/w20npL/oKa9G5gVWEXCQnfg==", "e2d6ca3e-16fc-45fa-8276-956dd2fadd4a" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "dea12856-c198-4129-b3f3-b893d8395082",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "89cf4f12-3d67-4b10-8ab6-dbb21c31c44c", "AQAAAAEAACcQAAAAEC94qvpEaftVbSKHoXlc5Myebol9sqh2SE+62Sy6h3V5i/nZC8qnde43wTcxSin6WA==", "6db907cf-0659-4d4e-bf89-418288969535" });
+                values: new object[] { "c2311f5a-fb4f-4206-9efb-50e984962e45", "AQAAAAEAACcQAAAAEKDE+rIkD4EgFcZmLT+e6PDBMw4akBxEMZZf4ncJ+6DoTyJ5gnsXIWcxqEmhF8ldvA==", "498b5b6c-2476-47df-9d90-a5d722e87a6a" });
         }
     }
 }

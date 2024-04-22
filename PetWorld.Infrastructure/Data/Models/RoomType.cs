@@ -12,7 +12,5 @@ namespace PetWorld.Infrastructure.Data.Models
         [Required]
         [Comment("RoomType")]
         public string Name { get; set; } = string.Empty;
-
-        public List<Room> Rooms { get; set; } = new List<Room>();
     }
 }

@@ -10,7 +10,7 @@ namespace PetWorld.Infrastructure.Data.SeedDb
         {
             var data = new SeedData();
 
-            builder.HasData(new RoomType[] { data.DogRoom, data.CatRoom, data.BirdRoom });
+            builder.HasData(new RoomType[] { data.DogRoom, data.CatRoom});
         }
     }
 }

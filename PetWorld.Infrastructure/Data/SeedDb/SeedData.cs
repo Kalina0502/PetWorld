@@ -17,7 +17,6 @@ namespace PetWorld.Infrastructure.Data.SeedDb
         public GenderType OtherGender { get; set; }
         public RoomType DogRoom { get; set; }
         public RoomType CatRoom { get; set; }
-        public RoomType BirdRoom { get; set; }
         public Room DogRooms { get; set; }
         public Room CatRooms { get; set; }
         public Room BirdRooms { get; set; }
@@ -210,12 +209,6 @@ namespace PetWorld.Infrastructure.Data.SeedDb
                 Id = 2,
                 Name = "Cat Room",
             };
-
-            BirdRoom = new RoomType()
-            {
-                Id = 3,
-                Name = "Bird Room",
-            };
         }
 
         private void SeedRooms()
@@ -232,14 +225,6 @@ namespace PetWorld.Infrastructure.Data.SeedDb
             {
                 Id = 2,
                 RoomTypeId = CatRoom.Id,
-                IsAvailable = true,
-                AgentId = Agent.Id
-            };
-
-            BirdRooms = new Room()
-            {
-                Id = 3,
-                RoomTypeId = BirdRoom.Id,
                 IsAvailable = true,
                 AgentId = Agent.Id
             };
@@ -263,8 +248,8 @@ namespace PetWorld.Infrastructure.Data.SeedDb
                 Id = 2,
                 RoomId = CatRoom.Id,
               //  PetId = Cat.Id,
-                CheckInDate = new DateTime(2024, 4, 1),
-                CheckOutDate = new DateTime(2024, 4, 5),
+                CheckInDate = new DateTime(2024, 4, 24),
+                CheckOutDate = new DateTime(2024, 4, 25),
                 IncludesFood = false,
                 IncludesWalk = true
             };

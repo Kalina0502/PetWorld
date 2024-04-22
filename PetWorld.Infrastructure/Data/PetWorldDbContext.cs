@@ -29,7 +29,6 @@ namespace PetWorld.Infrastructure.Data
             builder.ApplyConfiguration(new GroomingReservationConfiguration());
             builder.ApplyConfiguration(new GroomingTypeConfiguration());
 
-
             base.OnModelCreating(builder);
         }
 

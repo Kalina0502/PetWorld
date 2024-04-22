@@ -143,15 +143,15 @@ namespace PetWorld.Infrastructure.Migrations
                         {
                             Id = "dea12856-c198-4129-b3f3-b893d8395082",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "bad50921-a32d-4ad7-bb3a-c0aa0c608e96",
+                            ConcurrencyStamp = "5950cb9b-1d6f-4fb7-997b-29caf3d74c12",
                             Email = "agent@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "agent@mail.com",
                             NormalizedUserName = "agent@mail.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEHDaRNJnBhiIlbBNK9faaDBjq4nIOa6BnScj6ZHjA7SiuxgAgFX9ZWQpK4JoS5GrfQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIbavKDUdVNCz2TBxYz8CyKAsOxuBQ/OrpeFkkyq8+JwcTGin1QzotK5ivAqGlX3JA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b2255055-4f85-403b-a9ee-41915b5ce03b",
+                            SecurityStamp = "3c05915e-2524-40ba-a3e4-a7f2233f6377",
                             TwoFactorEnabled = false,
                             UserName = "agent@mail.com"
                         },
@@ -159,15 +159,15 @@ namespace PetWorld.Infrastructure.Migrations
                         {
                             Id = "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d2151026-e237-41e6-b805-20d7f4da5a81",
+                            ConcurrencyStamp = "36823253-4c96-46f0-ae97-3301b14cf418",
                             Email = "guest@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "guest@mail.com",
                             NormalizedUserName = "guest@mail.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEIuRhZO2aWCtJUl0ZOfYJ2KbYlYnqkFIpChjJtUqI62xHDLJS+a4uRp+/5y8hvSKWQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDm+BFyHWHlHy0+jFOGUXuC01h6fqc3QtRG1U3Pm37kxeamrIzLmY9RKwKr/31zINg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d3b4b114-dfc4-4ac5-937e-ae720caf08df",
+                            SecurityStamp = "dfdf9ecd-eeb1-4799-b292-7067dd383b6b",
                             TwoFactorEnabled = false,
                             UserName = "guest@mail.com"
                         });
@@ -789,13 +789,6 @@ namespace PetWorld.Infrastructure.Migrations
                             AgentId = 1,
                             IsAvailable = true,
                             RoomTypeId = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            AgentId = 1,
-                            IsAvailable = true,
-                            RoomTypeId = 3
                         });
                 });
 
@@ -854,8 +847,8 @@ namespace PetWorld.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            CheckInDate = new DateTime(2024, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CheckOutDate = new DateTime(2024, 4, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CheckInDate = new DateTime(2024, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CheckOutDate = new DateTime(2024, 4, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IncludesFood = false,
                             IncludesWalk = true,
                             RoomId = 2
@@ -890,11 +883,6 @@ namespace PetWorld.Infrastructure.Migrations
                         {
                             Id = 2,
                             Name = "Cat Room"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Bird Room"
                         });
                 });
 
@@ -1120,7 +1108,7 @@ namespace PetWorld.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("PetWorld.Infrastructure.Data.Models.RoomType", "RoomType")
-                        .WithMany("Rooms")
+                        .WithMany()
                         .HasForeignKey("RoomTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1148,11 +1136,6 @@ namespace PetWorld.Infrastructure.Migrations
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.Room", b =>
                 {
                     b.Navigation("Reservations");
-                });
-
-            modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.RoomType", b =>
-                {
-                    b.Navigation("Rooms");
                 });
 
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.Species", b =>
