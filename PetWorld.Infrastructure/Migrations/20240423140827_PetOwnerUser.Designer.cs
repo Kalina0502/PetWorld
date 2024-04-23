@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetWorld.Infrastructure.Data;
 
@@ -11,9 +12,10 @@ using PetWorld.Infrastructure.Data;
 namespace PetWorld.Infrastructure.Migrations
 {
     [DbContext(typeof(PetWorldDbContext))]
-    partial class PetWorldDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240423140827_PetOwnerUser")]
+    partial class PetOwnerUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,15 +145,15 @@ namespace PetWorld.Infrastructure.Migrations
                         {
                             Id = "dea12856-c198-4129-b3f3-b893d8395082",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f4885094-0773-4401-b3be-b763651b4097",
+                            ConcurrencyStamp = "31036cae-d367-4341-b955-e21bcaa8d249",
                             Email = "agent@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "agent@mail.com",
                             NormalizedUserName = "agent@mail.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEE7ABlsdnZrOxWyghzg+7/arUin01DRv3nfEq7JJdFB1BV77qd5WYBI1HYZE6+Fh3w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAECG6/OzAkjCKSFFIon/tpjHLfAGSF7UMS88M0iITJiCtullfaTTo5rECF/jCvuNW0A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "4543d4f3-7f17-4da9-8ac3-aaaee23b096d",
+                            SecurityStamp = "0a3b0af5-c65b-4569-bdaa-5ede418eb830",
                             TwoFactorEnabled = false,
                             UserName = "agent@mail.com"
                         },
@@ -159,15 +161,15 @@ namespace PetWorld.Infrastructure.Migrations
                         {
                             Id = "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f52fc14b-5719-4b2f-83e8-2f57cb753807",
-                            Email = "guest1@mail.com",
+                            ConcurrencyStamp = "c3f0edba-bb78-4331-a006-6152b214b372",
+                            Email = "guest@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "guest@mail.com",
                             NormalizedUserName = "guest@mail.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAENRSxZaGB0SqxTIkXdJF9cGqc2L8qEfAeEITkcW5pc/dFvQs0G95ClXWC/VVBQ8+Zw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJD63SBUos6qU16GCV/qnj8sThPbNAYWpXM7QxjpvumX1VAPPBB4b5DPRuNo7yl6gw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a0bbe1f3-2b66-4861-8b2e-88199a035f25",
+                            SecurityStamp = "19d29ea3-e61f-4f93-be8e-37df560d6aef",
                             TwoFactorEnabled = false,
                             UserName = "guest@mail.com"
                         });
@@ -722,10 +724,6 @@ namespace PetWorld.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Email")
-                        .IsUnique()
-                        .HasDatabaseName("PetOwners_Email");
-
                     b.HasIndex("GenderId");
 
                     b.HasIndex("UserId");
@@ -1096,7 +1094,7 @@ namespace PetWorld.Infrastructure.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Gender");
