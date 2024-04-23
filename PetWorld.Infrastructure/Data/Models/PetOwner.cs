@@ -41,9 +41,9 @@ namespace PetWorld.Infrastructure.Data.Models
         public int Age { get; set; }
 
         [ForeignKey(nameof(Gender))]
-        public int? GenderId { get; set; }
+        public int GenderId { get; set; }
 
-        public GenderType? Gender { get; set; } = null;
+        public GenderType Gender { get; set; } = null!;
 
         [Required]
         [Comment("User identifier")]
