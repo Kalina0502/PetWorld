@@ -4,62 +4,147 @@
     ViewData["Title"] = "Profile Details";
 }
 
-<h2>Profile Details</h2>
+<h2>@ViewData["Title"]</h2>
 
-<div>
-    <p>Name: @Model.PetOwner.PetOwnerFirstName @Model.PetOwner.PetOwnerLastName</p>
-    <p>Age: @Model.PetOwner.Age</p>
-    <p>Email: @Model.PetOwner.Email</p>
-    <p>Phone Number: @Model.PetOwner.PhoneNumber</p>
+<div class="profile-details">
+
+    <!-- Информация за собственика на животните -->
+    <section class="owner-info">
+        <h3>Your information</h3>
+        <div class="info-box">
+            <p><strong>Name:</strong> @Model.PetOwner.PetOwnerFirstName @Model.PetOwner.PetOwnerLastName</p>
+            <p><strong>Age:</strong> @Model.PetOwner.Age</p>
+            <p><strong>Gender:</strong> @Model.Gender</p>
+            <p><strong>Email:</strong> @Model.PetOwner.Email</p>
+            <p><strong>Phone Number:</strong> @Model.PetOwner.PhoneNumber</p>
+        </div>
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <a href="@Url.Action("Edit", "Profile")" class="btn btn-primary">Edit</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Списък с животни -->
+    <section class="pets-info">
+        <h3>Pets</h3>
+        <div class="info-box">
+            @if (Model.Pets.Any())
+            {
+                <ul class="pet-list">
+                    @foreach (var pet in Model.Pets)
+                    {
+                        <li class="pet-item">
+                            <div class="pet-details">
+                                <p><strong>Name:</strong> @pet.Name</p>
+                                <p><strong>Age:</strong> @pet.Age</p>
+                                <p><strong>Description:</strong> @pet.Description</p>
+                                <p><strong>City:</strong> @pet.City</p>
+                            </div>
+                            <img class="pet-image" src="@pet.ImageUrl" alt="@pet.Name" />
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>No pets found.</p>
+            }
+        </div>
+    </section>
+
+    <!-- Списък с резервации за хотел -->
+    <section class="reservations-info">
+        <h3>Hotel Reservations</h3>
+        <div class="info-box">
+            @if (Model.HotelReservations.Any())
+            {
+                <ul class="reservation-list">
+                    @foreach (var reservation in Model.HotelReservations)
+                    {
+                        <li class="reservation-item">
+                            <p><strong>Room Type:</strong> @reservation.RoomTypeId</p>
+                            <p><strong>Check-in:</strong> @reservation.CheckInDate.ToString("dd/MM/yyyy")</p>
+                            <p><strong>Check-out:</strong> @reservation.CheckOutDate.ToString("dd/MM/yyyy")</p>
+                            <p><strong>Includes Food:</strong> @reservation.IncludesFood</p>
+                            <p><strong>Includes Walk:</strong> @reservation.IncludesWalk</p>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>No hotel reservations found.</p>
+            }
+        </div>
+    </section>
+
+    <!-- Списък с осиновявания -->
+    <section class="adoptions-info">
+        <h3>Adoptions</h3>
+        <div class="info-box">
+            @if (Model.Adoptions.Any())
+            {
+                <ul class="adoption-list">
+                    @foreach (var adoption in Model.Adoptions)
+                    {
+                        <li class="adoption-item">
+                            <p><strong>Adoption Details:</strong> <!-- Добавете специфични детайли за осиновяването --></p>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>No adoptions found.</p>
+            }
+        </div>
+    </section>
+
+    <!-- Връщане към списъка -->
+    <div class="back-link">
+        <a href="@Url.Action("Index", "Profile")">Back to list</a>
+    </div>
+
 </div>
 
-@* <div>
-    <h3>My Pets</h3>
-    @if (Model.Pets.Any())
-    {
-        <ul>
-            @foreach (var pet in Model.Pets)
-            {
-                <li>@pet.PetName</li>
-            }
-        </ul>
+<!-- Стилове за новия дизайн -->
+<style>
+    .profile-details {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
     }
-    else
-    {
-        <p>No pets found.</p>
-    }
-</div>
 
-<div>
-    <h3>Hotel Reservations</h3>
-    @if (Model.HotelReservations.Any())
-    {
-        <ul>
-            @foreach (var reservation in Model.HotelReservations)
-            {
-                <li>Reservation ID: @reservation.Id, Room Number: @reservation.RoomNumber, Check-in: @reservation.CheckInDate, Check-out: @reservation.CheckOutDate</li>
-            }
-        </ul>
+    .info-box {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
     }
-    else
-    {
-        <p>No hotel reservations found.</p>
-    }
-</div>
 
-<div>
-    <h3>Adopted Pets</h3>
-    @if (Model.Adoptions.Any())
-    {
-        <ul>
-            @foreach (var adoption in Model.Adoptions)
-            {
-                <li>Pet Name: @adoption.PetName, Adoption Date: @adoption.AdoptionDate</li>
-            }
-        </ul>
+    h3 {
+        margin-bottom: 10px;
     }
-    else
-    {
-        <p>No adoptions found.</p>
+
+    ul {
+        list-style: none;
+        padding: 0;
     }
-</div> *@
+
+    ul li {
+        margin-bottom: 10px;
+    }
+
+    .pet-image {
+        max-width: 200px;
+        margin-top: 10px;
+        border-radius: 5px;
+    }
+
+    .back-link {
+        text-align: center;
+        margin-top: 20px;
+    }
+</style>

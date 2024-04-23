@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PetWorld.Core.Models.Adoption;
+using System.ComponentModel.DataAnnotations;
 using static PetWorld.Core.Constants.MessageConstants;
 using static PetWorld.Infrastructure.Constants.DataConstants;
 
@@ -6,6 +7,8 @@ namespace PetWorld.Core.Models.Profile
 {
     public class ProfileIndexViewModel
     {
+        public int Id { get; set; }
+
         [Required(ErrorMessage = RequiredMessage)]
         [StringLength(FirstNameMaxLength,
           MinimumLength = FirstNameMinLength,

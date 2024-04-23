@@ -18,6 +18,7 @@ namespace PetWorld.Core.Contracts
 
         Task<int> CreateAsync(HotelRoomFormModel model, int agentId);
 
-        Task<IEnumerable<RoomReservation>> GetUserReservationsAsync(string userId);
+        Task<List<HotelRoomServiceModel>> GetUserReservationsAsync(string userId);
+
     }
 }

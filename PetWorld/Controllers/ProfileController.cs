@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PetWorld.Core.Contracts;
 using PetWorld.Core.Models.Profile;
 using PetWorld.Core.Services;
@@ -85,6 +86,9 @@ namespace PetWorld.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            var userId = userIdClaim?.Value;
+
             // Извличане на информация за `PetOwner`
             var petOwner = await petOwnerService.FindPetOwnerByIdAsync(id);
 
@@ -98,10 +102,13 @@ namespace PetWorld.Controllers
             var pets = await petOwnerService.GetPetsByOwnerIdAsync(petOwner.Id);
 
             // Извличане на списъка с резервации за хотел
-           /// var hotelReservations = await hotelService.GetReservationsByOwnerIdAsync(petOwner.Id);
+            var hotelReservations = await hotelService.GetUserReservationsAsync(userId);
+            /// var hotelReservations = await hotelService.GetReservationsByOwnerIdAsync(petOwner.Id);
 
             // Извличане на списъка с осиновени животни
-           // var adoptions = await adoptionService.GetAdoptionsByOwnerIdAsync(petOwner.Id);
+            // var adoptions = await adoptionService.GetAdoptionsByOwnerIdAsync(petOwner.Id);
+
+            string genderType = await petOwnerService.GetGenderTypeByIdAsync(petOwner.GenderId);
 
             // Създаване на модел за данни
             var model = new ProfileDetailsViewModel
@@ -109,9 +116,10 @@ namespace PetWorld.Controllers
                 Id = id,
                 PetOwner = petOwner,
                 Pets = pets,
-               // HotelReservations = hotelReservations,
+                HotelReservations = hotelReservations,
+                Gender = genderType
                 //Adoptions = adoptions
-                
+
             };
 
             // Връщане на `View` с модела за данни
@@ -120,17 +128,36 @@ namespace PetWorld.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> Edit()
+        public async Task<IActionResult> Edit(int id)
         {
-            var model = new ProfileEditViewModel();
+
+            var model = await profileService.GetProfileIndexViewModelByIdAsync(id);
+
             return View(model);
         }
 
+        // Метод за обработка на заявката за редактиране
         [HttpPost]
-        public async Task<IActionResult> Edit(ProfileEditViewModel model)
+        public async Task<IActionResult> Edit(ProfileIndexViewModel model, int id)
         {
-            return RedirectToAction(nameof(Index));
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            var userId = userIdClaim?.Value;
+
+            if (userId == null)
+            {
+                return NotFound();
+            }
+
+            // Актуализиране на информацията за собственика
+            await profileService.UpdatePetOwnerAsync(model, userId);
+
+            // Пренасочване към страницата за детайли
+            return RedirectToAction(nameof(Details), new { id });
         }
+
+
+
+
 
         [HttpGet]
         public async Task<IActionResult> MyPets()

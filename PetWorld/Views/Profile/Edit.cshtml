@@ -1,7 +1,68 @@
-﻿@model ProfileEditViewModel
+﻿@model ProfileIndexViewModel
+
 @{
-    ViewData["Title"] = "Edit Profile";
+    ViewData["Title"] = "Edit your information";
 }
 
-<h2 class="text-center">@ViewData["Title"]</h2>
-<hr />
+<h2>Edit your information</h2>
+
+<!-- Форма за създаване на нов Pet Owner -->
+<form asp-action="Edit" method="post">
+    <!-- Първо име -->
+    <div class="form-group">
+        <label asp-for="FirstName">First Name</label>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+
+    <!-- Фамилно име -->
+    <div class="form-group">
+        <label asp-for="LastName">Last Name</label>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+
+    <!-- Имейл -->
+    <div class="form-group">
+        <label asp-for="Email">Email</label>
+        <input asp-for="Email" class="form-control" type="email" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <!-- Телефонен номер -->
+    <div class="form-group">
+        <label asp-for="PhoneNumber">Phone Number</label>
+        <input asp-for="PhoneNumber" class="form-control" type="tel" />
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    </div>
+
+    <!-- Възраст -->
+    <div class="form-group">
+        <label asp-for="Age">Age</label>
+        <input asp-for="Age" class="form-control" type="number" />
+        <span asp-validation-for="Age" class="text-danger"></span>
+    </div>
+
+    <!-- Пол -->
+    <div class="form-group">
+        <label asp-for="GenderId">Gender</label>
+        <select asp-for="GenderId" class="form-control">
+            <!-- Добавете опции за избор на пол -->
+            <option value="">Select Gender</option>
+            <option value="1">Male</option>
+            <option value="2">Female</option>
+            <!-- Добавете други опции за пол, ако е необходимо -->
+        </select>
+        <span asp-validation-for="GenderId" class="text-danger"></span>
+    </div>
+
+    <!-- Бутон за подаване -->
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+<!-- Скрипт за проверка на клиентската страна -->
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

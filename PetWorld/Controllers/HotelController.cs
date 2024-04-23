@@ -54,24 +54,16 @@ namespace PetWorld.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> Reserve(int roomId, DateTime checkInDate, DateTime checkOutDate, bool includesFood, bool includesWalk, string userId)
+        public async Task<IActionResult> Reserve(int roomId, DateTime checkInDate, DateTime checkOutDate, bool includesFood, bool includesWalk)
         {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            var userId = userIdClaim?.Value;
+
             await hotelService.ReserveRoomAsync(roomId, checkInDate, checkOutDate, includesFood, includesWalk, userId);
 
             TempData["SuccessMessage"] = "Reservation made successfully !";
 
             return RedirectToAction("All");
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Mine()
-        {
-            var userId = User.Id();
-            IEnumerable<RoomReservation> model;
-
-            model = await hotelService.GetUserReservationsAsync(userId);
-
-            return View(model);
         }
 
         [HttpGet]

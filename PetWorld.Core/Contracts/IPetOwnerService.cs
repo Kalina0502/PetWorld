@@ -1,4 +1,5 @@
-﻿using PetWorld.Core.Models.Profile;
+﻿using PetWorld.Core.Models.Pet;
+using PetWorld.Core.Models.Profile;
 using PetWorld.Infrastructure.Data.Models;
 
 namespace PetWorld.Core.Contracts
@@ -11,7 +12,8 @@ namespace PetWorld.Core.Contracts
 
         Task<PetOwner> FindPetOwnerByIdAsync(int id);
 
-        Task<List<Pet>> GetPetsByOwnerIdAsync(int ownerId);
+        Task<string> GetGenderTypeByIdAsync(int genderId);
 
+        Task<List<PetServiceModel>> GetPetsByOwnerIdAsync(int ownerId);
     }
 }

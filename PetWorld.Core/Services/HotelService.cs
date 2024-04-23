@@ -82,6 +82,7 @@ namespace PetWorld.Core.Services
                 CheckOutDate = checkOutDate,
                 IncludesFood = includesFood,
                 IncludesWalk = includesWalk,
+                UserId = userId 
             };
 
             await repository.AddAsync(reservation);
@@ -104,22 +105,29 @@ namespace PetWorld.Core.Services
             return hotelRoom.Id;
         }
 
-        public async Task<IEnumerable<RoomReservation>> GetUserReservationsAsync(string userId)
+        public async Task<List<HotelRoomServiceModel>> GetUserReservationsAsync(string userId)
         {
-            return await repository.AllReadOnly<RoomReservation>()
+            // Извличане на резервации за конкретния потребител
+            var reservations = await repository.AllReadOnly<RoomReservation>()
                 .Where(reservation => reservation.UserId == userId)
-                 .Include(rr => rr.Room)
+                .Include(rr => rr.Room)
                 .ThenInclude(r => r.RoomType)
-                .Select(rr => new RoomReservation
-                {
-                    Id = rr.RoomId,
-                    CheckInDate = rr.CheckInDate,
-                    CheckOutDate = rr.CheckOutDate,
-                    IncludesFood = rr.IncludesFood,
-                    IncludesWalk = rr.IncludesWalk,
-                })
                 .ToListAsync();
+
+            // Конвертиране на списъка с резервации към списък от HotelRoomServiceModel
+            var hotelReservations = reservations.Select(rr => new HotelRoomServiceModel
+            {
+                Id = rr.Id, // Използвате Id от RoomReservation
+                CheckInDate = rr.CheckInDate,
+                CheckOutDate = rr.CheckOutDate,
+                IncludesFood = rr.IncludesFood,
+                IncludesWalk = rr.IncludesWalk
+            }).ToList();
+
+            // Връщане на списък от HotelRoomServiceModel
+            return hotelReservations;
         }
+
 
         public async Task<bool> HasAgentWithIdAsync(int roomId, string userId)
         {
