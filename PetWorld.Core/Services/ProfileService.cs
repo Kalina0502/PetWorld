@@ -1,6 +1,5 @@
-﻿using PetWorld.Core.Contracts;
-using PetWorld.Core.Models;
-using PetWorld.Core.Models.Adoption;
+﻿using Microsoft.EntityFrameworkCore;
+using PetWorld.Core.Contracts;
 using PetWorld.Core.Models.Profile;
 using PetWorld.Infrastructure.Common;
 using PetWorld.Infrastructure.Data.Models;
@@ -29,14 +28,14 @@ namespace PetWorld.Core.Services
         public async Task<int> CreateAsync(ProfileIndexViewModel model, string userId)
         {
             PetOwner petOwner = new PetOwner()
-            { 
-              PetOwnerFirstName = model.FirstName,
-              PetOwnerLastName = model.LastName,
-              Age = model.Age,
-              GenderId = model.GenderId,
-              PhoneNumber = model.PhoneNumber,
-              Email = model.Email,
-              UserId = userId
+            {
+                PetOwnerFirstName = model.FirstName,
+                PetOwnerLastName = model.LastName,
+                Age = model.Age,
+                GenderId = model.GenderId,
+                PhoneNumber = model.PhoneNumber,
+                Email = model.Email,
+                UserId = userId
             };
 
             await repository.AddAsync(petOwner);
@@ -45,5 +44,13 @@ namespace PetWorld.Core.Services
             return petOwner.Id;
         }
 
+        public async Task<PetOwner> FindPetOwnerByEmailAsync(string email)
+        {
+            var petOwner = await repository.AllReadOnly<PetOwner>()
+                .Where(po => po.Email == email)
+                .FirstOrDefaultAsync();
+
+            return petOwner;
+        }
     }
 }

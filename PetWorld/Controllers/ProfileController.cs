@@ -1,16 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using PetWorld.Attributes;
+﻿using Microsoft.AspNetCore.Mvc;
 using PetWorld.Core.Contracts;
-using PetWorld.Core.Models;
-using PetWorld.Core.Models.Adoption;
 using PetWorld.Core.Models.Profile;
-using PetWorld.Core.Services;
-using System.Security.Claims;
 
 namespace PetWorld.Controllers
 {
-    [Authorize]
     public class ProfileController : BaseController
     {
         private readonly IAdoptionService adoptionService;
@@ -28,32 +21,22 @@ namespace PetWorld.Controllers
             this.profileService = profileService;
         }
 
-        [HttpGet]
-        [MustBeAgent]
-        public async Task<IActionResult> Create()
-        {
-            var model = new PetOwnerFormModel()
-            {
-
-            };
-
-            return View(model);
-        }
-
         [HttpPost]
-        public async Task<IActionResult> Profil(ProfileIndexViewModel model)
+        public async Task<IActionResult> Create(ProfileIndexViewModel model)
         {
-            // Проверка на валидността на модела
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            var userId = User.Identity?.Name;
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            var userId = userIdClaim?.Value;
 
             if (string.IsNullOrEmpty(userId))
             {
                 return RedirectToAction("Error", "Home");
+            }
+
+            var existingPetOwner = await profileService.FindPetOwnerByEmailAsync(model.Email);
+            if (existingPetOwner != null)
+            {
+                ModelState.AddModelError("Email", "Email is already in use.");
+                return View(model);
             }
 
             int newPetOwnerId = await profileService.CreateAsync(model, userId);
@@ -66,17 +49,34 @@ namespace PetWorld.Controllers
             {
                 return RedirectToAction("Error", "Home");
             }
-
         }
-
-
 
         [HttpGet]
         public async Task<IActionResult> Profile()
         {
-            var model = new ProfileIndexViewModel();
-            return View(model);
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            var userId = userIdClaim?.Value;
+
+            var email = User.Identity?.Name;
+
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            var existingPetOwner = await profileService.FindPetOwnerByEmailAsync(email);
+
+            if (existingPetOwner != null)
+            {
+                return RedirectToAction("Details", new { id = existingPetOwner.Id });
+            }
+            else
+            {
+                return View("Create");
+            }
         }
+
+
         [HttpGet]
         public async Task<IActionResult> Edit()
         {
