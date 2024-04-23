@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetWorld.Core.Contracts;
+using PetWorld.Core.Models.Adoption;
 using PetWorld.Core.Models.Hotel;
 using PetWorld.Infrastructure.Common;
 using PetWorld.Infrastructure.Data.Models;
@@ -69,7 +70,6 @@ namespace PetWorld.Core.Services
 
             return availableRoom;
         }
-
 
         public async Task ReserveRoomAsync(int roomId,
          DateTime checkInDate, DateTime checkOutDate,
@@ -143,6 +143,16 @@ namespace PetWorld.Core.Services
                 })
                 .ToListAsync();
         }
+
+        //public async Task<IEnumerable<HotelRoomServiceModel>> AllReservationsAgentIdAsync(string userId)
+        //{
+        //    return await repository.AllReadOnly<RoomReservation>()
+        //    .Where(aa => aa.UserId == userId)
+        //     .Select(
+                
+        //        );
+        //    .ToListAsync();
+        //}
 
     }
 }

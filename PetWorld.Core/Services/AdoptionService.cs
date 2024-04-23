@@ -305,14 +305,5 @@ namespace PetWorld.Core.Services
                 await repository.DeleteAsync<AdoptionAnimal>(adoptionId);
             }
         }
-
-        public async Task<int?> GetPetOwnerIdByUserIdAsync(string userId)
-        {
-            // Викаме метода от petOwnerService
-            return await petOwnerService.GetPetOwnerIdByUserIdAsync(userId);
-        }
-
-   
-
     }
 }

@@ -1,5 +1,65 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model ProfileDetailsViewModel
+
 @{
+    ViewData["Title"] = "Profile Details";
 }
+
+<h2>Profile Details</h2>
+
+<div>
+    <p>Name: @Model.PetOwner.PetOwnerFirstName @Model.PetOwner.PetOwnerLastName</p>
+    <p>Age: @Model.PetOwner.Age</p>
+    <p>Email: @Model.PetOwner.Email</p>
+    <p>Phone Number: @Model.PetOwner.PhoneNumber</p>
+</div>
+
+@* <div>
+    <h3>My Pets</h3>
+    @if (Model.Pets.Any())
+    {
+        <ul>
+            @foreach (var pet in Model.Pets)
+            {
+                <li>@pet.PetName</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No pets found.</p>
+    }
+</div>
+
+<div>
+    <h3>Hotel Reservations</h3>
+    @if (Model.HotelReservations.Any())
+    {
+        <ul>
+            @foreach (var reservation in Model.HotelReservations)
+            {
+                <li>Reservation ID: @reservation.Id, Room Number: @reservation.RoomNumber, Check-in: @reservation.CheckInDate, Check-out: @reservation.CheckOutDate</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No hotel reservations found.</p>
+    }
+</div>
+
+<div>
+    <h3>Adopted Pets</h3>
+    @if (Model.Adoptions.Any())
+    {
+        <ul>
+            @foreach (var adoption in Model.Adoptions)
+            {
+                <li>Pet Name: @adoption.PetName, Adoption Date: @adoption.AdoptionDate</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No adoptions found.</p>
+    }
+</div> *@

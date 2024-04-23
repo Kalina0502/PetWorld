@@ -1,4 +1,4 @@
-﻿@model PetWorld.Core.Models.PetOwnerFormModel
+﻿@model ProfileIndexViewModel
 
 @{
     ViewData["Title"] = "Create Pet Owner";
@@ -7,7 +7,7 @@
 <h2>Create Pet Owner</h2>
 
 <!-- Форма за създаване на нов Pet Owner -->
-<form asp-action="Profil" method="post">
+<form asp-action="Create" method="post">
     <!-- Първо име -->
     <div class="form-group">
         <label asp-for="FirstName">First Name</label>
