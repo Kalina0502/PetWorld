@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetWorld.Infrastructure.Data;
 
@@ -11,9 +12,10 @@ using PetWorld.Infrastructure.Data;
 namespace PetWorld.Infrastructure.Migrations
 {
     [DbContext(typeof(PetWorldDbContext))]
-    partial class PetWorldDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240423222410_GenderTypeRquired")]
+    partial class GenderTypeRquired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,15 +145,15 @@ namespace PetWorld.Infrastructure.Migrations
                         {
                             Id = "dea12856-c198-4129-b3f3-b893d8395082",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0daa04b4-6a36-4822-98b6-ab5e6b05e9b5",
+                            ConcurrencyStamp = "38bfffd3-ac96-4e59-81e9-8cd21c188e5d",
                             Email = "agent@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "agent@mail.com",
                             NormalizedUserName = "agent@mail.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJCJ0df45oDtUyOr/0JPEma1Aievr+JtpzhIOQdiWo0oQL/NAiOhauC1d4PkqxiREQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEG6qxWWMKjSX4xY4r/FSCgMJMN5P2GUjCyObWDXCWZ6AyTd4mp4bAJ5NafU0lj0ICA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3066ebc1-ee2f-4efb-a371-49270e86b5b8",
+                            SecurityStamp = "682ef884-5f34-4dd8-8355-bd0a915429c3",
                             TwoFactorEnabled = false,
                             UserName = "agent@mail.com"
                         },
@@ -159,15 +161,15 @@ namespace PetWorld.Infrastructure.Migrations
                         {
                             Id = "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "72c70fd3-b804-485e-ba59-4bb6d46dbc95",
+                            ConcurrencyStamp = "a893f457-0631-41a9-8771-3ac258ac71b7",
                             Email = "guest1@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "guest@mail.com",
                             NormalizedUserName = "guest@mail.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMjnas1JwTZ6K8ykG2B79J3bnbaN4t6fMRrZ4dVrUIEaCXlmWUhczPLhnswnQQ/VUA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEM3uYW9dfmIn+UYZvUe5gSLlRaXyFYz0Gzw0kpj87pnP8dKBPTe5fY0fbRhrNGIePQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "684726e2-4337-4138-b573-6880c77f4856",
+                            SecurityStamp = "9b251154-894a-4711-8ad7-ce6c4d87b64a",
                             TwoFactorEnabled = false,
                             UserName = "guest@mail.com"
                         });
@@ -721,6 +723,10 @@ namespace PetWorld.Infrastructure.Migrations
                         .HasComment("User identifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasDatabaseName("PetOwners_Email");
 
                     b.HasIndex("GenderId");
 
