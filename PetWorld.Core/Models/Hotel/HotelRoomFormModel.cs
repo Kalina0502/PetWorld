@@ -4,9 +4,9 @@
     {
         public int Id { get; set; }
 
-        public int  RoomTypeId { get; set; }
+        public int RoomTypeId { get; set; }
 
         public IEnumerable<RoomTypeServiceModel> AllRoomTypes { get; set; } =
-          new List<RoomTypeServiceModel>();
+            new List<RoomTypeServiceModel>();
     }
 }

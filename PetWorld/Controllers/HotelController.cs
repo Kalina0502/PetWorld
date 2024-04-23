@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using PetWorld.Attributes;
 using PetWorld.Core.Contracts;
+using PetWorld.Core.Models.Adoption;
 using PetWorld.Core.Models.Hotel;
+using PetWorld.Core.Services;
+using PetWorld.Infrastructure.Common;
 using PetWorld.Infrastructure.Data.Models;
 using System.Security.Claims;
 
@@ -14,11 +17,14 @@ namespace PetWorld.Controllers
 
         private readonly IAgentService agentService;
 
+        private readonly IRepository repository;
+
         public HotelController(
-            IHotelService _hotelService, IAgentService agentService)
+            IHotelService _hotelService, IAgentService agentService, IRepository repository)
         {
             hotelService = _hotelService;
             this.agentService = agentService;
+            this.repository = repository;
         }
 
         [AllowAnonymous]
@@ -101,3 +107,4 @@ namespace PetWorld.Controllers
         }
     }
 }
+

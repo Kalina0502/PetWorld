@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetWorld.Core.Contracts;
-using PetWorld.Core.Models.Adoption;
 using PetWorld.Core.Models.Hotel;
 using PetWorld.Infrastructure.Common;
 using PetWorld.Infrastructure.Data.Models;
@@ -96,6 +95,7 @@ namespace PetWorld.Core.Services
                 Id = model.Id,
                 AgentId = agentId,
                 RoomTypeId = model.RoomTypeId,
+                IsAvailable = true,
             };
 
             await repository.AddAsync(hotelRoom);
@@ -108,15 +108,38 @@ namespace PetWorld.Core.Services
         {
             return await repository.AllReadOnly<RoomReservation>()
                 .Where(reservation => reservation.UserId == userId)
-                 .Include(rr => rr.Room) 
-                .ThenInclude(r => r.RoomType) 
+                 .Include(rr => rr.Room)
+                .ThenInclude(r => r.RoomType)
                 .Select(rr => new RoomReservation
                 {
-                    Id = rr.RoomId, 
-                    CheckInDate = rr.CheckInDate, 
-                    CheckOutDate = rr.CheckOutDate, 
+                    Id = rr.RoomId,
+                    CheckInDate = rr.CheckInDate,
+                    CheckOutDate = rr.CheckOutDate,
                     IncludesFood = rr.IncludesFood,
-                    IncludesWalk = rr.IncludesWalk, 
+                    IncludesWalk = rr.IncludesWalk,
+                })
+                .ToListAsync();
+        }
+
+        public async Task<bool> HasAgentWithIdAsync(int roomId, string userId)
+        {
+            return await repository.AllReadOnly<Room>()
+                 .AnyAsync(r => r.Id == roomId && r.Agent.UserId == userId);
+        }
+
+        public async Task<IEnumerable<HotelRoomDetailsServiceModel>> GetRoomsByTypeAsync(int roomTypeId)
+        {
+            return await repository.AllReadOnly<Room>()
+                .Where(r => r.RoomType.Id == roomTypeId) // Филтрирайте по избрания тип стая
+                .Select(r => new HotelRoomDetailsServiceModel()
+                {
+                    Id = r.Id,
+                    RoomType = r.RoomType.Name,
+                    Agent = new Models.Agent.AgentServiceModel()
+                    {
+                        Email = r.Agent.User.Email,
+                        PhoneNumber = r.Agent.PhoneNumber
+                    }
                 })
                 .ToListAsync();
         }
