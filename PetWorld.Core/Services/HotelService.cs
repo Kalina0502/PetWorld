@@ -2,6 +2,7 @@
 using PetWorld.Core.Contracts;
 using PetWorld.Core.Models.Adoption;
 using PetWorld.Core.Models.Hotel;
+using PetWorld.Core.Models.Profile;
 using PetWorld.Infrastructure.Common;
 using PetWorld.Infrastructure.Data.Models;
 
@@ -153,15 +154,25 @@ namespace PetWorld.Core.Services
                 .ToListAsync();
         }
 
-        //public async Task<IEnumerable<HotelRoomServiceModel>> AllReservationsAgentIdAsync(string userId)
-        //{
-        //    return await repository.AllReadOnly<RoomReservation>()
-        //    .Where(aa => aa.UserId == userId)
-        //     .Select(
-                
-        //        );
-        //    .ToListAsync();
-        //}
-
+        public async Task<HotelRoomServiceModel> ReservationDetailsByIdAsync(int id)
+        {
+            return await repository.AllReadOnly<RoomReservation>()
+                //.Where(aa => aa.IsApproved)
+                .Where(rr => rr.Id == id)
+                .Select(rr => new HotelRoomServiceModel()
+                {
+                    Id = rr.Id,
+                    CheckInDate = rr.CheckInDate,
+                    CheckOutDate = rr.CheckOutDate,
+                    IncludesFood = rr.IncludesFood,
+                    IncludesWalk = rr.IncludesWalk,
+                })
+                .FirstAsync();
+        }
+        public async Task DeleteAsync(int id)
+        {
+            await repository.DeleteAsync<RoomReservation>(id);
+            await repository.SaveChangesAsync();
+        }
     }
 }

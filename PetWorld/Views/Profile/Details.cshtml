@@ -6,6 +6,13 @@
 
 <h2>@ViewData["Title"]</h2>
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
 <div class="profile-details">
 
     <!-- Информация за собственика на животните -->
@@ -67,8 +74,12 @@
                                     <p><strong>Room Type:</strong> @reservation.RoomType</p>
                                     <p><strong>Check-in:</strong> @reservation.CheckInDate.ToString("dd/MM/yyyy")</p>
                                     <p><strong>Check-out:</strong> @reservation.CheckOutDate.ToString("dd/MM/yyyy")</p>
-                                    <p><strong>Includes Food:</strong> @reservation.IncludesFood ? "Yes" : "No"</p>
-                                    <p><strong>Includes Walk:</strong> @reservation.IncludesWalk ? "Yes" : "No"</p>
+                                    <p><strong>Includes Food:</strong> @(reservation.IncludesFood ? "Yes" : "No")</p>
+                                    <p><strong>Includes Walk:</strong> @(reservation.IncludesWalk ? "Yes" : "No")</p>
+
+                                    <form method="get" action="@Url.Action("DeleteReservation", new { id = reservation.Id })">
+                                        <input type="submit" value="Delete" class="btn btn-danger" />
+                                    </form>
                                 </div>
                             </div>
                         }

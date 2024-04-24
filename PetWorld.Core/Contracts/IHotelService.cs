@@ -20,5 +20,11 @@ namespace PetWorld.Core.Contracts
 
         Task<List<HotelRoomServiceModel>> GetUserReservationsAsync(string userId);
 
+        Task DeleteAsync(int id);
+
+        Task<HotelRoomServiceModel> ReservationDetailsByIdAsync(int id);
+
+
+
     }
 }

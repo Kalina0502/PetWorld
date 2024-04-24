@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PetWorld.Attributes;
 using PetWorld.Core.Contracts;
 using PetWorld.Core.Models.Adoption;
@@ -97,6 +98,43 @@ namespace PetWorld.Controllers
 
             return RedirectToAction(nameof(All), new { id = newhotelRoomId, /*information = model.GetInformation()*/ });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            // Извличане на резервация по id
+            var reservation = await repository.AllReadOnly<RoomReservation>()
+                                              .FirstOrDefaultAsync(r => r.Id == id);
+
+            // Проверка дали резервацията е намерена
+            if (reservation == null)
+            {
+                return NotFound();
+            }
+
+            // Създаване на модел за изтриване
+            var model = new HotelRoomServiceModel
+            {
+                Id = reservation.Id,
+                CheckInDate = reservation.CheckInDate,
+                CheckOutDate = reservation.CheckOutDate,
+                RoomType = reservation.Room.RoomType.Name,
+                IncludesFood = reservation.IncludesFood,
+                IncludesWalk = reservation.IncludesWalk
+            };
+
+            // Връщане на изгледа за изтриване с модела
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id, HotelRoomServiceModel model)
+        {
+            await hotelService.DeleteAsync(model.Id);
+
+            return RedirectToAction("Details");
+        }
+
     }
 }
 
