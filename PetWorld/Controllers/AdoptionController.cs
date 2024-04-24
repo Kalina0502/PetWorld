@@ -5,7 +5,6 @@ using PetWorld.Core.Constants;
 using PetWorld.Core.Contracts;
 using PetWorld.Core.Models;
 using PetWorld.Core.Models.Adoption;
-using PetWorld.Core.Services;
 using System.Security.Claims;
 
 namespace PetWorld.Controllers
@@ -54,23 +53,35 @@ namespace PetWorld.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Adopt(int id)
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            bool isPetOwner = await adoptionService.IsPetOwnerAsync(userId);
+
+            if (isPetOwner)
+            {
+                 var adoptionAnimal = await adoptionService.GetAdoptionAnimalByIdAsync(id);
+
+                await adoptionService.AdoptAsync(id, userId, null);
+
+                TempData[MessageConstants.UserMessageSuccess] = "You have successfully adopted the pet! We will call you soon!";
+
+                return RedirectToAction(nameof(All));
+            }
+            else
+            {
+                return View(nameof(ProvideOwnerDetails), new PetOwnerFormModel { AdoptionId = id });
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> Adopt(int id, PetOwnerFormModel petOwnerModel)
         {
-            //   if (await adoptionService.SpeciesExistsAsync(id) == false)
-            // {
-            //     return BadRequest();
-            // }
-
-            if (await agentService.ExistsByIdAsync(User.Id()) == false)
-            //&& User.IsAdmin() == false)
-            {
-                return Unauthorized();
-            }
-
             if (await adoptionService.IsAdoptedAsync(id))
             {
-                return BadRequest();
+                return BadRequest("The pet has already been adopted.");
             }
 
             if (!ModelState.IsValid)
@@ -78,18 +89,12 @@ namespace PetWorld.Controllers
                 return View(petOwnerModel);
             }
 
+            await adoptionService.AdoptAsync(id, User.Id(), petOwnerModel);
 
-            return RedirectToAction(nameof(ProvideOwnerDetails), new { adoptionId = id });
+            TempData[MessageConstants.UserMessageSuccess] = "You have successfully adopted the pet! We will call you soon!";
 
-
-            //  await adoptionService.AdoptAsync(id, User.Id(), petOwnerModel);
-
-            //TempData[MessageConstants.UserMessageSuccess] = "You have successfully adopted the pet! We will call you soon!";
-
-            //return RedirectToAction(nameof(All));
+            return RedirectToAction(nameof(All));
         }
-
-
 
         [HttpPost]
         public async Task<IActionResult> ProvideOwnerDetails(int adoptionId, PetOwnerFormModel petOwnerModel)
@@ -99,7 +104,6 @@ namespace PetWorld.Controllers
                 return View(petOwnerModel);
             }
 
-            // Продължаване с процеса по осиновяване
             await adoptionService.AdoptAsync(adoptionId, User.Id(), petOwnerModel);
 
             TempData[MessageConstants.UserMessageSuccess] = "You have successfully adopted the pet! We will call you soon!";
@@ -108,29 +112,6 @@ namespace PetWorld.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<IActionResult> Mine()
-        {
-            var userId = User.Id();
-            IEnumerable<AdoptionServiceModel> model;
-
-            //  if (User.IsAdmin())
-            //{
-            //  return RedirectToAction("Mine", "House", new { area = "Admin" });
-            //}
-
-            if (await agentService.ExistsByIdAsync(userId))
-            {
-                int agentId = await agentService.GetAgentIdAsync(userId) ?? 0;
-                model = await adoptionService.AllAdoptionsByAgentIdAsync(agentId);
-            }
-            else
-            {
-                model = await adoptionService.AllAdoptionsByUserId(userId);
-            }
-
-            return View(model);
-        }
 
         [HttpGet]
         [MustBeAgent]
@@ -171,11 +152,6 @@ namespace PetWorld.Controllers
             }
 
             var model = await adoptionService.AdoptionDetailsByIdAsync(id);
-
-            //if (information != model.GetInformation())
-            //{
-            //  return BadRequest();
-            //x}
 
             return View(model);
         }

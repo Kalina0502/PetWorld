@@ -18,13 +18,9 @@
                 <a asp-controller="Adoption" asp-action="Delete" asp-route-id="@Model.Id"
                    class="btn btn-danger">Delete</a>
                 <p></p>
-
-
             }
-            <form class="input-group-sm" asp-controller="Adoption"
-                  asp-area="" asp-action="Adopt" asp-route-id="@Model.Id" method="post">
-                <input class="btn btn-primary" type="submit" value="Adopt" />
-            </form>
+            <a asp-controller="Adoption" asp-action="Adopt" asp-route-id="@Model.Id"
+               class="btn btn-success">Adopt</a>
         </div>
     </div>
 </div>

@@ -88,7 +88,7 @@ namespace PetWorld.Core.Services
             {
                 AdoptionSorting.Newest => adoptionPetToShow.OrderByDescending(aa => aa.Id),
                 AdoptionSorting.Oldest => adoptionPetToShow.OrderBy(aa => aa.Id),
-                _ => adoptionPetToShow.OrderByDescending(aa => aa.Id), 
+                _ => adoptionPetToShow.OrderByDescending(aa => aa.Id),
             };
 
             var adoptionPets = await adoptionPetToShow
@@ -254,6 +254,32 @@ namespace PetWorld.Core.Services
                 .ToListAsync();
         }
 
+        public async Task<bool> IsPetOwnerAsync(string userId)
+        {
+            // Проверете дали има PetOwner с дадения UserId
+            var petOwner = await repository.AllReadOnly<PetOwner>()
+                .FirstOrDefaultAsync(po => po.UserId == userId);
+
+            // Върнете true, ако petOwner не е null, в противен случай - false
+            return petOwner != null;
+        }
+
+        public async Task<AdoptionAnimal> GetAdoptionAnimalByIdAsync(int adoptionId)
+        {
+            var adoptionAnimal = await repository.AllReadOnly<AdoptionAnimal>()
+                .FirstOrDefaultAsync(aa => aa.Id == adoptionId);
+
+            if (adoptionAnimal == null)
+            {
+                // Логиране на информация, когато не е намерено животно
+                Console.WriteLine($"Adoption animal with ID {adoptionId} not found.");
+            }
+
+            return adoptionAnimal;
+        }
+
+
+
         public async Task AdoptAsync(int adoptionId, string userId, PetOwnerFormModel petOwnerModel)
         {
             // Проверете дали потребителят вече е осиновител
@@ -279,7 +305,8 @@ namespace PetWorld.Core.Services
             int petOwnerId = petOwner.Id;
 
             // Намерете осиновеното животно
-            var adoptionAnimal = await repository.GetByIdAsync<AdoptionAnimal>(adoptionId);
+            var adoptionAnimal = await repository.AllReadOnly<AdoptionAnimal>()
+                .FirstOrDefaultAsync(aa => aa.Id == adoptionId);
 
             if (adoptionAnimal != null)
             {
@@ -295,7 +322,8 @@ namespace PetWorld.Core.Services
                     City = adoptionAnimal.City,
                     PetOwnerId = petOwnerId, // Задайте PetOwnerId
                     ImageUrl = adoptionAnimal.ImageUrl,
-                    Description = adoptionAnimal.Description
+                    Description = adoptionAnimal.Description,
+                    UserId = userId,
                 };
 
                 await repository.AddAsync(pet);

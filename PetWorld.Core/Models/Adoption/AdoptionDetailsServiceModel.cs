@@ -1,5 +1,4 @@
 ﻿using PetWorld.Core.Models.Agent;
-using System.ComponentModel.DataAnnotations;
 
 namespace PetWorld.Core.Models.Adoption
 {

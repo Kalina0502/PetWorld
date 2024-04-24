@@ -2,6 +2,7 @@
 using PetWorld.Core.Models;
 using PetWorld.Core.Models.Adoption;
 using PetWorld.Core.Models.Home;
+using PetWorld.Infrastructure.Data.Models;
 
 namespace PetWorld.Core.Contracts
 {
@@ -47,5 +48,11 @@ namespace PetWorld.Core.Contracts
         Task<bool> IsAdoptedByIUserWithIdAsync(int adoptionId, string userId);
 
         Task AdoptAsync(int adoptionId, string userId, PetOwnerFormModel petOwnerModel);
+
+        Task<bool> IsPetOwnerAsync(string userId);
+
+        Task<AdoptionAnimal> GetAdoptionAnimalByIdAsync(int adoptionAnimalId);
+
+
     }
 }
