@@ -15,9 +15,8 @@
 
 <div class="profile-details">
 
-    <!-- Информация за собственика на животните -->
     <section class="owner-info">
-        <h3>Your information</h3>
+        <h3>My information</h3>
         <div class="info-box">
             <p><strong>Name:</strong> @Model.PetOwner.PetOwnerFirstName @Model.PetOwner.PetOwnerLastName</p>
             <p><strong>Age:</strong> @Model.PetOwner.Age</p>
@@ -25,110 +24,111 @@
             <p><strong>Email:</strong> @Model.PetOwner.Email</p>
             <p><strong>Phone Number:</strong> @Model.PetOwner.PhoneNumber</p>
         </div>
-        <div class="row">
-            <div class="col-md-12 mb-3">
-                <a href="@Url.Action("Edit", "Profile")" class="btn btn-primary">Edit</a>
-            </div>
-        </div>
     </section>
 
     <section class="pets-info">
         <h3>Pets</h3>
-        <div class="info-box">
+        <div class="info-box swiper-container">
             @if (Model.Pets.Any())
             {
-                <div class="swiper-container">
-                    <div class="swiper-wrapper">
-                        @foreach (var pet in Model.Pets)
-                        {
-                            <div class="swiper-slide">
-                                <div class="pet-item">
-                                    <p><strong>Name:</strong> @pet.Name</p>
-                                    <p><strong>City:</strong> @pet.City</p>
-                                    <img class="pet-image" src="@pet.ImageUrl" alt="@pet.Name" />
-                                </div>
+                <div class="swiper-wrapper">
+                    @foreach (var pet in Model.Pets)
+                    {
+                        <div class="pet-item swiper-slide">
+                            <div class="pet-details">
+                                <p><strong>Name:</strong> @pet.Name</p>
+                                <p><strong>City:</strong> @pet.City</p>
                             </div>
-                        }
-                    </div>
+                            <img class="pet-image" src="@pet.ImageUrl" alt="@pet.Name" />
+                        </div>
 
+                    }
                 </div>
             }
             else
             {
                 <p>No pets found.</p>
             }
-            <!-- Button for adding a pet -->
-            <form method="get" action="@Url.Action("Add", "Profile")">
-                <input type="submit" value="Add Pet" class="btn btn-danger" />
-            </form>
         </div>
     </section>
 
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-
-    <style>
-        .swiper-button-prev, .swiper-button-next {
-            width: 30px;
-            height: 30px;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: #ccc;
-            border-radius: 50%;
-        }
-
-        .reservations-info .info-box .swiper-button-prev {
-            left: -40px;
-        }
-
-        .reservations-info .info-box .swiper-button-next {
-            right: -40px;
-        }
-
-        .reservations-info .info-box {
-            overflow: hidden;
-        }
-
-        .swiper-container {
-            width: 100%;
-            height: auto;
-        }
-
-        .swiper-wrapper {
-            height: auto;
-        }
-
-        .reservation-item {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-    </style>
-
-
-    <!-- Списък с осиновявания -->
-    <section class="adoptions-info">
-        <h3>Adoptions</h3>
-        <div class="info-box">
-            @if (Model.Adoptions.Any())
+    <section class="reservations-info">
+        <h3>Hotel Reservations</h3>
+        <div class="info-box swiper-container">
+            @if (Model.HotelReservations.Any())
             {
-                <ul class="adoption-list">
-                    @foreach (var adoption in Model.Adoptions)
+                <div class="swiper-wrapper">
+                    @foreach (var reservation in Model.HotelReservations)
                     {
-                        <li class="adoption-item">
-                            <p><strong>Adoption Details:</strong> <!-- Добавете специфични детайли за осиновяването --></p>
-                        </li>
+                        <div class="reservation-item swiper-slide">
+                            <p><strong>Room Type:</strong> @reservation.RoomType</p>
+                            <p><strong>Check-in:</strong> @reservation.CheckInDate.ToString("dd/MM/yyyy")</p>
+                            <p><strong>Check-out:</strong> @reservation.CheckOutDate.ToString("dd/MM/yyyy")</p>
+                            <p><strong>Includes Food:</strong> @reservation.IncludesFood</p>
+                            <p><strong>Includes Walk:</strong> @reservation.IncludesWalk</p>
+                        </div>
                     }
-                </ul>
+                </div>
             }
             else
             {
-                <p>No adoptions found.</p>
+                <p>No hotel reservations found.</p>
             }
         </div>
     </section>
-
+    <div class="back-link">
+        <a href="@Url.Action("Index", "Profile")">Back to list</a>
+    </div>
 </div>
 
-<!-- Стилове за новия дизайн -->
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var swiper = new Swiper('.swiper-container', {
+            slidesPerView: 3,
+            spaceBetween: 10,
+            loop: false
+        });
+    });
+</script>
+
+<style>
+    .info-box {
+        width: 95%;
+        max-width: 700px;
+        padding: 10px;
+        background-color: #cccccc; 
+        border-radius: 5px;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+
+    .swiper-container {
+        width: 100%; 
+    }
+
+    .profile-details {
+        text-align: center; 
+    }
+
+    .swiper-slide {
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+    }
+
+    .pet-image {
+        width: 170px;
+        height: 100px;
+        border-radius: 10px;
+    }
+
+    .pet-item, .reservation-item {
+        border: 1px solid #000;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+</style>
