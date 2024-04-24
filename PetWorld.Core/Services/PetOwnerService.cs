@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetWorld.Core.Contracts;
+using PetWorld.Core.Models.Adoption;
 using PetWorld.Core.Models.Pet;
 using PetWorld.Core.Models.Profile;
 using PetWorld.Infrastructure.Common;
 using PetWorld.Infrastructure.Data.Models;
-using System.Threading.Tasks;
 
 namespace PetWorld.Core.Services
 {
@@ -89,7 +89,7 @@ namespace PetWorld.Core.Services
             // Конвертиране на списъка от `Pet` към списък от `PetServiceModel`
             var allPets = pets.Select(p => new PetServiceModel
             {
-                Id = p.Id,
+               // Id = p.Id,
                 Name = p.Name,
                 Age = p.Age,
                 Description = p.Description,
@@ -99,6 +99,62 @@ namespace PetWorld.Core.Services
 
             // Връщане на списък от PetServiceModel
             return allPets;
+        }
+        public async Task<IEnumerable<PetSpeciesServiceModel>> AllSpeciesAsync()
+        {
+            return await repository.AllReadOnly<Species>()
+                 .Select(c => new PetSpeciesServiceModel()
+                 {
+                     Id = c.Id,
+                     Name = c.Name,
+                 })
+                 .ToListAsync();
+        }
+
+        public async Task<int> CreatePetAsync(PetServiceModel model, string userId)
+        {
+            Pet newPet = new Pet()
+            {
+               // Id = model.Id,
+                Name = model.Name,
+                Age = model.Age,
+                Description = model.Description,
+                City = model.City,
+                ImageUrl = model.ImageUrl,
+                UserId = userId,
+                SpeciesId = model.SpeciesId,
+            };
+
+            await repository.AddAsync(newPet);
+            await repository.SaveChangesAsync();
+
+            return newPet.Id;
+        }
+
+        public async Task<AdoptionFormModel> PetDetailsByIdAsync(int id)
+        {
+            var pet = await repository.AllReadOnly<Pet>()
+                //.Where(aa => aa.IsApproved)
+                .Where(p => p.Id == id)
+                .Select(p => new AdoptionFormModel()
+                {
+                    City = p.City,
+                    ImageUrl = p.ImageUrl,
+                    //Species = p.Species.Name,
+                    Description = p.Description,
+                    Name = p.Name,
+                    Age = p.Age,
+                    SpeciesId = p.SpeciesId,
+                })
+                .FirstAsync();
+
+            return pet;
+        }
+
+        public async Task DeleteAsync(int petId)
+        {
+            await repository.DeleteAsync<Pet>(petId);
+            await repository.SaveChangesAsync();
         }
     }
 }

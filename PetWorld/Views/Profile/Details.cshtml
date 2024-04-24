@@ -32,98 +32,53 @@
         </div>
     </section>
 
-    <!-- Списък с животни -->
     <section class="pets-info">
         <h3>Pets</h3>
         <div class="info-box">
             @if (Model.Pets.Any())
             {
-                <ul class="pet-list">
-                    @foreach (var pet in Model.Pets)
-                    {
-                        <li class="pet-item">
-                            <div class="pet-details">
-                                <p><strong>Name:</strong> @pet.Name</p>
-                                <p><strong>Age:</strong> @pet.Age</p>
-                                <p><strong>Description:</strong> @pet.Description</p>
-                                <p><strong>City:</strong> @pet.City</p>
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        @foreach (var pet in Model.Pets)
+                        {
+                            <div class="swiper-slide">
+                                <div class="pet-item">
+                                    <p><strong>Name:</strong> @pet.Name</p>
+                                    <p><strong>City:</strong> @pet.City</p>
+                                    <img class="pet-image" src="@pet.ImageUrl" alt="@pet.Name" />
+                                </div>
                             </div>
-                            <img class="pet-image" src="@pet.ImageUrl" alt="@pet.Name" />
-                        </li>
-                    }
-                </ul>
+                        }
+                    </div>
+
+                </div>
             }
             else
             {
                 <p>No pets found.</p>
             }
-        </div>
-    </section>
-
-    <section class="reservations-info">
-        <h3>Hotel Reservations</h3>
-        <div class="info-box">
-            @if (Model.HotelReservations.Any())
-            {
-                <div class="swiper-container">
-                    <div class="swiper-wrapper">
-                        @foreach (var reservation in Model.HotelReservations)
-                        {
-                            <div class="swiper-slide">
-                                <div class="reservation-item">
-                                    <p><strong>Room Type:</strong> @reservation.RoomType</p>
-                                    <p><strong>Check-in:</strong> @reservation.CheckInDate.ToString("dd/MM/yyyy")</p>
-                                    <p><strong>Check-out:</strong> @reservation.CheckOutDate.ToString("dd/MM/yyyy")</p>
-                                    <p><strong>Includes Food:</strong> @(reservation.IncludesFood ? "Yes" : "No")</p>
-                                    <p><strong>Includes Walk:</strong> @(reservation.IncludesWalk ? "Yes" : "No")</p>
-
-                                    <form method="get" action="@Url.Action("DeleteReservation", new { id = reservation.Id })">
-                                        <input type="submit" value="Delete" class="btn btn-danger" />
-                                    </form>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                    <div class="swiper-button-prev"></div>
-                    <div class="swiper-button-next"></div>
-                </div>
-            }
-            else
-            {
-                <p>No hotel reservations found.</p>
-            }
+            <!-- Button for adding a pet -->
+            <form method="get" action="@Url.Action("Add", "Profile")">
+                <input type="submit" value="Add Pet" class="btn btn-danger" />
+            </form>
         </div>
     </section>
 
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
-
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-
-    <script>
-        var swiper = new Swiper('.swiper-container', {
-            slidesPerView: 3,
-            spaceBetween: 10,
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            loop: false,
-            watchOverflow: true, 
-        });
-    </script>
 
     <style>
         .swiper-button-prev, .swiper-button-next {
-            width: 30px; 
-            height: 30px; 
-            top: 50%; 
-            transform: translateY(-50%); 
-            background-color: #ccc; 
-            border-radius: 50%; 
+            width: 30px;
+            height: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #ccc;
+            border-radius: 50%;
         }
 
         .reservations-info .info-box .swiper-button-prev {
-            left: -40px; 
+            left: -40px;
         }
 
         .reservations-info .info-box .swiper-button-next {
@@ -131,11 +86,11 @@
         }
 
         .reservations-info .info-box {
-            overflow: hidden; 
+            overflow: hidden;
         }
 
         .swiper-container {
-            width: 100%; 
+            width: 100%;
             height: auto;
         }
 
@@ -174,50 +129,6 @@
         </div>
     </section>
 
-    <!-- Връщане към списъка -->
-    <div class="back-link">
-        <a href="@Url.Action("Index", "Profile")">Back to list</a>
-    </div>
-
 </div>
 
 <!-- Стилове за новия дизайн -->
-<style>
-    .profile-details {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    .info-box {
-        border: 1px solid #ccc;
-        padding: 10px;
-        margin-bottom: 20px;
-        border-radius: 5px;
-        background-color: #f9f9f9;
-    }
-
-    h3 {
-        margin-bottom: 10px;
-    }
-
-    ul {
-        list-style: none;
-        padding: 0;
-    }
-
-    ul li {
-        margin-bottom: 10px;
-    }
-
-    .pet-image {
-        max-width: 200px;
-        margin-top: 10px;
-        border-radius: 5px;
-    }
-
-    .back-link {
-        text-align: center;
-        margin-top: 20px;
-    }
-</style>

@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using PetWorld.Core.Contracts;
 using PetWorld.Core.Models.Hotel;
+using PetWorld.Core.Models.Pet;
 using PetWorld.Core.Models.Profile;
-using PetWorld.Core.Services;
 using PetWorld.Infrastructure.Common;
-using PetWorld.Infrastructure.Data.Models;
 using System.Security.Claims;
 
 namespace PetWorld.Controllers
@@ -38,7 +36,7 @@ namespace PetWorld.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(ProfileIndexViewModel model)
         {
-            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             var userId = userIdClaim?.Value;
 
             if (string.IsNullOrEmpty(userId))
@@ -68,7 +66,7 @@ namespace PetWorld.Controllers
         [HttpGet]
         public async Task<IActionResult> Profile()
         {
-            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             var userId = userIdClaim?.Value;
 
             var email = User.Identity?.Name;
@@ -93,7 +91,7 @@ namespace PetWorld.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             var userId = userIdClaim?.Value;
 
             // Извличане на информация за `PetOwner`
@@ -113,7 +111,7 @@ namespace PetWorld.Controllers
             /// var hotelReservations = await hotelService.GetReservationsByOwnerIdAsync(petOwner.Id);
 
             // Извличане на списъка с осиновени животни
-            // var adoptions = await adoptionService.GetAdoptionsByOwnerIdAsync(petOwner.Id);
+             var adoptions = await profileService.GetAdoptionsByOwnerIdAsync(userId);
 
             string genderType = await petOwnerService.GetGenderTypeByIdAsync(petOwner.GenderId);
 
@@ -124,15 +122,13 @@ namespace PetWorld.Controllers
                 PetOwner = petOwner,
                 Pets = pets,
                 HotelReservations = hotelReservations,
-                Gender = genderType
-                //Adoptions = adoptions
-
+                Gender = genderType,
+                Adoptions = adoptions
             };
 
             // Връщане на `View` с модела за данни
             return View(model);
         }
-
 
         [HttpGet]
         public async Task<IActionResult> Edit()
@@ -176,10 +172,6 @@ namespace PetWorld.Controllers
             return RedirectToAction(nameof(Details), new { userId });
         }
 
-
-
-
-
         [HttpGet]
         public async Task<IActionResult> DeleteReservation(int id)
         {
@@ -214,27 +206,65 @@ namespace PetWorld.Controllers
             return RedirectToAction("Details");
         }
 
-
-
         [HttpGet]
-        public async Task<IActionResult> MyPets()
+        public async Task<IActionResult> Add()
         {
-            var model = new MyPetsViewModel();
+            var model = new PetServiceModel()
+            {
+                AllSpecies = await petOwnerService.AllSpeciesAsync()
+            };
+
             return View(model);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> MyReservations()
+        [HttpPost]
+        public async Task<IActionResult> Add(PetServiceModel model)
         {
-            var model = new MyReservationsViewModel();
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            var userId = userIdClaim?.Value;
+
+            if (userId == null)
+            {
+                return NotFound();
+            }
+            if (!ModelState.IsValid)
+            {
+                model.AllSpecies = await petOwnerService.AllSpeciesAsync();
+                return View(model);
+            }
+
+            int newpetId = await petOwnerService.CreatePetAsync(model, userId);
+
+            return RedirectToAction(nameof(Details), new { id = newpetId, /*information = model.GetInformation()*/ });
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> DeletePet(int id)
+        {
+            var pet = await petOwnerService.PetDetailsByIdAsync(id);
+
+            var model = new PetDetailsServiceModel()
+            {
+                //Id = pet.Id,
+                City = pet.City,
+                ImageUrl = pet.ImageUrl,
+                Name = pet.Name,
+               // Age = pet.Age,
+                Description = pet.Description,
+               // Species = pet.Species,
+               // UserId = pet.UserId 
+            };
+
             return View(model);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> MyGroomingAppointments()
-        {
-            var model = new MyGroomingAppointmentsViewModel();
-            return View(model);
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> DeletePet(PetDetailsServiceModel model)
+        //{
+        //    await petOwnerService.DeleteAsync(model.Id);
+
+        //    return RedirectToAction(nameof(Details));
+        //}
     }
 }

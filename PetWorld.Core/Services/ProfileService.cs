@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetWorld.Core.Contracts;
+using PetWorld.Core.Models.Adoption;
 using PetWorld.Core.Models.Profile;
 using PetWorld.Infrastructure.Common;
 using PetWorld.Infrastructure.Data.Models;
@@ -76,6 +77,26 @@ namespace PetWorld.Core.Services
             }
         }
 
+        public async Task<List<AdoptionServiceModel>> GetAdoptionsByOwnerIdAsync(string userId)
+        {
+            // Извличане на списък с AdoptionAnimal обекти, които имат съответното userId
+            var adoptionAnimals = await repository.AllReadOnly<AdoptionAnimal>()
+                .Where(aa => aa.UserId == userId)
+                .ToListAsync();
 
+            // Преобразуване на списъка от AdoptionAnimal обекти в AdoptionServiceModel
+            var adoptionServiceModels = adoptionAnimals.Select(aa => new AdoptionServiceModel
+            {
+                Id = aa.Id,
+                Name = aa.Name,
+                City = aa.City,
+                Description = aa.Description,
+                ImageUrl = aa.ImageUrl
+            }).ToList();
+
+            // Връщане на списъка с AdoptionServiceModel
+            return adoptionServiceModels;
+        }
     }
+
 }

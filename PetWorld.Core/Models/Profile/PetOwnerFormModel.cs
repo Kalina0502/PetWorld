@@ -40,5 +40,7 @@ namespace PetWorld.Core.Models
         [Required(ErrorMessage = RequiredMessage)]
         [Display(Name = "Gender")]
         public int GenderId { get; set; }
+
+        public int AdoptionId { get; set; }
     }
 }
