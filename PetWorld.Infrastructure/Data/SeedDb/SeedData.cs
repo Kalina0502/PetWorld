@@ -166,7 +166,6 @@ namespace PetWorld.Infrastructure.Data.SeedDb
                 SpeciesId = DogSpecies.Id,
                 Description = "Friendly dog",
                 PetOwnerId = PetOwner.Id,
-                GenderId = MaleGender.Id,
                 City = "Varna"
             };
 
@@ -178,7 +177,6 @@ namespace PetWorld.Infrastructure.Data.SeedDb
                 SpeciesId = CatSpecies.Id,
                 Description = "Playful cat",
                 PetOwnerId = PetOwner.Id,
-                GenderId = FemaleGender.Id,
                 City = "Sofia"
             };
 
@@ -190,7 +188,6 @@ namespace PetWorld.Infrastructure.Data.SeedDb
                 SpeciesId = BirdSpecies.Id,
                 Description = "Talkative bird",
                 PetOwnerId = PetOwner.Id,
-                GenderId = FemaleGender.Id,
                 City = "Burgas"
             };
         }

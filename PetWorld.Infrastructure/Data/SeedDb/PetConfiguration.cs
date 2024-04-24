@@ -9,10 +9,10 @@ namespace PetWorld.Infrastructure.Data.SeedDb
         public void Configure(EntityTypeBuilder<Pet> builder)
         {
             builder
-               .HasOne(p => p.Gender)
-               .WithMany()
-               .HasForeignKey(p => p.GenderId)
-               .OnDelete(DeleteBehavior.Restrict);
+            .HasOne(p => p.User)
+            .WithMany()
+            .HasForeignKey(p => p.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
 
             var data = new SeedData();
 

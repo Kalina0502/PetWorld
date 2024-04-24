@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using static PetWorld.Infrastructure.Constants.DataConstants;
@@ -43,11 +44,10 @@ namespace PetWorld.Infrastructure.Data.Models
         [ForeignKey(nameof(PetOwnerId))]
         public PetOwner Owner { get; set; } = null!;
 
-        [Required]
-        [ForeignKey(nameof(Gender))]
-        [Comment("Pet gender")]
-        public int? GenderId { get; set; }
+        [Comment("User id of the pet")]
+        public string? UserId { get; set; }
 
-        public GenderType? Gender { get; set; } = null;
+        [ForeignKey(nameof(UserId))]
+        public IdentityUser? User { get; set; }
     }
 }

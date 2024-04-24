@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetWorld.Infrastructure.Data;
 
@@ -11,9 +12,10 @@ using PetWorld.Infrastructure.Data;
 namespace PetWorld.Infrastructure.Migrations
 {
     [DbContext(typeof(PetWorldDbContext))]
-    partial class PetWorldDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240424093919_PetUserIdAdded")]
+    partial class PetUserIdAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,15 +145,15 @@ namespace PetWorld.Infrastructure.Migrations
                         {
                             Id = "dea12856-c198-4129-b3f3-b893d8395082",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a62a1ddf-a127-423b-93dc-6d9f4bd7f6da",
+                            ConcurrencyStamp = "978bc269-1037-4136-816d-c560a101c692",
                             Email = "agent@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "agent@mail.com",
                             NormalizedUserName = "agent@mail.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAELmm5fHw51bskYdvjTta6wNben6OWPLkaCpNauF3Rx39DzHoYGWG7/gc8gSzBzUnCw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEE7MRRP/CajjIUqO0wk4VJgPX8B7RC4PgcS7KG3VSc+/KN6P3m28Y7pKcW4l4hEn5w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d3bd1716-f9ec-45a0-8df0-4779ed1c66fc",
+                            SecurityStamp = "526c4da7-acbd-4c03-ad5e-e9035f549344",
                             TwoFactorEnabled = false,
                             UserName = "agent@mail.com"
                         },
@@ -159,15 +161,15 @@ namespace PetWorld.Infrastructure.Migrations
                         {
                             Id = "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a4a15327-cc2a-4c64-9bc4-eee198167ab0",
+                            ConcurrencyStamp = "d0cff93e-2d81-47d5-b9b0-0cfd4c7678f7",
                             Email = "guest1@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "guest@mail.com",
                             NormalizedUserName = "guest@mail.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJqijGimzl/XS0FbG+WgLIwULYkl+Xw1ynNL4YEiAO2zCHfs+5kWW+GO9jyGv3xIjw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFT6HT4NsqBO+LyrAx7g6SnUySWBC/kJ4YZm6HxdTgRo+ffogx5QVP6QvXtNUnwFtQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "770dcb35-8ecb-4d4f-ac7e-eb358689fd43",
+                            SecurityStamp = "c0112451-987e-4104-9e18-3bf8e12478e1",
                             TwoFactorEnabled = false,
                             UserName = "guest@mail.com"
                         });
@@ -605,6 +607,11 @@ namespace PetWorld.Infrastructure.Migrations
                         .HasColumnType("nvarchar(500)")
                         .HasComment("Pet description");
 
+                    b.Property<int?>("GenderId")
+                        .IsRequired()
+                        .HasColumnType("int")
+                        .HasComment("Pet gender");
+
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
@@ -628,6 +635,8 @@ namespace PetWorld.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GenderId");
+
                     b.HasIndex("PetOwnerId");
 
                     b.HasIndex("SpeciesId");
@@ -645,6 +654,7 @@ namespace PetWorld.Infrastructure.Migrations
                             Age = 5,
                             City = "Varna",
                             Description = "Friendly dog",
+                            GenderId = 1,
                             Name = "Buddy",
                             PetOwnerId = 1,
                             SpeciesId = 1
@@ -655,6 +665,7 @@ namespace PetWorld.Infrastructure.Migrations
                             Age = 3,
                             City = "Sofia",
                             Description = "Playful cat",
+                            GenderId = 2,
                             Name = "Whiskers",
                             PetOwnerId = 1,
                             SpeciesId = 2
@@ -665,6 +676,7 @@ namespace PetWorld.Infrastructure.Migrations
                             Age = 2,
                             City = "Burgas",
                             Description = "Talkative bird",
+                            GenderId = 2,
                             Name = "Polly",
                             PetOwnerId = 1,
                             SpeciesId = 3
@@ -1054,6 +1066,12 @@ namespace PetWorld.Infrastructure.Migrations
 
             modelBuilder.Entity("PetWorld.Infrastructure.Data.Models.Pet", b =>
                 {
+                    b.HasOne("PetWorld.Infrastructure.Data.Models.GenderType", "Gender")
+                        .WithMany()
+                        .HasForeignKey("GenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("PetWorld.Infrastructure.Data.Models.PetOwner", "Owner")
                         .WithMany()
                         .HasForeignKey("PetOwnerId")
@@ -1068,8 +1086,9 @@ namespace PetWorld.Infrastructure.Migrations
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Gender");
 
                     b.Navigation("Owner");
 
