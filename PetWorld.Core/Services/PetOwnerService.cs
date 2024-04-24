@@ -58,11 +58,11 @@ namespace PetWorld.Core.Services
             return genderType;
         }
 
-        public async Task<PetOwner> FindPetOwnerByIdAsync(int id)
+        public async Task<PetOwner> FindPetOwnerByIdAsync(string userId)
         {
             // Query the PetOwner table using the provided ID
             var petOwner = await repository.AllReadOnly<PetOwner>()
-                .FirstOrDefaultAsync(po => po.Id == id);
+                .FirstOrDefaultAsync(po => po.UserId == userId);
 
             // Return the found PetOwner or null if not found
             return petOwner;

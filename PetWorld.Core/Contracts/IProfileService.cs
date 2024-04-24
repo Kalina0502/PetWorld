@@ -1,4 +1,5 @@
 ﻿using PetWorld.Core.Models.Profile;
+using PetWorld.Infrastructure.Data.Models;
 
 namespace PetWorld.Core.Contracts
 {
@@ -6,7 +7,10 @@ namespace PetWorld.Core.Contracts
     {
         Task UpdatePetOwnerAsync(ProfileIndexViewModel model, string userId);
 
-        Task<ProfileIndexViewModel?> GetProfileIndexViewModelByIdAsync(int id);
+        Task<PetOwner> GetPetOwnerByUserIdAsync(string userId);
+
+
+        Task<ProfileIndexViewModel?> GetProfileIndexViewModelByIdAsync(string userId);
 
     }
 }

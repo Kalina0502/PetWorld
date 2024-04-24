@@ -10,7 +10,7 @@ namespace PetWorld.Core.Contracts
 
         Task<int> CreateAsync(ProfileIndexViewModel model, string userId);
 
-        Task<PetOwner> FindPetOwnerByIdAsync(int id);
+        Task<PetOwner> FindPetOwnerByIdAsync(string userId);
 
         Task<string> GetGenderTypeByIdAsync(int genderId);
 

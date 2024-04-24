@@ -25,10 +25,10 @@ namespace PetWorld.Core.Services
             hotelService = _hotelService;
         }
 
-        public async Task<ProfileIndexViewModel?> GetProfileIndexViewModelByIdAsync(int id)
+        public async Task<ProfileIndexViewModel?> GetProfileIndexViewModelByIdAsync(string userId)
         {
             var petOwner = await repository.AllReadOnly<PetOwner>()
-                   .Where(pt => pt.Id == id)
+                   .Where(pt => pt.UserId == userId)
                    .Select(pt => new ProfileIndexViewModel()
                    {
                        FirstName = pt.PetOwnerFirstName,
@@ -43,13 +43,22 @@ namespace PetWorld.Core.Services
             return petOwner;
         }
 
+        public async Task<PetOwner> GetPetOwnerByUserIdAsync(string userId)
+        {
+            // Извличане на обекта PetOwner с даден userId
+            var petOwner = await repository.AllReadOnly<PetOwner>()
+                .FirstOrDefaultAsync(po => po.UserId == userId);
 
-        // Метод за актуализиране на информацията за собственика
+            // Връщане на намерения обект PetOwner (или null, ако няма такъв)
+            return petOwner;
+        }
+
+
         public async Task UpdatePetOwnerAsync(ProfileIndexViewModel model, string userId)
         {
             // Извличане на съществуващ обект PetOwner
-            var petOwner = await repository.All<PetOwner>()
-                .FirstOrDefaultAsync(po => po.UserId == userId);
+            var petOwner = await repository.AllReadOnly<PetOwner>()
+                 .FirstOrDefaultAsync(po => po.UserId == userId);
 
             // Проверка дали обектът е намерен
             if (petOwner != null)
@@ -65,7 +74,8 @@ namespace PetWorld.Core.Services
                 // Запазване на промените
                 await repository.SaveChangesAsync();
             }
-
         }
+
+
     }
 }

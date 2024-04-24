@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PetWorld.Core.Contracts;
 using PetWorld.Core.Models.Profile;
 using PetWorld.Core.Services;
+using System.Security.Claims;
 
 namespace PetWorld.Controllers
 {
@@ -90,7 +91,7 @@ namespace PetWorld.Controllers
             var userId = userIdClaim?.Value;
 
             // Извличане на информация за `PetOwner`
-            var petOwner = await petOwnerService.FindPetOwnerByIdAsync(id);
+            var petOwner = await petOwnerService.FindPetOwnerByIdAsync(userId);
 
             // Проверка дали `PetOwner` съществува
             if (petOwner == null)
@@ -128,17 +129,31 @@ namespace PetWorld.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit()
         {
+            // Извличане на userId на текущия потребител
+            var userId = User.Id();
 
-            var model = await profileService.GetProfileIndexViewModelByIdAsync(id);
+            // Извличане на обект PetOwner с даден userId
+            var petOwner = await profileService.GetPetOwnerByUserIdAsync(userId);
 
+            // Проверка дали е намерен PetOwner
+            if (petOwner == null)
+            {
+                // Ако няма PetOwner с този userId, връщане на NotFound()
+                return NotFound();
+            }
+
+            var model = await profileService.GetProfileIndexViewModelByIdAsync(userId);
+
+            // Връщане на изглед с модела за редактиране
             return View(model);
         }
 
+
         // Метод за обработка на заявката за редактиране
         [HttpPost]
-        public async Task<IActionResult> Edit(ProfileIndexViewModel model, int id)
+        public async Task<IActionResult> Edit(ProfileIndexViewModel model)
         {
             var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
             var userId = userIdClaim?.Value;
@@ -152,7 +167,7 @@ namespace PetWorld.Controllers
             await profileService.UpdatePetOwnerAsync(model, userId);
 
             // Пренасочване към страницата за детайли
-            return RedirectToAction(nameof(Details), new { id });
+            return RedirectToAction(nameof(Details), new { userId });
         }
 
 
