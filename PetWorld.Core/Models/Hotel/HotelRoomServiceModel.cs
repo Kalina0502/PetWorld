@@ -11,7 +11,7 @@ namespace PetWorld.Core.Models.Hotel
         public DateTime CheckOutDate { get; set; }
 
         [Comment("Room Type Id")]
-        public int RoomTypeId { get; set; }
+        public string RoomType { get; set; } = string.Empty;
 
         [Comment("Is Available")]
         public bool IsAvailable { get; set; }

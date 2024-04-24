@@ -63,7 +63,7 @@ namespace PetWorld.Core.Services
                 .Select(hr => new HotelRoomServiceModel
                 {
                     Id = hr.Id,
-                    RoomTypeId = hr.RoomTypeId,
+                    RoomType = hr.RoomType.Name,
                     IsAvailable = hr.IsAvailable
                 })
                 .FirstOrDefaultAsync();
@@ -121,7 +121,8 @@ namespace PetWorld.Core.Services
                 CheckInDate = rr.CheckInDate,
                 CheckOutDate = rr.CheckOutDate,
                 IncludesFood = rr.IncludesFood,
-                IncludesWalk = rr.IncludesWalk
+                IncludesWalk = rr.IncludesWalk,
+                RoomType = rr.Room.RoomType.Name
             }).ToList();
 
             // Връщане на списък от HotelRoomServiceModel
