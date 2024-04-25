@@ -3,6 +3,5 @@
     public class PetDetailsServiceModel : PetServiceModel
     {
         public string Species { get; set; } = null!;
-
     }
 }

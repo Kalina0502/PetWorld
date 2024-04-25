@@ -56,6 +56,10 @@
                 <a href="@Url.Action("Add", "Profile")" class="btn btn-primary">Add Pet</a>
             </div>
         </div>
+        <div class="row">
+            <a asp-controller="Profile" asp-action="DeletePet" asp-route-id="@Model.Id"
+               class="btn btn-danger">Delete</a>
+        </div>
     </section>
 
     <section class="reservations-info">

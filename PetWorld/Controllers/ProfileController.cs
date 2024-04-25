@@ -245,21 +245,38 @@ namespace PetWorld.Controllers
         [HttpGet]
         public async Task<IActionResult> DeletePet(int id)
         {
+            if (await petOwnerService.PetExistsAsync(id) == false)
+            {
+                return BadRequest();
+            }
+
             var pet = await petOwnerService.PetDetailsByIdAsync(id);
 
             var model = new PetDetailsServiceModel()
             {
-                //Id = pet.Id,
+                Id = pet.Id,
                 City = pet.City,
                 ImageUrl = pet.ImageUrl,
                 Name = pet.Name,
-               // Age = pet.Age,
                 Description = pet.Description,
-               // Species = pet.Species,
-               // UserId = pet.UserId 
             };
 
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeletePet(PetDetailsViewModel model)
+        {
+            if (await petOwnerService.PetExistsAsync(model.Id) == false)
+            {
+                return BadRequest();
+            }
+
+            await petOwnerService.DeleteAsync(model.Id);
+
+            TempData["SuccessMessage"] = "Pet successfully deleted.";
+
+            return RedirectToAction(nameof(Details));
         }
 
         [HttpGet]
