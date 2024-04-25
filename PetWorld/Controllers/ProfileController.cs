@@ -104,7 +104,7 @@ namespace PetWorld.Controllers
             }
 
             // Извличане на списъка с животни
-            var pets = await petOwnerService.GetPetsByOwnerIdAsync(petOwner.Id);
+            var pets = await petOwnerService.GetPetsByUserIdAsync(userId);
 
             // Извличане на списъка с резервации за хотел
             var hotelReservations = await hotelService.GetUserReservationsAsync(userId);
@@ -209,19 +209,20 @@ namespace PetWorld.Controllers
         [HttpGet]
         public async Task<IActionResult> Add()
         {
-            var model = new PetServiceModel()
+            var model = new PetFormModel()
             {
-                AllSpecies = await petOwnerService.AllSpeciesAsync()
+               AllSpecies = await petOwnerService.AllSpeciesAsync()
             };
 
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(PetServiceModel model)
+        public async Task<IActionResult> Add(PetFormModel model)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             var userId = userIdClaim?.Value;
+
 
             if (userId == null)
             {
@@ -232,6 +233,8 @@ namespace PetWorld.Controllers
                 model.AllSpecies = await petOwnerService.AllSpeciesAsync();
                 return View(model);
             }
+
+          //  var petOwner = await petOwnerService.FindPetOwnerByIdAsync(userId);
 
             int newpetId = await petOwnerService.CreatePetAsync(model, userId);
 
@@ -259,12 +262,18 @@ namespace PetWorld.Controllers
             return View(model);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> DeletePet(PetDetailsServiceModel model)
-        //{
-        //    await petOwnerService.DeleteAsync(model.Id);
+        [HttpGet]
+        public async Task<IActionResult> PetDetails(int id)
+        {
+            if (await petOwnerService.PetExistsAsync(id) == false)
+            {
+                return BadRequest();
+            }
 
-        //    return RedirectToAction(nameof(Details));
-        //}
+            var model = await petOwnerService.PetDetailsByIdAsync(id);
+
+            return View(model);
+        }
+
     }
 }

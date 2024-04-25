@@ -79,11 +79,11 @@ namespace PetWorld.Core.Services
         //    return pets;
         //}
 
-        public async Task<List<PetServiceModel>> GetPetsByOwnerIdAsync(int ownerId)
+        public async Task<List<PetServiceModel>> GetPetsByUserIdAsync(string userId)
         {
             // Query the Pet table to retrieve all pets associated with the provided owner ID
             var pets = await repository.AllReadOnly<Pet>()
-                .Where(p => p.PetOwnerId == ownerId)
+                .Where(p => p.UserId == userId)
                 .ToListAsync();
 
             // Конвертиране на списъка от `Pet` към списък от `PetServiceModel`
@@ -111,13 +111,21 @@ namespace PetWorld.Core.Services
                  .ToListAsync();
         }
 
-        public async Task<int> CreatePetAsync(PetServiceModel model, string userId)
+        public async Task<int> CreatePetAsync(PetFormModel model, string userId)
         {
+            //var petOwner = await FindPetOwnerByIdAsync(userId);
+
+            //// Ако не е намерен petOwner, върнете грешка или обработете случая по някакъв начин
+            //if (petOwner == null)
+            //{
+            //    throw new Exception("PetOwner not found");
+            //} 
+
             Pet newPet = new Pet()
             {
                // Id = model.Id,
                 Name = model.Name,
-                Age = model.Age,
+              //  Age = model.Age,
                 Description = model.Description,
                 City = model.City,
                 ImageUrl = model.ImageUrl,
@@ -131,20 +139,19 @@ namespace PetWorld.Core.Services
             return newPet.Id;
         }
 
-        public async Task<AdoptionFormModel> PetDetailsByIdAsync(int id)
+        public async Task<AdoptionDetailsServiceModel> PetDetailsByIdAsync(int id)
         {
             var pet = await repository.AllReadOnly<Pet>()
                 //.Where(aa => aa.IsApproved)
                 .Where(p => p.Id == id)
-                .Select(p => new AdoptionFormModel()
+                .Select(p => new AdoptionDetailsServiceModel()
                 {
                     City = p.City,
                     ImageUrl = p.ImageUrl,
-                    //Species = p.Species.Name,
                     Description = p.Description,
                     Name = p.Name,
-                    Age = p.Age,
-                    SpeciesId = p.SpeciesId,
+                  // Age = p.Age,
+                    Species = p.Species.Name,
                 })
                 .FirstAsync();
 
@@ -155,6 +162,12 @@ namespace PetWorld.Core.Services
         {
             await repository.DeleteAsync<Pet>(petId);
             await repository.SaveChangesAsync();
+        }
+
+        public async Task<bool> PetExistsAsync(int petId)
+        {
+            return await repository.AllReadOnly<Pet>()
+                 .AnyAsync(p => p.Id == petId);
         }
     }
 }

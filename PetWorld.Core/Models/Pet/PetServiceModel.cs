@@ -6,7 +6,7 @@ namespace PetWorld.Core.Models.Pet
 {
     public class PetServiceModel
     {
-       // public int Id { get; set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = RequiredMessage)]
         [StringLength(PetNameMaxLength,
@@ -35,11 +35,5 @@ namespace PetWorld.Core.Models.Pet
         [Required(ErrorMessage = RequiredMessage)]
         [Display(Name = "Image URL")]
         public string ImageUrl { get; set; } = string.Empty;
-
-        [Display(Name = "Species")]
-        public int SpeciesId { get; set; }
-
-        public IEnumerable<PetSpeciesServiceModel> AllSpecies { get; set; } =
-        new List<PetSpeciesServiceModel>();
     }
 }

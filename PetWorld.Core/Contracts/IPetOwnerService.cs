@@ -15,16 +15,17 @@ namespace PetWorld.Core.Contracts
 
         Task<string> GetGenderTypeByIdAsync(int genderId);
 
-        Task<List<PetServiceModel>> GetPetsByOwnerIdAsync(int ownerId);
+        Task<List<PetServiceModel>> GetPetsByUserIdAsync(string userId);
 
-        Task<AdoptionFormModel> PetDetailsByIdAsync(int id);
-
-        Task<int> CreatePetAsync(PetServiceModel model, string userId);
+        Task<int> CreatePetAsync(PetFormModel model, string userId);
 
         Task DeleteAsync(int petId);
 
         Task<IEnumerable<PetSpeciesServiceModel>> AllSpeciesAsync();
 
+        Task<AdoptionDetailsServiceModel> PetDetailsByIdAsync(int id);
+
+        Task<bool> PetExistsAsync(int speciesid);
 
     }
 }
