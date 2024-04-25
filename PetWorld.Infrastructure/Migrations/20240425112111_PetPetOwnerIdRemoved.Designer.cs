@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetWorld.Infrastructure.Data;
 
@@ -11,9 +12,10 @@ using PetWorld.Infrastructure.Data;
 namespace PetWorld.Infrastructure.Migrations
 {
     [DbContext(typeof(PetWorldDbContext))]
-    partial class PetWorldDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240425112111_PetPetOwnerIdRemoved")]
+    partial class PetPetOwnerIdRemoved
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
