@@ -1,7 +1,6 @@
-﻿using PetWorld.Core.Models.Hotel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace PetWorld.Controllers
+namespace PetWorld.Core.Models.Hotel
 {
     public class AllHotelRoomsQueryModel
     {

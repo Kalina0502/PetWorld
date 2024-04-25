@@ -1,5 +1,4 @@
 ﻿using PetWorld.Core.Models.Hotel;
-using PetWorld.Infrastructure.Data.Models;
 
 
 namespace PetWorld.Core.Contracts
@@ -19,6 +18,8 @@ namespace PetWorld.Core.Contracts
         Task<int> CreateAsync(HotelRoomFormModel model, int agentId);
 
         Task<List<HotelRoomServiceModel>> GetUserReservationsAsync(string userId);
+
+        Task<IEnumerable<AllHotelRoomsQueryModel>> GetAllRoomsAsync();
 
         Task DeleteAsync(int id);
 

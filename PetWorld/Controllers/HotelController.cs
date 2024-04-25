@@ -100,31 +100,11 @@ namespace PetWorld.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete()
         {
-            // Извличане на резервация по id
-            var reservation = await repository.AllReadOnly<RoomReservation>()
-                                              .FirstOrDefaultAsync(r => r.Id == id);
+            var rooms = await hotelService.GetAllRoomsAsync();
 
-            // Проверка дали резервацията е намерена
-            if (reservation == null)
-            {
-                return NotFound();
-            }
-
-            // Създаване на модел за изтриване
-            var model = new HotelRoomServiceModel
-            {
-                Id = reservation.Id,
-                CheckInDate = reservation.CheckInDate,
-                CheckOutDate = reservation.CheckOutDate,
-                RoomType = reservation.Room.RoomType.Name,
-                IncludesFood = reservation.IncludesFood,
-                IncludesWalk = reservation.IncludesWalk
-            };
-
-            // Връщане на изгледа за изтриване с модела
-            return View(model);
+            return View(rooms);
         }
 
         [HttpPost]

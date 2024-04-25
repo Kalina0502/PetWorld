@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetWorld.Core.Contracts;
-using PetWorld.Core.Models.Adoption;
 using PetWorld.Core.Models.Hotel;
-using PetWorld.Core.Models.Profile;
 using PetWorld.Infrastructure.Common;
 using PetWorld.Infrastructure.Data.Models;
 
@@ -83,7 +81,7 @@ namespace PetWorld.Core.Services
                 CheckOutDate = checkOutDate,
                 IncludesFood = includesFood,
                 IncludesWalk = includesWalk,
-                UserId = userId 
+                UserId = userId
             };
 
             await repository.AddAsync(reservation);
@@ -168,6 +166,22 @@ namespace PetWorld.Core.Services
                     IncludesWalk = rr.IncludesWalk,
                 })
                 .FirstAsync();
+        }
+
+        public async Task<IEnumerable<AllHotelRoomsQueryModel>> GetAllRoomsAsync()
+        {
+            // Извличане на всички стаи от базата данни
+            var rooms = await repository.AllReadOnly<RoomReservation>()
+                .Select(r => new AllHotelRoomsQueryModel
+                {
+                    CheckInDate = r.CheckInDate,
+                    CheckOutDate = r.CheckOutDate,
+                    RoomType = r.Room.RoomType.Name,
+                })
+                .ToListAsync();
+
+            // Връщане на списъка с всички стаи
+            return rooms;
         }
         public async Task DeleteAsync(int id)
         {
