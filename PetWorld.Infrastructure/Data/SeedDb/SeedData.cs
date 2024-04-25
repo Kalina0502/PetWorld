@@ -165,7 +165,6 @@ namespace PetWorld.Infrastructure.Data.SeedDb
                 Age = 5,
                 SpeciesId = DogSpecies.Id,
                 Description = "Friendly dog",
-                PetOwnerId = PetOwner.Id,
                 City = "Varna"
             };
 
@@ -176,7 +175,6 @@ namespace PetWorld.Infrastructure.Data.SeedDb
                 Age = 3,
                 SpeciesId = CatSpecies.Id,
                 Description = "Playful cat",
-                PetOwnerId = PetOwner.Id,
                 City = "Sofia"
             };
 
@@ -187,7 +185,6 @@ namespace PetWorld.Infrastructure.Data.SeedDb
                 Age = 2,
                 SpeciesId = BirdSpecies.Id,
                 Description = "Talkative bird",
-                PetOwnerId = PetOwner.Id,
                 City = "Burgas"
             };
         }

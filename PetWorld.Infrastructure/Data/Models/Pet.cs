@@ -35,14 +35,7 @@ namespace PetWorld.Infrastructure.Data.Models
         [MaxLength(CityMaxLength)]
         public string City { get; set; } = null!;
 
-        public string? ImageUrl { get; set; } 
-
-        [Required]
-        [Comment("Pet owner")]
-        public int PetOwnerId { get; set; }
-
-        [ForeignKey(nameof(PetOwnerId))]
-        public PetOwner Owner { get; set; } = null!;
+        public string? ImageUrl { get; set; }
 
         [Comment("User id of the pet")]
         public string? UserId { get; set; }
